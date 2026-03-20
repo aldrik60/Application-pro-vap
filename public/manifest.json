@@ -1,0 +1,22 @@
+{
+  "name": "Pro'Vap Sevrage",
+  "short_name": "Pro'Vap",
+  "description": "Votre compagnon de sevrage tabagique Pro'Vap",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#28282D",
+  "theme_color": "#28282D",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

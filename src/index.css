@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #28282D;
+  --color-surface: #1E1E22;
+  --color-primary: #B8482A;
+  --color-secondary: #CB8002;
+  --color-text: #F1F1F1;
+  --color-muted: #686868;
+  --color-border: #2E2E32;
+  --color-success: #2D9B55;
+  --color-danger: #C0392B;
+
+  --font-display: "Bebas Neue", sans-serif;
+  --font-body: "Poppins", sans-serif;
+
+  --radius-card: 14px;
+  --radius-input: 10px;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  background-color: #28282D;
+  color: #F1F1F1;
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
+}
+
+body {
+  overscroll-behavior: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #1E1E22; }
+::-webkit-scrollbar-thumb { background: #2E2E32; border-radius: 2px; }
+
+/* Bebas Neue helper */
+.font-display { font-family: "Bebas Neue", sans-serif; }
+
+/* Page containers */
+.page {
+  min-height: 100vh;
+  padding-bottom: 80px;
+  background-color: #28282D;
+}
+
+/* Card */
+.card {
+  background-color: #1E1E22;
+  border-radius: 14px;
+  border: 1px solid #2E2E32;
+}
+
+/* Input base */
+.input {
+  background-color: #1E1E22;
+  border: 1px solid #2E2E32;
+  border-radius: 10px;
+  color: #F1F1F1;
+  font-family: "Poppins", sans-serif;
+  padding: 12px 16px;
+  width: 100%;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.input:focus { border-color: #B8482A; }
+.input::placeholder { color: #686868; }
+
+/* Select */
+select.input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23686868' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #B8482A;
+  color: #F1F1F1;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 24px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  width: 100%;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.btn-primary:hover { opacity: 0.9; }
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-secondary {
+  background-color: transparent;
+  color: #B8482A;
+  border: 1px solid #B8482A;
+  border-radius: 10px;
+  padding: 13px 24px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+.btn-secondary:hover { background-color: rgba(184,72,42,0.1); }
+
+.btn-gold {
+  background-color: #CB8002;
+  color: #F1F1F1;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 24px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  width: 100%;
+  transition: opacity 0.2s;
+}
+.btn-gold:hover { opacity: 0.9; }
+
+.btn-danger {
+  background-color: #C0392B;
+  color: #F1F1F1;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 24px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  width: 100%;
+  transition: opacity 0.2s;
+}
+
+/* Badge animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes breathe-in {
+  from { transform: scale(1); }
+  to { transform: scale(1.2); }
+}
+
+@keyframes breathe-out {
+  from { transform: scale(1.2); }
+  to { transform: scale(1); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+/* Stat cards */
+.stat-card {
+  background-color: #1E1E22;
+  border-radius: 14px;
+  border: 1px solid #2E2E32;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Tab bar active indicator */
+.tab-active { color: #B8482A; }
+.tab-inactive { color: #686868; }
+
+/* Progress bar */
+.progress-track {
+  background-color: #2E2E32;
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background-color: #B8482A;
+  transition: width 0.5s ease;
+}
+.progress-fill-gold {
+  height: 100%;
+  border-radius: 999px;
+  background-color: #CB8002;
+  transition: width 0.5s ease;
+}
+
+/* Divider */
+.divider { border: none; border-top: 1px solid #2E2E32; }
+
+/* Textarea */
+textarea.input { resize: vertical; min-height: 80px; }
