@@ -7,10 +7,11 @@ import { Phone, Calendar, FlaskConical, ChevronRight, LogOut } from 'lucide-reac
 import { Modal } from '../components/Modal'
 
 const SHOPS = [
-  'Noyon', 'Compiègne', 'Clermont', 'Nogent-sur-Oise', 'Breteuil', 'Beauvais', 'Ferrières-en-Bray',
+  'Client Internet', 'Noyon', 'Compiègne', 'Clermont', 'Nogent-sur-Oise', 'Breteuil', 'Beauvais', 'Ferrières-en-Bray',
 ]
 
 const SHOP_PHONES: Record<string, string> = {
+  'Client Internet': '03 44 20 56 78',
   'Noyon': '03 44 44 44 44',
   'Compiègne': '03 44 20 56 78',
   'Clermont': '03 44 50 20 20',
@@ -260,6 +261,11 @@ export function ProfilePage() {
         </div>
       </section>
 
+      {/* Save Button */}
+      <button onClick={handleSave} className="btn-primary" disabled={loading}>
+        {loading ? 'Sauvegarde...' : 'Enregistrer mon profil'}
+      </button>
+
       {/* ── Reward Section ────────────────────────────────────────────────────── */}
       <section className="card p-5 space-y-4">
         <h2 className="text-base font-semibold text-[#CB8002]">Mon Objectif Plaisir</h2>
@@ -339,11 +345,6 @@ export function ProfilePage() {
           </button>
         )}
       </section>
-
-      {/* Save Button */}
-      <button onClick={handleSave} className="btn-primary" disabled={loading}>
-        {loading ? 'Sauvegarde...' : 'Enregistrer mon profil'}
-      </button>
 
       {/* ── Counselor Section ─────────────────────────────────────────────────── */}
       {preferredShop && (
