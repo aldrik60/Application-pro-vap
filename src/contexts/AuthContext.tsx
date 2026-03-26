@@ -21,10 +21,15 @@ const mockDemoProfile: Profile = {
   quit_date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
   cigarettes_per_day: 15,
   pack_price: 10.50,
+  tobacco_type: 'industrielle',
   preferred_shop: 'Compiègne',
   fagerstrom_score: 5,
   reward_name: 'Console de jeu',
   reward_amount: 500,
+  kit_price: 99.90,
+  smoker_profile: 'Kit Confort',
+  recommended_nicotine_mg: 12,
+  age_range: '25-40 ans',
   craving_count: 3,
   created_at: new Date().toISOString()
 }

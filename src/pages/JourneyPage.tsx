@@ -163,7 +163,7 @@ export function JourneyPage() {
           </h2>
           <div className="flex flex-col gap-3">
             {victories.map(v => (
-              <div key={v.id} className="card p-3 border-[#2D9B55]/30 bg-gradient-to-r from-[rgba(45,155,85,0.05)] to-transparent">
+              <div key={v.id} className="card p-3 border-l-[3px] border-l-[#CB8002] rounded-l-none bg-gradient-to-r from-[rgba(203,128,2,0.05)] to-transparent">
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-sm font-semibold text-[#2D9B55]">{format(parseISO(v.date), 'dd MMMM yyyy', { locale: fr })}</span>
                   <span className="text-xs text-[#686868]">{v.nicotine_mg} mg/ml</span>

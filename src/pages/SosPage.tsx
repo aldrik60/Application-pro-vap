@@ -117,9 +117,9 @@ export function SosPage() {
           <p className="text-[#F1F1F1] italic font-medium">"{message}"</p>
         </div>
 
-        <button 
-          onClick={handleSuccess} 
-          className="w-full bg-[#2D9B55] text-white rounded-xl py-5 font-display text-2xl tracking-wider shadow-[0_4px_14px_rgba(45,155,85,0.39)] transition-transform active:scale-95"
+        <button
+          onClick={handleSuccess}
+          className="w-full bg-[#2D9B55] text-white rounded-[14px] py-5 font-display text-2xl tracking-wider shadow-[0_4px_14px_rgba(45,155,85,0.39)] transition-transform active:scale-95"
         >
           J'AI TENU !
         </button>

@@ -168,7 +168,7 @@ export function FagerstromPage() {
             <button
               key={idx}
               onClick={() => handleSelect(option.score)}
-              className="w-full text-left p-4 rounded-xl border border-[#2E2E32] bg-[#1E1E22] text-[#F1F1F1] hover:border-[#CB8002] hover:bg-[rgba(203,128,2,0.05)] transition-all active:scale-[0.98] active:bg-[rgba(203,128,2,0.1)]"
+              className="w-full text-left p-4 rounded-[14px] border border-[#2E2E32] bg-[#1E1E22] text-[#F1F1F1] hover:border-[#CB8002] hover:bg-[rgba(203,128,2,0.05)] transition-all active:scale-[0.98] active:bg-[rgba(203,128,2,0.1)]"
             >
               <span className="text-lg">{option.text}</span>
             </button>

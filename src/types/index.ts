@@ -9,6 +9,8 @@ export type Shop =
 
 export type Feeling = 'difficile' | 'neutre' | 'bien' | 'excellent'
 
+export type TobaccoType = 'industrielle' | 'roulée' | 'cigare' | 'cigarillo' | 'cannabis' | 'mixte'
+
 export interface Profile {
   id: string
   email: string
@@ -17,10 +19,15 @@ export interface Profile {
   quit_date: string | null
   cigarettes_per_day: number
   pack_price: number
+  tobacco_type: TobaccoType | null
   preferred_shop: Shop | null
   fagerstrom_score: number | null
   reward_name: string | null
   reward_amount: number | null
+  kit_price: number | null
+  smoker_profile: string | null
+  recommended_nicotine_mg: number | null
+  age_range: string | null
   craving_count: number
   created_at: string
 }
