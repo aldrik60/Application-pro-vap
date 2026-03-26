@@ -3,23 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import toast from 'react-hot-toast'
-import { Phone, Calendar, FlaskConical, ChevronRight, LogOut } from 'lucide-react'
+import { Phone, Calendar, FlaskConical, ChevronRight, LogOut, MapPin, Clock } from 'lucide-react'
 import { Modal } from '../components/Modal'
+import { useShop } from '../hooks/useShop'
 
 const SHOPS = [
   'Client Internet', 'Noyon', 'Compiègne', 'Clermont', 'Nogent-sur-Oise', 'Breteuil', 'Beauvais', 'Ferrières-en-Bray',
 ]
-
-const SHOP_PHONES: Record<string, string> = {
-  'Client Internet': '03 44 20 56 78',
-  'Noyon': '03 44 44 44 44',
-  'Compiègne': '03 44 20 56 78',
-  'Clermont': '03 44 50 20 20',
-  'Nogent-sur-Oise': '03 44 55 30 30',
-  'Breteuil': '03 22 29 10 10',
-  'Beauvais': '03 44 06 40 40',
-  'Ferrières-en-Bray': '02 35 90 00 00',
-}
 
 const TOBACCO_TYPES = [
   { value: 'industrielle', label: 'Cigarette industrielle' },
@@ -156,7 +146,7 @@ export function ProfilePage() {
   const years = Array.from({ length: 50 }, (_, i) => String(currentYear - i))
   const days = Array.from({ length: 31 }, (_, i) => String(i + 1))
 
-  const shopPhone = preferredShop ? SHOP_PHONES[preferredShop] : null
+  const { shop: shopData } = useShop(preferredShop || null)
 
   return (
     <div className="page p-4 pb-24 space-y-6">
@@ -352,17 +342,31 @@ export function ProfilePage() {
           <h2 className="text-base font-semibold text-[#F1F1F1] mb-0.5">Mon Conseiller Pro'Vap</h2>
           <p className="text-sm text-[#CB8002] mb-4">Boutique de {preferredShop}</p>
 
-          {shopPhone && (
-            <p className="text-sm text-[#686868] mb-4 flex items-center gap-2">
-              <Phone size={14} className="text-[#B8482A]" />
-              {shopPhone}
-            </p>
-          )}
+          <div className="space-y-2 mb-4">
+            {shopData?.address && (
+              <p className="text-sm text-[#686868] flex items-start gap-2">
+                <MapPin size={14} className="text-[#B8482A] shrink-0 mt-0.5" />
+                {shopData.address}
+              </p>
+            )}
+            {shopData?.phone && (
+              <p className="text-sm text-[#686868] flex items-center gap-2">
+                <Phone size={14} className="text-[#B8482A] shrink-0" />
+                {shopData.phone}
+              </p>
+            )}
+            {shopData?.hours && (
+              <p className="text-sm text-[#686868] flex items-center gap-2">
+                <Clock size={14} className="text-[#B8482A] shrink-0" />
+                {shopData.hours}
+              </p>
+            )}
+          </div>
 
           <div className="flex gap-3">
-            {shopPhone && (
+            {shopData?.phone && (
               <a
-                href={`tel:${shopPhone}`}
+                href={`tel:${shopData.phone}`}
                 className="flex-1 btn-secondary text-center flex items-center justify-center gap-2 text-sm py-3"
               >
                 <Phone size={15} /> Appeler

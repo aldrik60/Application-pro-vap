@@ -1,4 +1,5 @@
 export type Shop =
+  | 'Client Internet'
   | 'Noyon'
   | 'Compiègne'
   | 'Clermont'
@@ -6,6 +7,14 @@ export type Shop =
   | 'Breteuil'
   | 'Beauvais'
   | 'Ferrières-en-Bray'
+
+export interface ShopData {
+  id: string
+  name: string
+  address: string | null
+  phone: string | null
+  hours: string | null
+}
 
 export type Feeling = 'difficile' | 'neutre' | 'bien' | 'excellent'
 

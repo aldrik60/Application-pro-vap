@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import toast from 'react-hot-toast'
 import { ChevronLeft, ShoppingBag, Phone } from 'lucide-react'
+import { useShop } from '../hooks/useShop'
 
 const KITS = {
   cbd: {
@@ -150,16 +151,6 @@ function getAgeRange(age: string): string {
   return 'Plus de 55 ans'
 }
 
-const SHOP_PHONES: Record<string, string> = {
-  'Noyon': '03 44 44 44 44',
-  'Compiègne': '03 44 20 56 78',
-  'Clermont': '03 44 50 20 20',
-  'Nogent-sur-Oise': '03 44 55 30 30',
-  'Breteuil': '03 22 29 10 10',
-  'Beauvais': '03 44 06 40 40',
-  'Ferrières-en-Bray': '02 35 90 00 00',
-}
-
 export function DiagnosticKitPage() {
   const { user, profile, refreshProfile } = useAuth()
   const navigate = useNavigate()
@@ -223,9 +214,9 @@ export function DiagnosticKitPage() {
     }
   }
 
-  if (isFinished) {
-    const shopPhone = profile?.preferred_shop ? SHOP_PHONES[profile.preferred_shop] : null
+  const { shop: shopData } = useShop(profile?.preferred_shop ?? null)
 
+  if (isFinished) {
     return (
       <div className="page p-6 pb-12 min-h-screen bg-[#28282D]">
         <button
@@ -285,8 +276,8 @@ export function DiagnosticKitPage() {
             {saving ? 'Enregistrement...' : 'Enregistrer ma recommandation'}
           </button>
 
-          {shopPhone && (
-            <a href={`tel:${shopPhone}`} className="btn-secondary flex items-center justify-center gap-2">
+          {shopData?.phone && (
+            <a href={`tel:${shopData.phone}`} className="btn-secondary flex items-center justify-center gap-2">
               <Phone size={16} /> Parler à un conseiller
             </a>
           )}
