@@ -1,33 +1,38 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Bell, AlertTriangle, Trophy } from 'lucide-react'
-import { CircularProgress } from '../components/CircularProgress'
-import { StatCard } from '../components/StatCard'
+import { Bell, AlertTriangle, Share2, ChevronRight } from 'lucide-react'
+import toast from 'react-hot-toast'
+import { Badge } from '../types'
+import { Vap, vapStageFromDays, VAP_STAGES } from '../components/Vap'
+import { ProVapLogo } from '../components/ProVapLogo'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { differenceInHours } from 'date-fns'
+import { IS_FULL } from '../lib/appMode'
 
+// Jalons d'amélioration de santé après l'arrêt du tabac.
+// Sources : Santé publique France, Tabac Info Service, OMS, HAS.
 const HEALTH_MILESTONES = [
-  { day: 0, hours: 0.33, label: '20 minutes', description: 'Rythme cardiaque normalisé' },
-  { day: 0, hours: 8, label: '8 heures', description: 'CO éliminé du sang' },
-  { day: 1, hours: 0, label: 'J+1', description: 'Premier souffle plus léger' },
-  { day: 3, hours: 0, label: 'J+3', description: 'Goût et odorat en réveil' },
-  { day: 7, hours: 0, label: 'J+7', description: 'Une semaine de liberté' },
-  { day: 14, hours: 0, label: 'J+14', description: 'Circulation sanguine améliorée' },
-  { day: 21, hours: 0, label: 'J+21', description: 'Habitude qui se forme' },
-  { day: 30, hours: 0, label: 'J+30', description: 'Poumons en récupération active' },
-  { day: 45, hours: 0, label: 'J+45', description: 'Énergie retrouvée' },
-  { day: 60, hours: 0, label: 'J+60', description: 'Capacité respiratoire +10%' },
-  { day: 75, hours: 0, label: 'J+75', description: 'Système immunitaire renforcé' },
-  { day: 90, hours: 0, label: 'J+90', description: 'Dépendance physique terminée' },
-  { day: 120, hours: 0, label: 'J+120', description: 'Risque cardiovasculaire en baisse' },
-  { day: 180, hours: 0, label: 'J+180', description: 'Poumons nettoyés à 50%' },
-  { day: 270, hours: 0, label: 'J+270', description: 'Infections divisées par 2' },
-  { day: 365, hours: 0, label: '1 an', description: 'Risque coronarien divisé par 2' },
-  { day: 545, hours: 0, label: '18 mois', description: 'Risque cancer divisé par 3' },
-  { day: 730, hours: 0, label: '2 ans', description: 'Poumons comme non-fumeur' },
-  { day: 1095, hours: 0, label: '3 ans', description: 'Liberté totale' },
-  { day: 1825, hours: 0, label: '5 ans', description: 'Risque cardiovasculaire normalisé' },
+  { day: 0, hours: 0.33, label: '20 minutes', description: 'Le rythme cardiaque se normalise' },
+  { day: 0, hours: 8,    label: '8 heures',   description: 'Le monoxyde de carbone baisse dans le sang' },
+  { day: 1, hours: 0,    label: 'J+1',        description: 'Le souffle paraît plus léger' },
+  { day: 3, hours: 0,    label: 'J+3',        description: 'Le goût et l\'odorat reviennent' },
+  { day: 7, hours: 0,    label: 'J+7',        description: 'Une semaine. La phase aiguë est passée.' },
+  { day: 14, hours: 0,   label: 'J+14',       description: 'La circulation sanguine s\'améliore' },
+  { day: 21, hours: 0,   label: 'J+21',       description: 'La nouvelle habitude s\'installe' },
+  { day: 30, hours: 0,   label: 'J+30',       description: 'Les poumons amorcent leur récupération' },
+  { day: 45, hours: 0,   label: 'J+45',       description: 'L\'énergie quotidienne s\'améliore' },
+  { day: 60, hours: 0,   label: 'J+60',       description: 'La capacité respiratoire progresse' },
+  { day: 75, hours: 0,   label: 'J+75',       description: 'Le système immunitaire récupère' },
+  { day: 90, hours: 0,   label: 'J+90',       description: 'Le sevrage physique est largement derrière' },
+  { day: 120, hours: 0,  label: 'J+120',      description: 'Le risque cardiovasculaire recule' },
+  { day: 180, hours: 0,  label: 'J+180',      description: 'Les poumons continuent de se régénérer' },
+  { day: 270, hours: 0,  label: 'J+270',      description: 'Moins d\'infections respiratoires' },
+  { day: 365, hours: 0,  label: '1 an',       description: 'Le risque coronarien recule (source : OMS)' },
+  { day: 545, hours: 0,  label: '18 mois',    description: 'Le risque de plusieurs cancers diminue' },
+  { day: 730, hours: 0,  label: '2 ans',      description: 'La fonction pulmonaire s\'est nettement améliorée' },
+  { day: 1095, hours: 0, label: '3 ans',      description: 'Trois ans sans tabac' },
+  { day: 1825, hours: 0, label: '5 ans',      description: 'Risque cardiovasculaire proche d\'un non-fumeur' },
 ]
 
 function getNextMilestone(totalHours: number) {
@@ -43,37 +48,47 @@ function getNextMilestone(totalHours: number) {
   return null
 }
 
+function nextStageDay(stage: 1 | 2 | 3 | 4 | 5 | 6): number {
+  const next = VAP_STAGES.find(s => s.id > stage)
+  return next?.day ?? 365
+}
+
+function stageProgress(stage: 1 | 2 | 3 | 4 | 5 | 6, days: number): number {
+  const current = VAP_STAGES[stage - 1]
+  const next = VAP_STAGES.find(s => s.id > stage)
+  if (!next) return 100
+  const span = next.day - current.day
+  const progressed = days - current.day
+  if (span <= 0) return 100
+  return Math.max(0, Math.min(100, (progressed / span) * 100))
+}
+
 export function HomePage() {
   const { profile } = useAuth()
   const navigate = useNavigate()
-  const [dailyMessage, setDailyMessage] = useState('Chaque jour est une nouvelle victoire. Continuez ainsi !')
+  const [dailyMessage, setDailyMessage] = useState("Aujourd'hui compte. Demain aussi.")
+  const [badges, setBadges] = useState<Badge[]>([])
 
   const quitDate = profile?.quit_date ? new Date(profile.quit_date) : null
   const now = new Date()
-
   const totalHours = quitDate ? Math.max(0, differenceInHours(now, quitDate)) : 0
   const daysSmokeFree = Math.floor(totalHours / 24)
   const hoursSmokeFree = totalHours % 24
 
-  // Stats calculations
   const cigsAvoided = daysSmokeFree * (profile?.cigarettes_per_day || 0)
   const moneySaved = daysSmokeFree * ((profile?.pack_price || 0) / 20) * (profile?.cigarettes_per_day || 0)
   const kitPrice = profile?.kit_price || 0
   const netSavings = moneySaved - kitPrice
-
   const lifeGainedMin = cigsAvoided * 11
   const lifeGainedHours = Math.floor(lifeGainedMin / 60)
-  const lifeGainedDays = Math.floor(lifeGainedHours / 24)
 
-  // Progress ring: cycles every 30 days
-  const progressPercent = Math.min(100, ((daysSmokeFree % 30) / 30) * 100)
-
-  // Reward progress
   const rewardCost = profile?.reward_amount || 0
   const rewardProgress = rewardCost > 0 ? Math.min(100, (Math.max(0, netSavings) / rewardCost) * 100) : 0
 
-  // Next milestone
   const nextMilestone = getNextMilestone(totalHours)
+  const vapStage = vapStageFromDays(daysSmokeFree)
+  const vapNextDay = nextStageDay(vapStage)
+  const vapProgress = stageProgress(vapStage, daysSmokeFree)
 
   useEffect(() => {
     if (daysSmokeFree > 0 && daysSmokeFree <= 90) {
@@ -87,17 +102,47 @@ export function HomePage() {
     }
   }, [daysSmokeFree])
 
+  useEffect(() => {
+    supabase.from('badges')
+      .select('*')
+      .order('day_threshold', { ascending: true })
+      .then(({ data }) => {
+        if (data) setBadges(data as Badge[])
+      })
+  }, [])
+
+  const handleShare = async () => {
+    const cigsRound = Math.round(cigsAvoided)
+    const moneyRound = Math.round(moneySaved)
+    const text = daysSmokeFree >= 1
+      ? `${daysSmokeFree} jour${daysSmokeFree > 1 ? 's' : ''} sans tabac. ${cigsRound} cigarettes évitées, ${moneyRound}€ économisés. Mon parcours avec Pro'Vap Sevrage.`
+      : `J'ai commencé mon sevrage tabagique avec Pro'Vap Sevrage.`
+    const shareData = { title: "Pro'Vap Sevrage", text, url: window.location.origin }
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData)
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(`${text} ${shareData.url}`)
+        toast.success('Message copié dans le presse-papier')
+      }
+    } catch {
+      /* annulation utilisateur */
+    }
+  }
+
+  // ─── No quit date : onboarding state ─────────────────────────────────────
   if (!profile?.quit_date) {
     return (
-      <div className="page p-6 flex flex-col items-center justify-center text-center">
-        <div className="text-6xl mb-6">🌱</div>
-        <h2 className="font-display text-3xl text-[#F1F1F1] mb-4">
-          BIENVENUE {profile?.name?.toUpperCase()} !
+      <div className="page p-6 flex flex-col items-center justify-center text-center min-h-screen">
+        <Vap stage={1} size={180} withScene />
+        <p className="eyebrow text-pv-ochre mt-2">Bienvenue</p>
+        <h2 className="display text-3xl text-ink mt-3 mb-4">
+          {profile?.name ? `Bonjour, ${profile.name}` : 'Bonjour'}
         </h2>
-        <p className="text-[#686868] mb-8 leading-relaxed">
-          Pour commencer votre suivi de sevrage, veuillez configurer votre profil et indiquer votre date d'arrêt.
+        <p className="text-ink-2 mb-8 leading-relaxed max-w-xs text-sm">
+          Pour commencer votre parcours, indiquez votre date d'arrêt depuis votre profil.
         </p>
-        <button className="btn-primary" onClick={() => navigate('/profil')}>
+        <button className="btn-primary max-w-xs" onClick={() => navigate('/profil')}>
           Configurer mon profil
         </button>
       </div>
@@ -105,153 +150,243 @@ export function HomePage() {
   }
 
   return (
-    <div className="page p-4 pb-32 space-y-5">
-      <header className="flex justify-between items-center mt-2">
-        <h1 className="font-display text-3xl text-[#CB8002] tracking-wide">PRO'VAP SEVRAGE</h1>
-        <button className="p-2.5 rounded-full bg-[#1E1E22] border border-[#2E2E32] text-[#F1F1F1] transition-transform active:scale-95">
-          <Bell size={20} />
-        </button>
+    <div className="page pb-32">
+      {/* Header logo + actions */}
+      <header className="flex items-center justify-between px-6 pt-6">
+        <ProVapLogo height={22} />
+        <div className="flex gap-2">
+          <button
+            onClick={handleShare}
+            className="w-[38px] h-[38px] rounded-full border border-line-strong flex items-center justify-center text-ink transition-colors hover:border-pv-terracotta"
+            aria-label="Partager mon parcours"
+          >
+            <Share2 size={16} strokeWidth={1.4} />
+          </button>
+          <button
+            className="w-[38px] h-[38px] rounded-full border border-line-strong flex items-center justify-center text-ink transition-colors hover:border-pv-terracotta"
+            aria-label="Notifications"
+          >
+            <Bell size={16} strokeWidth={1.4} />
+          </button>
+        </div>
       </header>
 
-      {/* Progress Ring */}
-      <div className="flex flex-col items-center justify-center py-4">
-        <CircularProgress progress={progressPercent} size={220} strokeWidth={16}>
-          <span className="font-display text-6xl text-[#F1F1F1] leading-none mb-1">{daysSmokeFree}</span>
-          <span className="text-sm text-[#686868] font-medium uppercase tracking-wider">
-            {daysSmokeFree === 1 ? 'Jour' : 'Jours'}
-          </span>
+      {/* Hero compteur + Vap */}
+      <section className="relative px-6 pt-4">
+        <div
+          className="absolute pointer-events-none"
+          style={{ right: -8, top: 8, opacity: 0.82, zIndex: 0 }}
+          aria-hidden
+        >
+          <Vap stage={vapStage} size={140} withScene />
+        </div>
+        <div className="relative pt-10" style={{ zIndex: 1 }}>
+          <p className="eyebrow">Vous tenez bon depuis</p>
+          <div className="flex items-baseline gap-2 mt-3">
+            <span
+              className="font-display tabular text-ink"
+              style={{
+                fontSize: 96,
+                fontWeight: 500,
+                letterSpacing: '-0.04em',
+                lineHeight: 0.85,
+                textShadow: '0 2px 24px var(--color-bg)',
+              }}
+            >
+              {daysSmokeFree}
+            </span>
+          </div>
+          <div className="display-italic mt-1 text-2xl text-ink-2">
+            {daysSmokeFree <= 1 ? 'jour' : 'jours'} sans tabac
+          </div>
           {hoursSmokeFree > 0 && (
-            <span className="text-xs text-[#B8482A] font-bold mt-1">ET {hoursSmokeFree}H</span>
+            <div className="eyebrow text-pv-ochre mt-2">+ {hoursSmokeFree} heures</div>
           )}
-        </CircularProgress>
-      </div>
+        </div>
 
-      {/* Daily Motivation */}
-      <div className="card p-4 accent-left border-[#B8482A] bg-[rgba(184,72,42,0.05)]">
-        <p className="text-[10px] text-[#B8482A] font-bold uppercase tracking-wider mb-2">
-          Message du jour {daysSmokeFree <= 90 ? `J+${daysSmokeFree}` : ''}
-        </p>
-        <p className="text-[#F1F1F1] text-sm leading-relaxed italic">"{dailyMessage}"</p>
-      </div>
+        {/* Progress vers prochain stade Vap */}
+        <Link to="/badges" className="mt-5 flex items-center gap-3 group">
+          <div className="flex-1 progress-track">
+            <div className="progress-fill" style={{ width: `${vapProgress}%` }} />
+          </div>
+          <div className="text-[11px] text-pv-ochre whitespace-nowrap" style={{ letterSpacing: '0.05em' }}>
+            Prochain palier · J+{vapNextDay}
+          </div>
+          <ChevronRight size={14} className="text-ink-3 transition-transform group-hover:translate-x-0.5" />
+        </Link>
+      </section>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 gap-3">
-        <StatCard
-          label="Cigarettes évitées"
-          value={cigsAvoided}
-          unit="cig."
-          textColorClass="text-[#F1F1F1]"
-        />
-        <StatCard
-          label="Économies brutes"
-          value={moneySaved.toFixed(2)}
-          unit="€"
-          textColorClass="text-[#CB8002]"
-        />
-      </div>
-      <div className="grid grid-cols-1">
-        <StatCard
-          label="Vie regagnée"
-          value={lifeGainedDays > 0 ? `${lifeGainedDays}j ${lifeGainedHours % 24}h` : `${lifeGainedHours}h`}
-          textColorClass="text-[#B8482A]"
-        />
-      </div>
-
-      {/* Kit Amortization Card */}
-      {kitPrice > 0 && (
-        <div className="card p-4">
-          <p className="text-[10px] text-[#686868] font-bold uppercase tracking-wider mb-3">
-            Kit Pro'Vap — Amortissement
+      {/* Message du jour */}
+      <section className="px-5 mt-7">
+        <div className="card p-5">
+          <div className="flex justify-between items-center mb-3">
+            <span className="eyebrow text-pv-terracotta">Message du jour</span>
+            <div className="w-7 h-px bg-pv-ochre opacity-70" />
+          </div>
+          <p
+            className="display-italic text-ink leading-snug"
+            style={{ fontSize: 22, lineHeight: 1.32 }}
+          >
+            « {dailyMessage} »
           </p>
-          {netSavings < 0 ? (
-            <>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-[#F1F1F1]">
-                  Kit amorti dans{' '}
-                  <span className="font-bold text-[#B8482A]">
-                    {Math.ceil(Math.abs(netSavings) / ((profile.pack_price || 10) / 20 * (profile.cigarettes_per_day || 10)))} jours
-                  </span>
-                </span>
-                <span className="text-xs text-[#C0392B] font-semibold">{netSavings.toFixed(2)}€</span>
-              </div>
-              <div className="progress-track">
-                <div
-                  className="progress-fill"
-                  style={{ width: `${Math.min(100, (moneySaved / kitPrice) * 100)}%`, backgroundColor: '#C0392B' }}
-                />
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-[#2D9B55] font-semibold">Kit amorti ! 🎉</span>
-                <span className="text-sm font-bold text-[#2D9B55]">+{netSavings.toFixed(2)}€</span>
-              </div>
-              <div className="progress-track">
-                <div className="h-full rounded-full bg-[#2D9B55] transition-all" style={{ width: '100%' }} />
-              </div>
-              <p className="text-xs text-[#686868] mt-2">
-                Bénéfice net : <span className="text-[#2D9B55] font-semibold">{netSavings.toFixed(2)}€</span>
-              </p>
-            </>
-          )}
+          <div className="mt-3 text-[11px] text-ink-3" style={{ letterSpacing: '0.06em' }}>
+            L'équipe Pro'Vap · jour {daysSmokeFree}
+          </div>
         </div>
-      )}
+      </section>
 
-      {/* Next Health Milestone */}
+      {/* Stats en duo */}
+      <section className="grid grid-cols-2 gap-2.5 px-5 mt-4">
+        <StatTile eyebrow="Cigarettes évitées" value={String(cigsAvoided)} unit="cig." />
+        <StatTile eyebrow="Économies" value={moneySaved.toFixed(0)} unit="€" accent />
+      </section>
+
+      {/* Vie regagnée */}
+      <section className="px-5 mt-3">
+        <div className="card p-5">
+          <div className="flex justify-between items-baseline">
+            <span className="eyebrow">Vie regagnée</span>
+            <span className="font-display text-pv-ochre" style={{ fontSize: 24 }}>
+              {lifeGainedHours}
+              <span className="display-italic text-sm text-ink-2 ml-0.5">h</span>
+            </span>
+          </div>
+          <p className="mt-3 text-xs text-ink-3 leading-relaxed">
+            Votre goût, votre odorat et votre souffle progressent chaque jour.
+          </p>
+        </div>
+      </section>
+
+      {/* Prochain jalon santé */}
       {nextMilestone && (
-        <div className="card p-4 accent-left bg-[rgba(203,128,2,0.03)]">
-          <div className="flex items-start gap-3">
-            <Trophy size={20} className="text-[#CB8002] mt-0.5 shrink-0" />
-            <div>
-              <p className="text-[10px] text-[#686868] font-bold uppercase tracking-wider mb-1">
-                Prochain jalon de santé
-              </p>
-              <p className="text-[#F1F1F1] font-semibold text-sm">{nextMilestone.description}</p>
-              <p className="text-xs text-[#CB8002] mt-1">
-                Dans{' '}
-                {nextMilestone.daysLeft > 0
-                  ? `${nextMilestone.daysLeft} jour${nextMilestone.daysLeft > 1 ? 's' : ''}${nextMilestone.hrsLeft > 0 ? ` et ${nextMilestone.hrsLeft}h` : ''}`
-                  : `${nextMilestone.hrsLeft} heure${nextMilestone.hrsLeft > 1 ? 's' : ''}`}
-              </p>
+        <section className="px-5 mt-3">
+          <div className="card p-5">
+            <div className="flex justify-between items-center mb-3">
+              <span className="eyebrow text-pv-terracotta">Prochain jalon santé</span>
+              <div className="w-7 h-px bg-pv-ochre opacity-70" />
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Reward Progress */}
-      {profile.reward_name && profile.reward_amount && (
-        <div className="card p-4">
-          <div className="flex justify-between items-end mb-3">
-            <div>
-              <span className="block text-[10px] text-[#686868] font-bold uppercase tracking-wider mb-1">
-                Objectif Plaisir
-              </span>
-              <span className="block text-[#F1F1F1] font-semibold">{profile.reward_name}</span>
-            </div>
-            <div className="text-right">
-              <span className="text-lg font-bold text-[#CB8002]">{Math.max(0, Math.floor(netSavings))}€</span>
-              <span className="text-xs text-[#686868]"> / {profile.reward_amount}€</span>
-            </div>
-          </div>
-          <div className="progress-track">
-            <div className="progress-fill-gold" style={{ width: `${rewardProgress}%` }} />
-          </div>
-          {rewardProgress < 100 && (
-            <p className="text-xs text-[#686868] mt-2">
-              Dans {Math.ceil((profile.reward_amount - Math.max(0, netSavings)) / ((profile.pack_price || 10) / 20 * (profile.cigarettes_per_day || 10)))} jours vous pourrez vous l'offrir
+            <p className="font-display text-ink leading-snug" style={{ fontSize: 18, fontWeight: 500 }}>
+              {nextMilestone.description}
             </p>
-          )}
-        </div>
+            <p className="text-[11px] text-pv-ochre mt-2" style={{ letterSpacing: '0.06em' }}>
+              Dans {nextMilestone.daysLeft > 0
+                ? `${nextMilestone.daysLeft} jour${nextMilestone.daysLeft > 1 ? 's' : ''}${nextMilestone.hrsLeft > 0 ? ` et ${nextMilestone.hrsLeft}h` : ''}`
+                : `${nextMilestone.hrsLeft} heure${nextMilestone.hrsLeft > 1 ? 's' : ''}`}
+            </p>
+          </div>
+        </section>
       )}
 
-      {/* SOS Button */}
-      <Link to="/sos" className="block mt-2">
-        <button className="flex items-center justify-center gap-3 w-full bg-[#C0392B] text-white rounded-[14px] py-5 font-display text-2xl tracking-wider shadow-[0_4px_14px_rgba(192,57,43,0.39)] transition-transform active:scale-95">
-          <AlertTriangle size={24} />
-          J'AI UNE ENVIE !
-        </button>
-      </Link>
+      {/* Kit amortissement — full mode only */}
+      {IS_FULL && kitPrice > 0 && (
+        <section className="px-5 mt-3">
+          <div className="card p-5">
+            <span className="eyebrow">Kit Pro'Vap — Amortissement</span>
+            {netSavings < 0 ? (
+              <>
+                <div className="flex justify-between items-baseline mt-3">
+                  <span className="text-sm text-ink">
+                    Kit amorti dans{' '}
+                    <span className="font-display text-pv-terracotta" style={{ fontSize: 17 }}>
+                      {Math.ceil(Math.abs(netSavings) / ((profile.pack_price || 10) / 20 * (profile.cigarettes_per_day || 10)))} jours
+                    </span>
+                  </span>
+                  <span className="text-xs text-danger font-semibold">{netSavings.toFixed(0)}€</span>
+                </div>
+                <div className="progress-track mt-3">
+                  <div
+                    className="h-full rounded-full transition-all"
+                    style={{ width: `${Math.min(100, (moneySaved / kitPrice) * 100)}%`, backgroundColor: 'var(--color-danger)' }}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex justify-between items-baseline mt-3">
+                  <span className="text-sm text-success font-medium">Kit amorti</span>
+                  <span className="font-display text-success" style={{ fontSize: 20 }}>
+                    + {netSavings.toFixed(0)}€
+                  </span>
+                </div>
+                <div className="progress-track mt-3">
+                  <div className="h-full rounded-full transition-all"
+                    style={{ width: '100%', backgroundColor: 'var(--color-success)' }} />
+                </div>
+              </>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Objectif plaisir */}
+      {profile.reward_name && profile.reward_amount && (
+        <section className="px-5 mt-3">
+          <div className="card p-5">
+            <div className="flex justify-between items-end mb-3">
+              <div>
+                <span className="eyebrow block">Objectif plaisir</span>
+                <span className="block font-display text-ink mt-1" style={{ fontSize: 18, fontWeight: 500 }}>
+                  {profile.reward_name}
+                </span>
+              </div>
+              <div className="text-right">
+                <span className="font-display text-pv-ochre" style={{ fontSize: 20 }}>
+                  {Math.max(0, Math.floor(netSavings))}
+                </span>
+                <span className="display-italic text-ink-3 text-sm"> / {profile.reward_amount}€</span>
+              </div>
+            </div>
+            <div className="progress-track">
+              <div className="progress-fill-gold" style={{ width: `${rewardProgress}%` }} />
+            </div>
+            {rewardProgress < 100 && profile.cigarettes_per_day > 0 && (
+              <p className="text-[11px] text-ink-3 mt-2" style={{ letterSpacing: '0.05em' }}>
+                Dans {Math.ceil((profile.reward_amount - Math.max(0, netSavings)) / ((profile.pack_price || 10) / 20 * profile.cigarettes_per_day))} jours, c'est à vous.
+              </p>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Bouton SOS */}
+      <section className="px-5 mt-5">
+        <Link to="/sos">
+          <button className="btn-primary w-full" style={{ minHeight: 60 }}>
+            <AlertTriangle size={18} strokeWidth={1.6} />
+            <span>SOS — j'ai une envie</span>
+          </button>
+        </Link>
+      </section>
+
+      {/* Disclaimer médical */}
+      <p className="text-[10px] text-ink-3 text-center leading-relaxed px-5 pt-5">
+        Informations indicatives, ne remplacent pas l'avis d'un professionnel de santé.
+        <br />
+        <span className="text-pv-ochre font-medium">Tabac Info Service 3989</span> · gratuit, lun-sam 8h-20h.
+      </p>
+    </div>
+  )
+}
+
+function StatTile({ eyebrow, value, unit, accent }: { eyebrow: string; value: string; unit: string; accent?: boolean }) {
+  return (
+    <div className="card p-4">
+      <span className="eyebrow" style={{ fontSize: 9 }}>{eyebrow}</span>
+      <div className="flex items-baseline gap-1 mt-2">
+        <span
+          className="font-display tabular"
+          style={{
+            fontSize: 32,
+            color: accent ? 'var(--color-pv-ochre)' : 'var(--color-ink)',
+            fontWeight: 500,
+            letterSpacing: '-0.02em',
+            lineHeight: 1,
+          }}
+        >
+          {value}
+        </span>
+        <span className="display-italic text-ink-3 text-sm">{unit}</span>
+      </div>
     </div>
   )
 }

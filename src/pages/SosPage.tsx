@@ -3,227 +3,256 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import toast from 'react-hot-toast'
+import { X, Pause, Play } from 'lucide-react'
 
-const PHASES = [
-  {
-    key: 'INSPIRE',
-    label: 'Inspirez',
-    emoji: '🌬️',
-    color: '#B8482A',
-    glow: 'rgba(184,72,42,0.25)',
-    tip: 'Remplissez vos poumons lentement...',
-    big: true,
-  },
-  {
-    key: 'RETENIR',
-    label: 'Retenez',
-    emoji: '💫',
-    color: '#CB8002',
-    glow: 'rgba(203,128,2,0.25)',
-    tip: 'Gardez l\'air, sentez la paix...',
-    big: true,
-  },
-  {
-    key: 'EXPIRE',
-    label: 'Expirez',
-    emoji: '✨',
-    color: '#2D9B55',
-    glow: 'rgba(45,155,85,0.25)',
-    tip: 'Relâchez tout le stress...',
-    big: false,
-  },
-]
+/**
+ * SOS — cohérence cardiaque, version sensorielle.
+ * Plein écran sombre umber + grain, orbe qui respire 4-7-8.
+ * Aucune UI mobile classique : texte serif italique, ambiance cuir/papier brûlé.
+ *
+ * Cycle 4-7-8 : Inspirez 4s · Retenez 7s · Expirez 8s.
+ * 6 cycles complets = ~3 min, durée recommandée pour passer une envie.
+ */
 
-const TOTAL_DURATION = 180
+type Phase = 'inhale' | 'hold' | 'exhale'
+
+const CYCLES_TOTAL = 6
+const PHASE_DURATIONS: Record<Phase, number> = { inhale: 4, hold: 7, exhale: 8 }
+const PHASE_ORDER: Phase[] = ['inhale', 'hold', 'exhale']
+
+const PHASE_META: Record<Phase, { eyebrow: string; big: string; sub: string }> = {
+  inhale: { eyebrow: 'Inspirez', big: '4', sub: 'Par le nez, lentement.' },
+  hold:   { eyebrow: 'Retenez', big: '7', sub: 'Doucement.' },
+  exhale: { eyebrow: 'Expirez', big: '8', sub: 'Par la bouche, en relâchant.' },
+}
 
 export function SosPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
 
-  const [phaseIdx, setPhaseIdx] = useState(0)
-  const [phaseCount, setPhaseCount] = useState(4)
+  const [phaseIdx, setPhaseIdx] = useState(0)        // index dans PHASE_ORDER
+  const [secondsInPhase, setSecondsInPhase] = useState(PHASE_DURATIONS.inhale)
   const [cycle, setCycle] = useState(1)
-  const [timeLeft, setTimeLeft] = useState(TOTAL_DURATION)
+  const [paused, setPaused] = useState(false)
   const [done, setDone] = useState(false)
 
-  const phase = PHASES[phaseIdx]
+  const currentPhase = PHASE_ORDER[phaseIdx]
+  const meta = PHASE_META[currentPhase]
 
   useEffect(() => {
-    if (done) return
-
+    if (done || paused) return
     const tick = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          setDone(true)
-          return 0
-        }
-        return prev - 1
-      })
-
-      setPhaseCount(prev => {
-        if (prev <= 1) {
-          setPhaseIdx(prevIdx => {
-            const next = (prevIdx + 1) % 3
-            if (next === 0) setCycle(c => c + 1)
-            return next
-          })
-          return 4
-        }
-        return prev - 1
+      setSecondsInPhase(s => {
+        if (s > 1) return s - 1
+        // Phase termine, passe à la suivante
+        setPhaseIdx(idx => {
+          const nextIdx = (idx + 1) % PHASE_ORDER.length
+          if (nextIdx === 0) {
+            // cycle complet
+            setCycle(c => {
+              if (c >= CYCLES_TOTAL) {
+                setDone(true)
+                return c
+              }
+              return c + 1
+            })
+          }
+          return nextIdx
+        })
+        return 0 // reset, will be set by phase change effect
       })
     }, 1000)
-
     return () => clearInterval(tick)
-  }, [done])
+  }, [done, paused])
+
+  // Reset compteur au changement de phase
+  useEffect(() => {
+    setSecondsInPhase(PHASE_DURATIONS[PHASE_ORDER[phaseIdx]])
+  }, [phaseIdx])
 
   const handleSuccess = async () => {
     try {
       if (user) {
-        const { data: profile } = await supabase.from('profiles').select('craving_count').eq('id', user.id).single()
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('craving_count')
+          .eq('id', user.id)
+          .single()
         if (profile) {
-          await supabase.from('profiles').update({ craving_count: (profile.craving_count || 0) + 1 }).eq('id', user.id)
+          await supabase
+            .from('profiles')
+            .update({ craving_count: (profile.craving_count || 0) + 1 })
+            .eq('id', user.id)
         }
       }
-      toast.success('Bravo d\'avoir résisté !', { icon: '💪', style: { background: '#2D9B55', color: '#fff' } })
       navigate(-1)
-    } catch (e) {
+    } catch {
       navigate(-1)
     }
   }
 
-  const progress = ((TOTAL_DURATION - timeLeft) / TOTAL_DURATION) * 100
-  const minutes = Math.floor(timeLeft / 60)
-  const seconds = timeLeft % 60
-
-  // Victory screen
+  // Écran de fin
   if (done) {
     return (
-      <div className="page p-6 flex flex-col items-center justify-center min-h-screen text-center bg-[#28282D]">
-        <div className="text-8xl mb-6" style={{ animation: 'fadeInUp 0.5s ease' }}>🎉</div>
-        <h1 className="font-display text-5xl text-[#2D9B55] mb-3 tracking-wider">BRAVO !</h1>
-        <p className="text-[#F1F1F1] text-lg mb-2">3 minutes sans craquer !</p>
-        <p className="text-[#686868] text-sm mb-2">{cycle} cycles de cohérence cardiaque</p>
-        <p className="text-[#CB8002] text-xs font-semibold mb-10 uppercase tracking-wider">Votre rythme cardiaque est apaisé ✓</p>
-        <button
-          onClick={handleSuccess}
-          className="w-full max-w-xs bg-[#2D9B55] text-white rounded-[14px] py-5 font-display text-2xl tracking-wider shadow-[0_4px_20px_rgba(45,155,85,0.4)] transition-transform active:scale-95"
-        >
-          J'AI TENU ! 💪
-        </button>
-        <button onClick={() => navigate(-1)} className="mt-4 text-[#686868] text-sm p-2">
-          Retour à l'accueil
-        </button>
+      <div
+        className="min-h-screen flex flex-col items-center justify-center text-center px-8 py-12 relative overflow-hidden"
+        style={{
+          background: 'radial-gradient(120% 80% at 50% 30%, #3a2218 0%, #1a0e08 50%, #050302 100%)',
+          color: 'var(--color-pv-ivory)',
+        }}
+      >
+        <SOSGrain />
+        <div className="relative z-10 flex flex-col items-center" style={{ animation: 'fadeInUp 0.6s ease' }}>
+          <p className="eyebrow text-pv-ochre" style={{ letterSpacing: '0.32em' }}>Vous l'avez traversée</p>
+          <h1
+            className="display-italic mt-6"
+            style={{ fontSize: 56, lineHeight: 1.05, color: 'var(--color-pv-ivory)' }}
+          >
+            L'envie<br/>est passée.
+          </h1>
+          <p className="text-base text-pv-ivory/70 mt-6 leading-relaxed max-w-xs">
+            Vous venez de gagner une victoire silencieuse. Aucun mérite n'est plus durable que celui qu'on accumule chaque jour.
+          </p>
+          <button onClick={handleSuccess} className="btn-primary mt-10 max-w-xs">
+            J'ai tenu
+          </button>
+          <button
+            onClick={() => navigate(-1)}
+            className="text-pv-ivory/50 text-sm mt-4 p-2"
+          >
+            Retour
+          </button>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="page flex flex-col items-center justify-between min-h-screen pb-10 pt-10 text-center bg-[#28282D] px-6">
+    <div
+      className="relative min-h-screen overflow-hidden flex flex-col"
+      style={{
+        background: 'radial-gradient(120% 80% at 50% 30%, #3a2218 0%, #1a0e08 50%, #050302 100%)',
+        color: 'var(--color-pv-ivory)',
+      }}
+    >
+      <SOSGrain />
 
       {/* Header */}
-      <div className="w-full">
-        <h1 className="font-display text-3xl tracking-wider mb-1" style={{ color: phase.color }}>
-          COHÉRENCE CARDIAQUE
-        </h1>
-        <p className="text-[#686868] text-xs uppercase tracking-widest mb-3">
-          Cycle {cycle} &nbsp;·&nbsp; {minutes}:{seconds.toString().padStart(2, '0')} restantes
+      <header
+        className="relative z-10 flex items-center justify-between px-6"
+        style={{ paddingTop: 'max(env(safe-area-inset-top), 24px)', paddingBottom: 16 }}
+      >
+        <button
+          onClick={() => navigate(-1)}
+          aria-label="Quitter"
+          className="w-9 h-9 rounded-full flex items-center justify-center transition-opacity hover:opacity-100"
+          style={{ border: '1px solid rgba(246,241,232,0.25)', color: 'rgba(246,241,232,0.7)' }}
+        >
+          <X size={14} strokeWidth={1.5} />
+        </button>
+        <span
+          className="text-pv-ivory/50 font-semibold"
+          style={{ fontSize: 10, letterSpacing: '0.24em', textTransform: 'uppercase' }}
+        >
+          Cycle {String(cycle).padStart(2, '0')} / {String(CYCLES_TOTAL).padStart(2, '0')}
+        </span>
+        <button
+          onClick={() => setPaused(p => !p)}
+          aria-label={paused ? 'Reprendre' : 'Pause'}
+          className="w-9 h-9 rounded-full flex items-center justify-center transition-opacity"
+          style={{ border: '1px solid rgba(246,241,232,0.25)', color: 'rgba(246,241,232,0.7)' }}
+        >
+          {paused ? <Play size={14} strokeWidth={1.5} /> : <Pause size={14} strokeWidth={1.5} />}
+        </button>
+      </header>
+
+      {/* Centre : orbe + chiffre */}
+      <main className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-8">
+        <p
+          className="text-pv-ochre font-semibold"
+          style={{ fontSize: 10, letterSpacing: '0.32em', textTransform: 'uppercase' }}
+        >
+          {meta.eyebrow}
         </p>
-        {/* Global progress bar */}
-        <div className="progress-track max-w-xs mx-auto">
-          <div
-            className="h-full rounded-full transition-all duration-1000"
-            style={{ width: `${progress}%`, backgroundColor: phase.color }}
-          />
-        </div>
-      </div>
 
-      {/* Breathing bubble */}
-      <div className="flex flex-col items-center gap-5">
-
-        {/* Outer glow layer 1 */}
-        <div className="relative flex items-center justify-center" style={{ width: 300, height: 300 }}>
+        <div className="relative" style={{ width: 260, height: 260, marginTop: 28, marginBottom: 28 }}>
+          {/* Cercles concentriques */}
+          <div className="absolute rounded-full" style={{ inset: -42, border: '0.5px solid rgba(246,241,232,0.08)' }} />
+          <div className="absolute rounded-full" style={{ inset: -20, border: '0.5px solid rgba(246,241,232,0.12)' }} />
+          {/* Orbe qui respire */}
           <div
             className="absolute rounded-full"
             style={{
-              width: phase.big ? 290 : 170,
-              height: phase.big ? 290 : 170,
-              backgroundColor: phase.glow,
-              opacity: 0.35,
-              transition: 'all 3.2s ease-in-out',
+              inset: 0,
+              background: 'radial-gradient(60% 60% at 35% 30%, rgba(203,128,2,0.4), rgba(184,72,42,0.4) 55%, rgba(80,30,18,0.7) 100%)',
+              boxShadow: '0 0 80px rgba(184,72,42,0.3), inset 0 0 60px rgba(0,0,0,0.5), inset 6px 6px 30px rgba(255,220,200,0.18)',
+              animation: paused ? 'none' : 'sosBreathe 19s ease-in-out infinite',
             }}
           />
-          {/* Outer glow layer 2 */}
-          <div
-            className="absolute rounded-full"
-            style={{
-              width: phase.big ? 240 : 140,
-              height: phase.big ? 240 : 140,
-              backgroundColor: phase.glow,
-              opacity: 0.45,
-              transition: 'all 3.2s ease-in-out',
-            }}
-          />
-          {/* Main bubble */}
-          <div
-            className="relative rounded-full flex flex-col items-center justify-center"
-            style={{
-              width: phase.big ? 190 : 120,
-              height: phase.big ? 190 : 120,
-              background: `radial-gradient(circle at 40% 40%, ${phase.glow}, rgba(30,30,34,0.95))`,
-              border: `2px solid ${phase.color}`,
-              boxShadow: `0 0 40px ${phase.glow}, 0 0 80px ${phase.glow}`,
-              transition: 'all 3.2s ease-in-out',
-            }}
-          >
-            <span className="text-4xl mb-1 transition-all duration-300">{phase.emoji}</span>
+          {/* Chiffre central */}
+          <div className="absolute inset-0 flex items-center justify-center">
             <span
-              className="font-display text-xl tracking-widest transition-colors duration-300"
-              style={{ color: phase.color }}
+              className="font-display tabular"
+              style={{
+                fontSize: 100,
+                fontWeight: 400,
+                color: 'var(--color-pv-ivory)',
+                letterSpacing: '-0.02em',
+                textShadow: '0 4px 24px rgba(0,0,0,0.5)',
+              }}
             >
-              {phase.label}
+              {secondsInPhase}
             </span>
-            <span className="text-5xl font-bold text-[#F1F1F1] mt-1 leading-none">{phaseCount}</span>
           </div>
         </div>
 
-        {/* Tip */}
-        <p className="text-[#686868] text-sm italic">{phase.tip}</p>
+        <p className="display-italic" style={{ fontSize: 22, lineHeight: 1.35, maxWidth: 260 }}>
+          {meta.sub}
+        </p>
 
-        {/* Phase dots indicator */}
-        <div className="flex items-center gap-3">
-          {PHASES.map((p, i) => (
-            <div key={i} className="flex flex-col items-center gap-1.5">
-              <div
-                className="rounded-full transition-all duration-500"
-                style={{
-                  width: i === phaseIdx ? 12 : 8,
-                  height: i === phaseIdx ? 12 : 8,
-                  backgroundColor: i === phaseIdx ? phase.color : '#2E2E32',
-                }}
-              />
-              <span
-                className="text-[9px] uppercase tracking-wider font-semibold transition-colors duration-300"
-                style={{ color: i === phaseIdx ? phase.color : '#2E2E32' }}
-              >
-                {p.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+        <p className="text-pv-ivory/50 text-xs leading-relaxed mt-8" style={{ maxWidth: 280 }}>
+          L'envie passera. Elle dure rarement plus de trois minutes — votre souffle la traverse.
+        </p>
+      </main>
 
-      {/* Bottom actions */}
-      <div className="w-full max-w-sm space-y-3">
-        <button
-          onClick={handleSuccess}
-          className="w-full bg-[#2D9B55] text-white rounded-[14px] py-4 font-display text-xl tracking-wider shadow-[0_4px_14px_rgba(45,155,85,0.35)] transition-transform active:scale-95"
-        >
-          J'AI TENU !
-        </button>
-        <button onClick={() => navigate(-1)} className="text-[#686868] text-sm p-2 w-full">
-          Retour à l'accueil
-        </button>
-      </div>
+      {/* Indicateur de cycles en bas */}
+      <footer className="relative z-10 pb-8 flex justify-center gap-2">
+        {Array.from({ length: CYCLES_TOTAL }).map((_, i) => (
+          <span
+            key={i}
+            className="rounded-full transition-all duration-500"
+            style={{
+              width: i + 1 === cycle ? 22 : 6,
+              height: 6,
+              background: i < cycle ? 'var(--color-pv-ochre)' : 'rgba(246,241,232,0.18)',
+            }}
+          />
+        ))}
+      </footer>
+
+      <style>{`
+        @keyframes sosBreathe {
+          0%, 100% { transform: scale(0.78); }
+          21%      { transform: scale(1); }
+          58%      { transform: scale(1); }
+        }
+      `}</style>
     </div>
+  )
+}
+
+/** Texture de grain (cuir / papier brûlé). */
+function SOSGrain() {
+  return (
+    <div
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        zIndex: 1,
+        backgroundImage:
+          "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.12  0 0 0 0 0.06  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>\")",
+        mixBlendMode: 'overlay',
+        opacity: 0.5,
+      }}
+    />
   )
 }

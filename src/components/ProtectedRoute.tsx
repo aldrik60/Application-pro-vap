@@ -27,5 +27,15 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
     return <Navigate to="/" replace />
   }
 
+  // Onboarding : rediriger les nouveaux utilisateurs qui n'ont pas encore vu les écrans d'introduction.
+  // On évite la boucle si on est déjà sur /onboarding.
+  if (
+    profile &&
+    profile.onboarding_completed === false &&
+    location.pathname !== '/onboarding'
+  ) {
+    return <Navigate to="/onboarding" replace />
+  }
+
   return <>{children}</>
 }

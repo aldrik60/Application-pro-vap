@@ -8,7 +8,7 @@ interface Message {
 }
 
 const OPENING_MESSAGE =
-  "Bonjour ! Je suis votre conseiller Pro'Vap. Je suis là pour vous aider dans votre parcours de sevrage tabagique. Comment puis-je vous aider ?"
+  "Bonjour. Je suis votre conseiller Pro'Vap. Posez-moi votre question — nicotine, envie, matériel, boutique. Je réponds en clair."
 
 type Rule = { keywords: string[]; response: string }
 
@@ -84,7 +84,7 @@ const RULES: Rule[] = [
 ]
 
 const DEFAULT_RESPONSE =
-  "Je ne suis pas sûr de comprendre votre question. Pour un accompagnement personnalisé, n'hésitez pas à contacter votre boutique Pro'Vap ou à prendre rendez-vous depuis votre Profil. Je suis spécialisé dans le sevrage tabagique et les conseils vape — posez-moi une question sur ces sujets !"
+  "Je ne saisis pas votre question. Reformulez ou demandez un conseiller en boutique Pro'Vap pour un échange plus précis. Je traite : nicotine, envies, matériel, sevrage, économies, sommeil, rechute."
 
 function getBotResponse(input: string): string {
   const lower = input.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -152,7 +152,7 @@ export function ChatBot() {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-[80px] right-4 z-40 w-14 h-14 bg-[#B8482A] rounded-full flex items-center justify-center shadow-[0_4px_16px_rgba(184,72,42,0.5)] transition-transform active:scale-90 ${isOpen ? 'hidden' : 'flex'}`}
+        className={`fixed bottom-[80px] right-4 z-40 w-14 h-14 bg-primary rounded-full flex items-center justify-center shadow-[0_4px_16px_rgba(184,72,42,0.5)] transition-transform active:scale-90 ${isOpen ? 'hidden' : 'flex'}`}
         aria-label="Ouvrir le conseiller Pro'Vap"
       >
         <MessageCircle size={24} color="white" />
@@ -160,19 +160,19 @@ export function ChatBot() {
 
       {/* Chat Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-[200] flex flex-col bg-[#28282D]">
+        <div className="fixed inset-0 z-[200] flex flex-col bg-bg">
           {/* Header */}
-          <div className="flex items-center gap-3 p-4 border-b border-[#2E2E32] bg-[#1E1E22]">
-            <div className="w-10 h-10 rounded-full bg-[#B8482A] flex items-center justify-center font-display text-lg text-white shadow">
+          <div className="flex items-center gap-3 p-4 border-b border-border bg-surface">
+            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center font-display text-lg text-white shadow">
               PV
             </div>
             <div className="flex-1">
-              <h2 className="font-semibold text-[#F1F1F1] text-sm">Conseil Pro'Vap</h2>
-              <p className="text-[10px] text-[#2D9B55] font-medium">En ligne</p>
+              <h2 className="font-semibold text-text text-sm">Conseil Pro'Vap</h2>
+              <p className="text-[10px] text-success font-medium">En ligne</p>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="p-2 bg-[#28282D] rounded-full text-[#686868] hover:text-[#F1F1F1] transition-colors"
+              className="p-2 bg-bg rounded-full text-text-muted hover:text-text transition-colors"
             >
               <ChevronDown size={22} />
             </button>
@@ -186,15 +186,15 @@ export function ChatBot() {
                 className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'} gap-2`}
               >
                 {msg.from === 'bot' && (
-                  <div className="w-7 h-7 rounded-full bg-[#B8482A] flex items-center justify-center font-display text-xs text-white shrink-0 mt-1">
+                  <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center font-display text-xs text-white shrink-0 mt-1">
                     PV
                   </div>
                 )}
                 <div
                   className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-line ${
                     msg.from === 'user'
-                      ? 'bg-[#B8482A] text-white rounded-tr-sm'
-                      : 'bg-[#1E1E22] text-[#F1F1F1] border border-[#2E2E32] rounded-tl-sm'
+                      ? 'bg-primary text-white rounded-tr-sm'
+                      : 'bg-surface text-text border border-border rounded-tl-sm'
                   }`}
                 >
                   {msg.text}
@@ -204,14 +204,14 @@ export function ChatBot() {
 
             {isTyping && (
               <div className="flex justify-start gap-2">
-                <div className="w-7 h-7 rounded-full bg-[#B8482A] flex items-center justify-center font-display text-xs text-white shrink-0 mt-1">
+                <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center font-display text-xs text-white shrink-0 mt-1">
                   PV
                 </div>
-                <div className="bg-[#1E1E22] border border-[#2E2E32] px-4 py-3 rounded-2xl rounded-tl-sm flex gap-1 items-center">
+                <div className="bg-surface border border-border px-4 py-3 rounded-2xl rounded-tl-sm flex gap-1 items-center">
                   {[0, 1, 2].map(i => (
                     <span
                       key={i}
-                      className="w-2 h-2 rounded-full bg-[#686868] animate-bounce"
+                      className="w-2 h-2 rounded-full bg-text-dim animate-bounce"
                       style={{ animationDelay: `${i * 0.15}s` }}
                     />
                   ))}
@@ -224,13 +224,13 @@ export function ChatBot() {
           {/* Quick Questions */}
           {messages.length <= 2 && (
             <div className="px-4 pb-2">
-              <p className="text-[10px] text-[#686868] mb-2 uppercase font-semibold tracking-wider">Questions fréquentes</p>
+              <p className="text-[10px] text-text-muted mb-2 uppercase font-semibold tracking-wider">Questions fréquentes</p>
               <div className="flex flex-wrap gap-2">
                 {QUICK_QUESTIONS.map((q, i) => (
                   <button
                     key={i}
                     onClick={() => sendMessage(q)}
-                    className="text-xs px-3 py-2 rounded-full bg-[#1E1E22] border border-[#2E2E32] text-[#B8482A] hover:border-[#B8482A] transition-colors"
+                    className="text-xs px-3 py-2 rounded-full bg-surface border border-border text-primary hover:border-primary transition-colors"
                   >
                     {q}
                   </button>
@@ -242,12 +242,12 @@ export function ChatBot() {
           {/* Input */}
           <form
             onSubmit={handleSubmit}
-            className="flex items-center gap-3 p-4 border-t border-[#2E2E32] bg-[#1E1E22]"
+            className="flex items-center gap-3 p-4 border-t border-border bg-surface"
           >
             <input
               ref={inputRef}
               type="text"
-              className="flex-1 bg-[#28282D] border border-[#2E2E32] rounded-full px-4 py-3 text-sm text-[#F1F1F1] outline-none focus:border-[#B8482A] placeholder:text-[#686868]"
+              className="flex-1 bg-bg border border-border rounded-full px-4 py-3 text-sm text-text outline-none focus:border-primary placeholder:text-text-muted"
               placeholder="Posez votre question..."
               value={input}
               onChange={e => setInput(e.target.value)}
@@ -256,7 +256,7 @@ export function ChatBot() {
             <button
               type="submit"
               disabled={!input.trim() || isTyping}
-              className="w-11 h-11 rounded-full bg-[#B8482A] flex items-center justify-center disabled:opacity-40 transition-opacity active:scale-90"
+              className="w-11 h-11 rounded-full bg-primary flex items-center justify-center disabled:opacity-40 transition-opacity active:scale-90"
             >
               <Send size={18} color="white" />
             </button>

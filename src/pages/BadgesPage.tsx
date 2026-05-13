@@ -1,30 +1,23 @@
 import { useEffect, useState } from 'react'
-import { BadgeCard } from '../components/BadgeCard'
 import { supabase } from '../lib/supabase'
 import { Badge } from '../types'
 import { useAuth } from '../contexts/AuthContext'
 import { differenceInDays } from 'date-fns'
+import { Vap, vapStageFromDays, VAP_STAGES, VapStage } from '../components/Vap'
+import { Check, Lock } from 'lucide-react'
 
-const STATIC_BADGES: Omit<Badge, 'id'>[] = [
-  { day_threshold: 1,    title: 'Premier souffle',   description: 'Rythme cardiaque normalisé',         icon: '💨' },
-  { day_threshold: 3,    title: '72h de liberté',    description: 'CO éliminé du sang',                  icon: '🩸' },
-  { day_threshold: 7,    title: 'Une semaine',        description: 'Goût et odorat qui reviennent',       icon: '👃' },
-  { day_threshold: 14,   title: 'Deux semaines',      description: 'Circulation améliorée',               icon: '❤️' },
-  { day_threshold: 21,   title: 'Trois semaines',     description: 'Habitude qui se forme',               icon: '🧠' },
-  { day_threshold: 30,   title: 'Un mois',            description: 'Poumons en récupération',             icon: '🫁' },
-  { day_threshold: 45,   title: '45 jours',           description: 'Énergie retrouvée',                   icon: '⚡' },
-  { day_threshold: 60,   title: 'Deux mois',          description: 'Capacité respiratoire +10%',          icon: '🏃' },
-  { day_threshold: 75,   title: '75 jours',           description: 'Système immunitaire renforcé',        icon: '🛡️' },
-  { day_threshold: 90,   title: 'Trois mois',         description: 'Dépendance physique terminée',        icon: '🔓' },
-  { day_threshold: 120,  title: '4 mois',             description: 'Risque cardiovasculaire en baisse',   icon: '💪' },
-  { day_threshold: 180,  title: '6 mois',             description: 'Poumons nettoyés à 50%',              icon: '✨' },
-  { day_threshold: 270,  title: '9 mois',             description: 'Infections divisées par 2',           icon: '🦠' },
-  { day_threshold: 365,  title: 'Un an',              description: 'Risque coronarien divisé par 2',      icon: '🏆' },
-  { day_threshold: 545,  title: '18 mois',            description: 'Risque cancer divisé par 3',          icon: '🌟' },
-  { day_threshold: 730,  title: '2 ans',              description: 'Poumons comme non-fumeur',            icon: '🫧' },
-  { day_threshold: 1095, title: '3 ans',              description: 'Liberté totale',                      icon: '🕊️' },
-  { day_threshold: 1825, title: '5 ans',              description: 'Risque cardiovasculaire normalisé',   icon: '🎊' },
-]
+/**
+ * Étapes — timeline des stades de Vap.
+ * Le visiteur voit son Vap actuel grand, puis la timeline des 6 stades en-dessous.
+ * Sous chaque stade, la liste des badges qui s'y rattachent.
+ */
+
+function badgesForStage(stage: VapStage, badges: Badge[]): Badge[] {
+  const current = VAP_STAGES[stage - 1]
+  const next = VAP_STAGES.find(s => s.id > stage)
+  const maxDay = next?.day ?? Infinity
+  return badges.filter(b => b.day_threshold >= current.day && b.day_threshold < maxDay)
+}
 
 export function BadgesPage() {
   const { profile } = useAuth()
@@ -35,73 +28,164 @@ export function BadgesPage() {
     ? Math.max(0, differenceInDays(new Date(), new Date(profile.quit_date)))
     : 0
 
+  const currentStage = vapStageFromDays(daysSmokeFree)
+
   useEffect(() => {
     supabase.from('badges')
       .select('*')
       .order('day_threshold', { ascending: true })
       .then(({ data }) => {
-        if (data && data.length > 0) {
-          setBadges(data as Badge[])
-        } else {
-          // Fallback: use static badges with synthetic IDs
-          setBadges(STATIC_BADGES.map((b, i) => ({ ...b, id: String(i) })))
-        }
+        if (data) setBadges(data as Badge[])
         setLoading(false)
       })
   }, [])
 
-  const unlockedCount = badges.filter(b => daysSmokeFree >= b.day_threshold).length
-  const progressPercent = badges.length > 0 ? (unlockedCount / badges.length) * 100 : 0
-
   if (loading) {
     return (
-      <div className="page p-4 flex justify-center items-center">
-        <div className="w-8 h-8 border-2 border-[#B8482A] border-t-transparent rounded-full animate-spin" />
+      <div className="page flex justify-center items-center">
+        <div className="w-8 h-8 border-2 border-pv-terracotta border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
+  const unlockedBadges = badges.filter(b => daysSmokeFree >= b.day_threshold)
+  const nextBadge = badges.find(b => b.day_threshold > daysSmokeFree)
+
   return (
-    <div className="page p-4 pb-24">
-      <header className="mb-6 mt-2 text-center">
-        <h1 className="text-3xl font-display text-[#B8482A] tracking-wider mb-1">MES BADGES</h1>
-        <p className="text-[#686868] text-sm">Collectionnez vos victoires de santé</p>
+    <div className="page pb-32">
+      {/* Header */}
+      <header className="px-6 pt-6">
+        <span className="eyebrow">Votre parcours</span>
+        <h1 className="display text-ink mt-2" style={{ fontSize: 36 }}>
+          Vos <span className="display-italic">étapes</span>
+        </h1>
+        <p className="text-sm text-ink-3 mt-2 leading-relaxed">
+          Chaque palier fait grandir <span className="display-italic text-ink-2">Vap</span>, votre compagnon.
+        </p>
       </header>
 
-      {/* Progress Overview */}
-      <div className="card p-4 mb-6">
-        <div className="flex justify-between items-center mb-3">
-          <span className="text-[#F1F1F1] font-medium text-sm">Progression globale</span>
-          <span className="text-xl font-bold font-display tracking-widest text-[#CB8002]">
-            {unlockedCount} / {badges.length}
+      {/* Vap actuel centré */}
+      <section
+        className="mt-5 py-6 flex flex-col items-center text-center"
+        style={{
+          background: 'linear-gradient(180deg, transparent, var(--color-bg-elev) 30%, var(--color-bg-elev) 70%, transparent)',
+        }}
+      >
+        <Vap stage={currentStage} size={180} withScene />
+        <p className="display-italic text-pv-ochre mt-2" style={{ fontSize: 22 }}>
+          « {VAP_STAGES[currentStage - 1].title} »
+        </p>
+        <p className="text-[11px] text-ink-3 mt-1" style={{ letterSpacing: '0.12em' }}>
+          STADE {currentStage} SUR 6 · JOUR {daysSmokeFree}
+        </p>
+        <p className="text-xs text-ink-3 mt-3 max-w-[280px] leading-relaxed">
+          {VAP_STAGES[currentStage - 1].sub}
+        </p>
+      </section>
+
+      {/* Badges débloqués / prochain */}
+      <section className="px-6 pt-6">
+        <div className="flex justify-between items-center">
+          <span className="eyebrow">Vos collections</span>
+          <span className="font-display tabular text-pv-ochre" style={{ fontSize: 18, fontWeight: 500 }}>
+            {unlockedBadges.length}<span className="display-italic text-ink-3 text-sm"> / {badges.length}</span>
           </span>
         </div>
-        <div className="progress-track">
-          <div className="progress-fill-gold" style={{ width: `${progressPercent}%` }} />
+        <div className="progress-track mt-3">
+          <div className="progress-fill-gold" style={{ width: `${(unlockedBadges.length / Math.max(1, badges.length)) * 100}%` }} />
         </div>
-        {unlockedCount > 0 && (
-          <p className="text-xs text-[#686868] mt-2">
-            Prochain badge dans{' '}
-            {(() => {
-              const next = badges.find(b => daysSmokeFree < b.day_threshold)
-              if (!next) return 'tous débloqués !'
-              const diff = next.day_threshold - daysSmokeFree
-              return `${diff} jour${diff > 1 ? 's' : ''}`
-            })()}
+        {nextBadge && (
+          <p className="text-xs text-ink-3 mt-2">
+            Prochain badge dans {nextBadge.day_threshold - daysSmokeFree} jour{nextBadge.day_threshold - daysSmokeFree > 1 ? 's' : ''} · <span className="display-italic text-ink-2">« {nextBadge.title} »</span>
           </p>
         )}
-      </div>
+      </section>
 
-      {/* Badges Grid */}
-      <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-        {badges.map(badge => (
-          <BadgeCard
-            key={badge.id}
-            badge={badge}
-            unlocked={daysSmokeFree >= badge.day_threshold}
-          />
-        ))}
-      </div>
+      {/* Timeline des stades */}
+      <section className="px-5 mt-6">
+        {VAP_STAGES.map((s, i) => {
+          const unlocked = i < currentStage
+          const current = i === currentStage - 1
+          const stageBadges = badgesForStage(s.id, badges)
+          const stageUnlocked = stageBadges.filter(b => daysSmokeFree >= b.day_threshold).length
+          return (
+            <div
+              key={s.id}
+              className="py-5"
+              style={{
+                borderBottom: i < VAP_STAGES.length - 1 ? '1px solid var(--color-line)' : 'none',
+                opacity: unlocked || current ? 1 : 0.45,
+              }}
+            >
+              <div className="flex gap-4 items-center">
+                <div
+                  className="flex items-center justify-center overflow-hidden shrink-0"
+                  style={{
+                    width: 56, height: 56,
+                    borderRadius: 8,
+                    border: '1px solid ' + (current ? 'var(--color-pv-ochre)' : 'var(--color-line-strong)'),
+                    background: unlocked ? 'var(--color-bg-card)' : 'transparent',
+                  }}
+                >
+                  {unlocked || current ? (
+                    <Vap stage={s.id} size={46} />
+                  ) : (
+                    <Lock size={16} className="text-ink-4" strokeWidth={1.3} />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p
+                    className="font-display"
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 500,
+                      color: current ? 'var(--color-pv-ochre)' : 'var(--color-ink)',
+                    }}
+                  >
+                    {s.title}
+                  </p>
+                  <p className="text-[11px] text-ink-3 mt-0.5">
+                    Jour {s.day} · {s.sub}
+                  </p>
+                </div>
+                {unlocked && (
+                  <Check size={16} className="text-pv-ochre shrink-0" strokeWidth={1.6} />
+                )}
+              </div>
+
+              {/* Badges du stade */}
+              {stageBadges.length > 0 && (unlocked || current) && (
+                <div className="mt-3 ml-[72px] flex flex-wrap gap-1.5">
+                  {stageBadges.map(b => {
+                    const isUnlocked = daysSmokeFree >= b.day_threshold
+                    return (
+                      <span
+                        key={b.id}
+                        title={b.description}
+                        className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px]"
+                        style={{
+                          letterSpacing: '0.06em',
+                          background: isUnlocked ? 'rgba(184,72,42,0.10)' : 'transparent',
+                          border: '1px solid ' + (isUnlocked ? 'rgba(184,72,42,0.40)' : 'var(--color-line)'),
+                          color: isUnlocked ? 'var(--color-pv-ochre)' : 'var(--color-ink-4)',
+                        }}
+                      >
+                        <span style={{ fontSize: 10 }}>{b.icon}</span>
+                        <span>{b.title}</span>
+                      </span>
+                    )
+                  })}
+                </div>
+              )}
+              {stageBadges.length > 0 && (unlocked || current) && (
+                <p className="text-[10px] text-ink-3 mt-2 ml-[72px]" style={{ letterSpacing: '0.06em' }}>
+                  {stageUnlocked} / {stageBadges.length} badge{stageBadges.length > 1 ? 's' : ''}
+                </p>
+              )}
+            </div>
+          )
+        })}
+      </section>
     </div>
   )
 }

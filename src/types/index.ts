@@ -38,7 +38,21 @@ export interface Profile {
   recommended_nicotine_mg: number | null
   age_range: string | null
   craving_count: number
+  onboarding_completed: boolean
   created_at: string
+}
+
+export type MoodLevel = 'tres_difficile' | 'difficile' | 'neutre' | 'bien' | 'excellent'
+
+export interface MoodEntry {
+  id: string
+  user_id: string
+  date: string
+  mood: MoodLevel
+  note: string | null
+  relapsed: boolean
+  created_at: string
+  updated_at: string
 }
 
 export interface DailyMessage {

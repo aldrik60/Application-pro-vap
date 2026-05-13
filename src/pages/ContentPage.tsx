@@ -5,6 +5,7 @@ import { Modal } from '../components/Modal'
 import { FileText, MessageSquare, PlusCircle, ChevronDown, ChevronUp } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/AuthContext'
+import { IS_FULL } from '../lib/appMode'
 
 // ─── Static content ────────────────────────────────────────────────────────────
 
@@ -72,8 +73,10 @@ La cigarette électronique délivre de la nicotine sans combustion, ce qui suppr
 4. LA DÉSENSIBILISATION DES RÉCEPTEURS
 En maintenant un taux de nicotine stable via la vape, les récepteurs de votre cerveau commencent à se désensibiliser. En descendant progressivement le taux, vous réduisez la dépendance sans souffrir.
 
-5. LA GUÉRISON EST RÉELLE
-À J+30, vos poumons ont déjà commencé à se régénérer. À J+90, la dépendance physique est essentiellement terminée. À J+1 an, votre risque cardiovasculaire a diminué de moitié. Votre corps a une capacité de guérison remarquable.`,
+5. LA RÉCUPÉRATION EST PROGRESSIVE
+À J+30, les poumons commencent à se régénérer. À J+90, la phase aiguë du sevrage est généralement passée. À 1 an, le risque cardiovasculaire diminue significativement (source : OMS). Votre corps possède une remarquable capacité de récupération.
+
+Ces informations sont indicatives et ne remplacent pas l'avis d'un professionnel de santé.`,
   },
   {
     id: 'static-4',
@@ -81,7 +84,7 @@ En maintenant un taux de nicotine stable via la vape, les récepteurs de votre c
     summary: 'Ce qui se passe dans votre corps dès que vous arrêtez de fumer.',
     category: 'santé',
     created_at: '',
-    body: `Votre corps commence à se réparer dès la première seconde sans cigarette. Voici le calendrier de votre guérison.
+    body: `Votre corps commence à se réparer dès la première seconde sans cigarette. Voici le calendrier indicatif de votre récupération (sources : OMS, Santé publique France, Tabac Info Service).
 
 ⏱ 20 MINUTES
 Votre rythme cardiaque et votre pression artérielle baissent. La circulation sanguine dans vos mains et vos pieds s'améliore.
@@ -90,7 +93,7 @@ Votre rythme cardiaque et votre pression artérielle baissent. La circulation sa
 Le taux de monoxyde de carbone (CO) dans votre sang est normalisé. L'oxygène peut à nouveau circuler correctement jusqu'à vos cellules.
 
 📅 24 HEURES
-Votre risque de crise cardiaque commence à diminuer. Vous respirez plus facilement sans le CO.
+Le risque cardiovasculaire commence à diminuer. La respiration devient souvent plus facile sans le monoxyde de carbone.
 
 📅 48 HEURES
 Les terminaisons nerveuses du goût et de l'odorat, endommagées par la fumée, commencent à se régénérer.
@@ -105,24 +108,26 @@ La circulation sanguine s'améliore sensiblement. La marche et l'exercice devien
 Les cils bronchiques (qui évacuent le mucus) se régénèrent. Les infections respiratoires diminuent. L'énergie revient.
 
 📅 1 AN
-Votre risque de maladie coronarienne est deux fois moins élevé que celui d'un fumeur.
+Le risque de maladie coronarienne diminue significativement (source : OMS).
 
 📅 5 ANS
-Votre risque d'AVC est comparable à celui d'un non-fumeur. Le risque de cancer buccal, de la gorge et de l'œsophage est divisé par deux.
+Le risque d'AVC se rapproche progressivement de celui d'un non-fumeur. Le risque de plusieurs cancers (buccal, gorge, œsophage) tend également à reculer.
 
 📅 10 ANS
-Le risque de cancer du poumon est divisé par deux. Le risque d'autres cancers (bouche, gorge, œsophage, reins) continue de diminuer.`,
+Le risque de cancer du poumon continue de diminuer, ainsi que celui d'autres cancers liés au tabac.
+
+Ces données proviennent de l'OMS et de Santé publique France. Elles sont indicatives et ne remplacent pas l'avis d'un professionnel de santé.`,
   },
 ]
 
-const FAQ_ITEMS = [
+const FAQ_ITEMS: { question: string; answer: string; fullOnly?: boolean }[] = [
   {
     question: 'Combien de temps durent les envies de fumer ?',
     answer: 'Une envie de fumer dure généralement entre 3 et 5 minutes, même si elle peut sembler interminable. Pendant cette période, votre cerveau envoie des signaux urgents, mais ils s\'atténuent d\'eux-mêmes. Chaque envie surmontée affaiblit les suivantes. Avec la vape, vous pouvez également calmer l\'envie en quelques bouffées.',
   },
   {
     question: 'La vape aide-t-elle vraiment à arrêter de fumer ?',
-    answer: 'Oui. De nombreuses études, dont celles de l\'ANSM et du NHS britannique, montrent que la cigarette électronique est environ 2 fois plus efficace que les patchs ou gommes à la nicotine pour arrêter de fumer. Elle reproduit le geste et la sensation tout en supprimant les 7 000 substances toxiques de la fumée. L\'accompagnement par un professionnel (comme nos conseillers Pro\'Vap) augmente encore les chances de succès.',
+    answer: 'Selon plusieurs études (NHS britannique, recherches publiées dans le New England Journal of Medicine), la cigarette électronique peut être un outil de transition efficace pour les personnes qui souhaitent arrêter le tabac, en particulier lorsqu\'elle est utilisée avec un accompagnement adapté. Elle reproduit le geste et la sensation tout en évitant la combustion. Pour un avis personnalisé, consultez un professionnel de santé ou de l\'arrêt du tabac.',
   },
   {
     question: 'Quel taux de nicotine choisir pour commencer ?',
@@ -142,11 +147,11 @@ const FAQ_ITEMS = [
   },
   {
     question: 'Je vapote beaucoup plus qu\'avant, est-ce normal ?',
-    answer: 'Oui, c\'est tout à fait normal au début. Vous compensez l\'absence de cigarettes et les gestes associés. Avec le temps, la fréquence diminuera naturellement. L\'essentiel est de ne pas retourner à la cigarette. Si vous avez l\'impression de vaper excessivement, il est possible que votre taux de nicotine soit trop faible — consultez votre conseiller Pro\'Vap.',
+    answer: 'Oui, c\'est fréquent au début. Vous compensez l\'absence de cigarettes et les gestes associés. Avec le temps, la fréquence diminue souvent naturellement. Si vous avez l\'impression de vaper excessivement, il est possible que votre taux de nicotine soit trop faible — un professionnel de la vape ou de l\'arrêt du tabac peut vous orienter.',
   },
   {
     question: 'Quand faut-il changer la résistance de sa vape ?',
-    answer: 'Changez votre résistance lorsque vous percevez : un goût brûlé ou âcre, une vapeur moins dense, un sifflement anormal, ou si votre e-liquide prend un goût métallique. En moyenne, une résistance dure 1 à 3 semaines selon votre usage. Nos boutiques Pro\'Vap ont toutes les résistances adaptées à votre matériel.',
+    answer: 'Changez votre résistance lorsque vous percevez : un goût brûlé ou âcre, une vapeur moins dense, un sifflement anormal, ou si votre e-liquide prend un goût métallique. En moyenne, une résistance dure 1 à 3 semaines selon votre usage.',
   },
   {
     question: 'Comment descendre progressivement en nicotine ?',
@@ -155,6 +160,7 @@ const FAQ_ITEMS = [
   {
     question: 'Puis-je contacter ma boutique Pro\'Vap directement ?',
     answer: 'Bien sûr ! Nos 7 boutiques en Picardie sont là pour vous accompagner. Vous pouvez appeler ou prendre rendez-vous depuis l\'onglet Profil de cette application. Nos conseillers sont formés au sevrage tabagique et peuvent adapter vos recommandations selon votre évolution.',
+    fullOnly: true,
   },
 ]
 
@@ -172,6 +178,7 @@ export function ContentPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const allArticles = dbArticles.length > 0 ? dbArticles : STATIC_ARTICLES
+  const visibleFaqs = IS_FULL ? FAQ_ITEMS : FAQ_ITEMS.filter(f => !f.fullOnly)
 
   useEffect(() => {
     supabase.from('content_articles')
@@ -220,58 +227,59 @@ export function ContentPage() {
   const SHOPS = ['Noyon', 'Compiègne', 'Clermont', 'Nogent-sur-Oise', 'Breteuil', 'Beauvais', 'Ferrières-en-Bray']
 
   return (
-    <div className="page p-4 pb-24 space-y-8">
-      <header className="mt-2">
-        <h1 className="text-3xl font-display text-[#B8482A] tracking-wider mb-1">RESSOURCES</h1>
-        <p className="text-[#686868] text-sm">Tout ce dont vous avez besoin pour réussir</p>
+    <div className="page pb-32">
+      <header className="px-6 pt-6">
+        <span className="eyebrow">Ressources</span>
+        <h1 className="display text-ink mt-2" style={{ fontSize: 36 }}>
+          Guides &amp; <span className="display-italic">conseils.</span>
+        </h1>
+        <p className="text-sm text-ink-3 mt-2">Pour comprendre, anticiper, tenir.</p>
       </header>
 
-      {/* ── Articles Section ─────────────────────────────────────────────────── */}
-      <section>
-        <div className="flex items-center gap-2 mb-4">
-          <FileText size={20} className="text-[#CB8002]" />
-          <h2 className="text-lg font-semibold text-[#F1F1F1]">Guides Pratiques</h2>
-        </div>
-
-        <div className="flex flex-col gap-3">
+      {/* ── Articles ─────────────────────────────────────────────────────── */}
+      <section className="px-5 mt-7">
+        <span className="eyebrow">Guides pratiques</span>
+        <div className="mt-3 flex flex-col gap-2.5">
           {allArticles.map(article => (
-            <div
+            <button
               key={article.id}
-              className="card p-4 active:scale-[0.98] transition-transform cursor-pointer hover:border-[#B8482A]/50"
+              className="card p-5 text-left transition-transform active:scale-[0.98] hover:border-pv-terracotta/50"
               onClick={() => setSelectedArticle(article)}
             >
-              <span className="text-[10px] text-[#B8482A] font-bold uppercase tracking-wider block mb-1">
-                {article.category}
-              </span>
-              <h3 className="font-semibold text-[#F1F1F1] mb-1">{article.title}</h3>
-              <p className="text-sm text-[#686868] line-clamp-2">{article.summary}</p>
-            </div>
+              <span className="eyebrow text-pv-terracotta">{article.category}</span>
+              <p
+                className="font-display text-ink mt-2"
+                style={{ fontSize: 19, fontWeight: 500, letterSpacing: '-0.01em', lineHeight: 1.2 }}
+              >
+                {article.title}
+              </p>
+              <p className="text-xs text-ink-3 mt-1.5 line-clamp-2 leading-relaxed">{article.summary}</p>
+            </button>
           ))}
         </div>
       </section>
 
-      {/* ── FAQ Section ──────────────────────────────────────────────────────── */}
-      <section>
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-[#CB8002] text-xl font-bold">?</span>
-          <h2 className="text-lg font-semibold text-[#F1F1F1]">Questions fréquentes</h2>
-        </div>
-
-        <div className="flex flex-col divide-y divide-[#2E2E32] card overflow-hidden">
-          {FAQ_ITEMS.map((item, idx) => (
-            <div key={idx}>
+      {/* ── FAQ ──────────────────────────────────────────────────────────── */}
+      <section className="px-5 mt-7">
+        <span className="eyebrow">Questions fréquentes</span>
+        <div className="card mt-3 overflow-hidden">
+          {visibleFaqs.map((item, idx) => (
+            <div
+              key={idx}
+              style={{ borderBottom: idx < visibleFaqs.length - 1 ? '1px solid var(--color-line)' : 'none' }}
+            >
               <button
-                className="w-full flex items-center justify-between p-4 text-left"
+                className="w-full flex items-center justify-between gap-3 p-4 text-left"
                 onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
               >
-                <span className="text-sm font-medium text-[#F1F1F1] pr-3 leading-snug">{item.question}</span>
+                <span className="text-sm text-ink pr-2 leading-snug font-medium">{item.question}</span>
                 {openFaq === idx
-                  ? <ChevronUp size={16} className="shrink-0 text-[#B8482A]" />
-                  : <ChevronDown size={16} className="shrink-0 text-[#686868]" />}
+                  ? <ChevronUp size={15} className="shrink-0 text-pv-ochre" strokeWidth={1.4} />
+                  : <ChevronDown size={15} className="shrink-0 text-ink-3" strokeWidth={1.4} />}
               </button>
               {openFaq === idx && (
                 <div className="px-4 pb-4">
-                  <p className="text-sm text-[#686868] leading-relaxed whitespace-pre-line">{item.answer}</p>
+                  <p className="text-sm text-ink-2 leading-relaxed whitespace-pre-line">{item.answer}</p>
                 </div>
               )}
             </div>
@@ -279,72 +287,98 @@ export function ContentPage() {
         </div>
       </section>
 
-      {/* ── Stories Section ──────────────────────────────────────────────────── */}
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <MessageSquare size={20} className="text-[#CB8002]" />
-            <h2 className="text-lg font-semibold text-[#F1F1F1]">Histoires de Vapoteurs</h2>
-          </div>
-          <button
-            onClick={() => setIsStoryModalOpen(true)}
-            className="flex items-center gap-1 text-[#B8482A] text-sm font-medium p-1"
-          >
-            <PlusCircle size={16} /> Partager
-          </button>
-        </div>
-
-        {/* Shop filter */}
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-3 hide-scrollbar">
-          <button
-            onClick={() => setShopFilter('all')}
-            className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${shopFilter === 'all' ? 'bg-[#CB8002] text-[#1E1E22]' : 'bg-[#1E1E22] text-[#686868] border border-[#2E2E32]'}`}
-          >
-            Toutes
-          </button>
-          {SHOPS.map(s => (
+      {/* ── Stories — full only ──────────────────────────────────────────── */}
+      {IS_FULL && (
+        <section className="px-5 mt-7">
+          <div className="flex justify-between items-center px-1 mb-3">
+            <span className="eyebrow">Histoires de vapoteurs</span>
             <button
-              key={s}
-              onClick={() => setShopFilter(s)}
-              className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${shopFilter === s ? 'bg-[#CB8002] text-[#1E1E22]' : 'bg-[#1E1E22] text-[#686868] border border-[#2E2E32]'}`}
+              onClick={() => setIsStoryModalOpen(true)}
+              className="flex items-center gap-1.5 text-pv-ochre text-[11px] hover:underline"
+              style={{ letterSpacing: '0.06em' }}
             >
-              {s}
+              <PlusCircle size={13} strokeWidth={1.4} /> Partager
             </button>
-          ))}
-        </div>
+          </div>
 
-        <div className="flex overflow-x-auto gap-4 pb-4 snap-x">
-          {filteredStories.length === 0 ? (
-            <p className="text-[#686868] text-sm italic py-4">Soyez le premier à partager votre histoire !</p>
-          ) : (
-            filteredStories.map(story => (
-              <div
-                key={story.id}
-                className="card p-4 min-w-[280px] max-w-[300px] snap-center flex-shrink-0"
+          <div className="flex gap-2 overflow-x-auto pb-2 mb-3 hide-scrollbar px-1">
+            <button
+              onClick={() => setShopFilter('all')}
+              className="whitespace-nowrap px-3 py-1.5 rounded-full text-[11px] transition-colors"
+              style={{
+                background: shopFilter === 'all' ? 'var(--color-pv-ochre)' : 'transparent',
+                color: shopFilter === 'all' ? 'var(--color-pv-charcoal)' : 'var(--color-ink-3)',
+                border: '1px solid ' + (shopFilter === 'all' ? 'var(--color-pv-ochre)' : 'var(--color-line)'),
+                letterSpacing: '0.06em',
+                fontWeight: 600,
+              }}
+            >
+              Toutes
+            </button>
+            {SHOPS.map(s => (
+              <button
+                key={s}
+                onClick={() => setShopFilter(s)}
+                className="whitespace-nowrap px-3 py-1.5 rounded-full text-[11px] transition-colors"
+                style={{
+                  background: shopFilter === s ? 'var(--color-pv-ochre)' : 'transparent',
+                  color: shopFilter === s ? 'var(--color-pv-charcoal)' : 'var(--color-ink-3)',
+                  border: '1px solid ' + (shopFilter === s ? 'var(--color-pv-ochre)' : 'var(--color-line)'),
+                  letterSpacing: '0.06em',
+                  fontWeight: 600,
+                }}
               >
-                <p className="text-sm text-[#F1F1F1] italic mb-4 line-clamp-4">"{story.story_text}"</p>
-                <div className="flex justify-between items-center text-xs">
-                  <span className="font-semibold text-[#CB8002]">{story.author_name}</span>
-                  <span className="text-[#686868] bg-[#2E2E32] px-2 py-1 rounded-md">{story.shop}</span>
+                {s}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex overflow-x-auto gap-3 pb-4 snap-x hide-scrollbar">
+            {filteredStories.length === 0 ? (
+              <p className="display-italic text-ink-3 text-sm py-2 px-1">
+                Soyez le premier à partager votre histoire.
+              </p>
+            ) : (
+              filteredStories.map(story => (
+                <div
+                  key={story.id}
+                  className="card p-5 min-w-[280px] max-w-[300px] snap-center shrink-0"
+                >
+                  <p
+                    className="display-italic text-ink mb-4 line-clamp-5"
+                    style={{ fontSize: 16, lineHeight: 1.45 }}
+                  >
+                    « {story.story_text} »
+                  </p>
+                  <div className="flex justify-between items-center pt-2"
+                    style={{ borderTop: '1px solid var(--color-line)' }}>
+                    <span className="text-pv-ochre text-xs font-semibold">{story.author_name}</span>
+                    <span className="eyebrow text-ink-3">{story.shop}</span>
+                  </div>
                 </div>
-              </div>
-            ))
-          )}
+              ))
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* ── Vidéos (placeholder) ─────────────────────────────────────────── */}
+      <section className="px-5 mt-7">
+        <span className="eyebrow">Vidéos &amp; conseils</span>
+        <div className="card mt-3 p-8 text-center" style={{ borderStyle: 'dashed' }}>
+          <p className="display-italic text-ink-2" style={{ fontSize: 20 }}>Bientôt disponible.</p>
+          <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">
+            Des vidéos de conseils et témoignages sont en préparation.
+          </p>
         </div>
       </section>
 
-      {/* ── Videos Section ───────────────────────────────────────────────────── */}
-      <section>
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-[#CB8002] text-lg">▶</span>
-          <h2 className="text-lg font-semibold text-[#F1F1F1]">Vidéos & Conseils</h2>
-        </div>
-        <div className="card p-8 text-center border-dashed">
-          <p className="text-4xl mb-3">🎬</p>
-          <p className="text-[#686868] text-sm font-medium">Bientôt disponible</p>
-          <p className="text-[10px] text-[#686868] mt-1">Des vidéos de conseils et témoignages sont en préparation.</p>
-        </div>
-      </section>
+      {/* Disclaimer */}
+      <p className="text-[10px] text-ink-3 text-center leading-relaxed mt-7 px-6">
+        Les informations affichées sont indicatives et ne remplacent pas l'avis d'un professionnel de santé.
+        Pour un accompagnement gratuit et confidentiel, contactez{' '}
+        <span className="text-pv-ochre font-semibold">Tabac Info Service au 3989</span>.
+      </p>
 
       {/* Article Modal */}
       <Modal
@@ -353,15 +387,22 @@ export function ContentPage() {
         title={selectedArticle?.title}
         fullScreen
       >
-        <div className="p-4 pt-0">
-          <p className="text-[#CB8002] italic mb-6 leading-relaxed">{selectedArticle?.summary}</p>
-          <div className="text-[#F1F1F1] space-y-4 leading-relaxed whitespace-pre-line text-sm">
+        <div className="pt-0">
+          {selectedArticle?.summary && (
+            <p
+              className="display-italic text-pv-ochre mb-6 leading-relaxed"
+              style={{ fontSize: 18 }}
+            >
+              {selectedArticle.summary}
+            </p>
+          )}
+          <div className="text-ink space-y-4 leading-relaxed whitespace-pre-line text-[15px]">
             {selectedArticle?.body}
           </div>
         </div>
       </Modal>
 
-      {/* Write Story Modal */}
+      {/* Story Modal */}
       <Modal
         isOpen={isStoryModalOpen}
         onClose={() => setIsStoryModalOpen(false)}
@@ -369,23 +410,24 @@ export function ContentPage() {
       >
         <form onSubmit={handleStorySubmit} className="flex flex-col gap-4">
           {!profile?.preferred_shop ? (
-            <div className="p-4 bg-[rgba(192,57,43,0.1)] border border-[#C0392B] rounded-[14px] text-sm text-[#F1F1F1]">
-              Vous devez d'abord définir votre boutique Pro'Vap dans l'onglet Profil.
+            <div className="p-4 rounded-md text-sm text-ink"
+              style={{ background: 'rgba(200,74,42,0.10)', border: '1px solid rgba(200,74,42,0.30)' }}>
+              Vous devez d'abord définir votre boutique Pro'Vap dans votre profil.
             </div>
           ) : (
             <>
-              <p className="text-sm text-[#686868]">
-                Racontez votre parcours, vos victoires et vos difficultés. Votre témoignage (max 500 caractères) inspirera d'autres fumeurs.
+              <p className="text-sm text-ink-2 leading-relaxed">
+                Racontez votre parcours, vos victoires et vos difficultés. Votre témoignage (500 caractères max) inspirera d'autres.
               </p>
               <textarea
                 className="input h-32 text-sm"
-                placeholder="Racontez votre expérience..."
+                placeholder="Racontez votre expérience…"
                 maxLength={500}
                 value={newStoryText}
                 onChange={e => setNewStoryText(e.target.value)}
                 required
               />
-              <div className="text-right text-xs text-[#686868]">{newStoryText.length}/500</div>
+              <div className="text-right text-xs text-ink-3">{newStoryText.length}/500</div>
               <button type="submit" className="btn-primary mt-2">
                 Soumettre mon témoignage
               </button>

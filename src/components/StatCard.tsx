@@ -8,16 +8,16 @@ interface StatCardProps {
   textColorClass?: string
 }
 
-export function StatCard({ label, value, unit, icon, textColorClass = 'text-[#F1F1F1]' }: StatCardProps) {
+export function StatCard({ label, value, unit, icon, textColorClass = 'text-text' }: StatCardProps) {
   return (
     <div className="stat-card">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs text-[#686868] font-medium">{label}</span>
-        {icon && <span className="text-[#B8482A]">{icon}</span>}
+        <span className="text-xs text-text-muted font-medium">{label}</span>
+        {icon && <span className="text-primary">{icon}</span>}
       </div>
       <div className="flex items-baseline gap-1">
         <span className={`text-2xl font-bold ${textColorClass}`}>{value}</span>
-        {unit && <span className="text-sm text-[#686868]">{unit}</span>}
+        {unit && <span className="text-sm text-text-muted">{unit}</span>}
       </div>
     </div>
   )

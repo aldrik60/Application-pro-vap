@@ -9,29 +9,6 @@ interface AuthContextType {
   loading: boolean
   refreshProfile: () => Promise<void>
   signOut: () => Promise<void>
-  signInAsDemo: () => void
-}
-
-const mockDemoUser = { id: 'demo-user-123', email: 'demo@provap.fr' } as User
-const mockDemoProfile: Profile = {
-  id: 'demo-user-123',
-  email: 'demo@provap.fr',
-  name: 'Utilisateur Démo',
-  role: 'admin',
-  quit_date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-  cigarettes_per_day: 15,
-  pack_price: 10.50,
-  tobacco_type: 'industrielle',
-  preferred_shop: 'Compiègne',
-  fagerstrom_score: 5,
-  reward_name: 'Console de jeu',
-  reward_amount: 500,
-  kit_price: 99.90,
-  smoker_profile: 'Kit Confort',
-  recommended_nicotine_mg: 12,
-  age_range: '25-40 ans',
-  craving_count: 3,
-  created_at: new Date().toISOString()
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -40,17 +17,14 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   refreshProfile: async () => {},
   signOut: async () => {},
-  signInAsDemo: () => {},
 })
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
-  const [isDemo, setIsDemo] = useState(false)
 
   const fetchProfile = async (userId: string) => {
-    if (isDemo) return
     const { data } = await supabase
       .from('profiles')
       .select('*')
@@ -60,26 +34,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const refreshProfile = async () => {
-    if (isDemo) return
     if (user) await fetchProfile(user.id)
   }
 
   const signOut = async () => {
-    if (isDemo) {
-      setIsDemo(false)
-      setUser(null)
-      setProfile(null)
-      return
-    }
     await supabase.auth.signOut()
     setUser(null)
     setProfile(null)
-  }
-
-  const signInAsDemo = () => {
-    setIsDemo(true)
-    setUser(mockDemoUser)
-    setProfile(mockDemoProfile)
   }
 
   useEffect(() => {
@@ -101,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, refreshProfile, signOut, signInAsDemo }}>
+    <AuthContext.Provider value={{ user, profile, loading, refreshProfile, signOut }}>
       {children}
     </AuthContext.Provider>
   )

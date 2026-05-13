@@ -218,128 +218,138 @@ export function DiagnosticKitPage() {
 
   if (isFinished) {
     return (
-      <div className="page p-6 pb-12 min-h-screen bg-[#28282D]">
+      <div className="min-h-screen flex flex-col bg-bg" style={{ padding: '24px 28px 32px' }}>
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-[#686868] mb-8 mt-2"
+          className="flex items-center gap-2 text-ink-3 text-sm hover:text-ink transition-colors self-start"
         >
-          <ChevronLeft size={20} /> Retour
+          <ChevronLeft size={18} /> Retour
         </button>
 
-        <h1 className="font-display text-4xl text-[#B8482A] tracking-wider mb-1">VOTRE KIT IDÉAL</h1>
-        <p className="text-[#686868] text-sm mb-8">Recommandation personnalisée selon votre profil</p>
+        <div className="mt-8">
+          <span className="eyebrow text-pv-ochre">Votre recommandation</span>
+          <h1
+            className="display mt-3 text-ink"
+            style={{ fontSize: 36, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
+          >
+            Votre kit <span className="display-italic">idéal.</span>
+          </h1>
+        </div>
 
-        {/* Kit Card */}
-        <div className="card p-5 mb-4 accent-left">
-          <div className="flex justify-between items-start mb-3">
+        {/* Kit card */}
+        <div className="card p-5 mt-6 accent-left">
+          <div className="flex justify-between items-start gap-3">
             <div className="flex items-center gap-3">
-              <span className="text-4xl">{kit.icon}</span>
-              <h2 className="font-display text-2xl text-[#CB8002] tracking-wider leading-tight">{kit.name}</h2>
+              <span className="text-3xl">{kit.icon}</span>
+              <p className="font-display text-pv-ochre" style={{ fontSize: 22, fontWeight: 500 }}>
+                {kit.name}
+              </p>
             </div>
-            <span className="text-xl font-bold text-[#F1F1F1] whitespace-nowrap">{kit.price.toFixed(2)}€</span>
+            <span className="font-display text-ink whitespace-nowrap" style={{ fontSize: 22, fontWeight: 500 }}>
+              {kit.price.toFixed(2)}€
+            </span>
           </div>
-          <p className="text-sm text-[#686868] leading-relaxed mb-4">{kit.description}</p>
+          <p className="text-sm text-ink-2 leading-relaxed mt-3">{kit.description}</p>
 
-          <div className="flex items-center gap-3 p-3 bg-[#28282D] rounded-[14px] border border-[#2E2E32]">
-            <div className="w-11 h-11 rounded-full bg-[rgba(184,72,42,0.15)] border border-[#B8482A]/30 flex items-center justify-center">
-              <span className="font-display text-lg text-[#B8482A]">{nicotineMg}</span>
+          <div className="flex items-center gap-3 p-3 mt-4"
+            style={{ background: 'var(--color-bg-elev)', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-line)' }}>
+            <div
+              className="w-11 h-11 rounded-full flex items-center justify-center"
+              style={{
+                background: 'rgba(184, 72, 42, 0.15)',
+                border: '1px solid rgba(184, 72, 42, 0.30)',
+              }}
+            >
+              <span className="font-display text-pv-terracotta" style={{ fontSize: 17, fontWeight: 500 }}>
+                {nicotineMg}
+              </span>
             </div>
             <div>
-              <span className="block text-[10px] text-[#686868] uppercase font-bold tracking-wider mb-0.5">Taux de nicotine recommandé</span>
-              <span className="block text-[#F1F1F1] font-semibold text-sm">{nicotineMg} mg/ml</span>
+              <span className="eyebrow block">Taux nicotine recommandé</span>
+              <span className="block font-display text-ink text-sm mt-0.5">{nicotineMg} mg/ml</span>
             </div>
           </div>
         </div>
 
         {/* Amortization */}
-        <div className="card p-4 mb-4 border-[#2D9B55]/30 bg-[rgba(45,155,85,0.05)]">
-          <p className="text-sm text-[#F1F1F1] leading-relaxed">
-            💰 À <span className="font-semibold text-[#CB8002]">{packPrice.toFixed(2)}€</span> le paquet, votre kit sera amorti en environ{' '}
-            <span className="font-bold text-[#2D9B55]">{daysToAmortize} jours</span>.
-            Ensuite, chaque euro est un bénéfice pour votre santé et votre portefeuille.
+        <div className="card p-5 mt-3" style={{ borderColor: 'rgba(122, 138, 94, 0.30)' }}>
+          <p className="text-sm text-ink leading-relaxed">
+            À <span className="font-semibold text-pv-ochre">{packPrice.toFixed(2)}€</span> le paquet, votre kit sera amorti en environ{' '}
+            <span className="font-semibold text-success">{daysToAmortize} jours</span>. Ensuite, chaque euro est un bénéfice net.
           </p>
         </div>
 
-        {/* Reassurance */}
-        {kit.price >= 84.90 && (
-          <div className="card p-4 mb-6 border-[#B8482A]/20 bg-[rgba(184,72,42,0.05)]">
-            <p className="text-sm text-[#F1F1F1] leading-relaxed">
-              💡 Un paquet coûte en moyenne 10€. Ce kit représente moins de 10 paquets de cigarettes.
-              Investir dans votre santé est le meilleur placement qui soit.
-            </p>
-          </div>
-        )}
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col gap-3 mb-6">
+        {/* CTA */}
+        <div className="flex flex-col gap-3 mt-6">
           <button onClick={handleSave} className="btn-primary" disabled={saving}>
-            {saving ? 'Enregistrement...' : 'Enregistrer ma recommandation'}
+            {saving ? 'Enregistrement…' : 'Enregistrer ma recommandation'}
           </button>
-
           {shopData?.phone && (
-            <a href={`tel:${shopData.phone}`} className="btn-secondary flex items-center justify-center gap-2">
-              <Phone size={16} /> Parler à un conseiller
+            <a href={`tel:${shopData.phone}`} className="btn-ghost flex items-center justify-center gap-2">
+              <Phone size={14} strokeWidth={1.4} /> Parler à un conseiller
             </a>
           )}
-
-          <button onClick={() => navigate('/profil')} className="flex items-center justify-center gap-2 w-full text-[#686868] text-sm py-3 border border-[#2E2E32] rounded-[14px]">
-            <ShoppingBag size={16} /> Voir en boutique Pro'Vap
-          </button>
         </div>
 
-        <p className="text-[10px] text-[#686868] text-center leading-relaxed">
-          Cette recommandation est donnée à titre indicatif. Nos conseillers Pro'Vap peuvent affiner ce diagnostic lors de votre visite en boutique.
+        <p className="text-[11px] text-ink-3 text-center leading-relaxed mt-6">
+          Recommandation indicative. Nos conseillers Pro'Vap peuvent affiner ce diagnostic en boutique.
         </p>
       </div>
     )
   }
 
   return (
-    <div className="page p-6 min-h-screen bg-[#28282D] pt-10">
-      <button
-        onClick={() => step > 0 ? setStep(s => s - 1) : navigate(-1)}
-        className="flex items-center gap-2 text-[#686868] mb-6"
-      >
-        <ChevronLeft size={20} /> {step > 0 ? 'Question précédente' : 'Retour'}
-      </button>
-
-      <div className="mb-10 text-center">
-        <h1 className="font-display text-4xl text-[#B8482A] mb-4 tracking-wider">DIAGNOSTIC KIT</h1>
-        <div className="progress-track w-full max-w-xs mx-auto">
-          <div className="progress-fill transition-all duration-500" style={{ width: `${progressPercent}%` }} />
-        </div>
-        <p className="text-[#686868] text-sm mt-3 font-medium tracking-widest">
-          QUESTION {step + 1} / {QUESTIONS.length}
-        </p>
+    <div className="min-h-screen flex flex-col bg-bg" style={{ padding: '24px 28px 32px' }}>
+      <div className="flex justify-between items-center">
+        <button
+          onClick={() => step > 0 ? setStep(s => s - 1) : navigate(-1)}
+          className="flex items-center gap-2 text-ink-3 text-sm hover:text-ink transition-colors"
+        >
+          <ChevronLeft size={18} /> {step > 0 ? 'Précédent' : 'Retour'}
+        </button>
+        <span className="text-[10px] text-ink-3" style={{ letterSpacing: '0.2em' }}>
+          {String(step + 1).padStart(2, '0')} / {String(QUESTIONS.length).padStart(2, '0')}
+        </span>
       </div>
 
-      <div className="max-w-md mx-auto w-full">
-        <h2 className="text-xl font-semibold text-[#F1F1F1] text-center mb-8 leading-snug">
+      <div className="mt-3 rounded-full overflow-hidden" style={{ height: 2, background: 'var(--color-line)' }}>
+        <div
+          className="h-full transition-all duration-500"
+          style={{ width: `${progressPercent}%`, background: 'var(--color-pv-ochre)' }}
+        />
+      </div>
+
+      <div className="flex-1 flex flex-col justify-center pt-8">
+        <span className="eyebrow text-pv-terracotta">Diagnostic kit · Question {step + 1}</span>
+        <h2
+          className="display mt-3 text-ink"
+          style={{ fontSize: 26, fontWeight: 400, letterSpacing: '-0.015em', lineHeight: 1.2 }}
+        >
           {currentQ.text}
         </h2>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2.5 mt-8">
           {currentQ.options.map((opt, idx) => (
             <button
               key={idx}
               onClick={() => handleAnswer(opt.value)}
-              className={`w-full text-left p-4 rounded-[14px] border transition-all active:scale-[0.98] ${
-                selected === opt.value
-                  ? 'border-[#CB8002] bg-[rgba(203,128,2,0.1)] text-[#CB8002]'
-                  : 'border-[#2E2E32] bg-[#1E1E22] text-[#F1F1F1] hover:border-[#CB8002]/40 hover:bg-[rgba(203,128,2,0.03)]'
-              }`}
+              className="w-full text-left p-4 transition-all active:scale-[0.98]"
+              style={{
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid ' + (selected === opt.value ? 'var(--color-pv-ochre)' : 'var(--color-line)'),
+                background: selected === opt.value ? 'rgba(203,128,2,0.06)' : 'var(--color-bg-elev)',
+                color: selected === opt.value ? 'var(--color-pv-ochre)' : 'var(--color-ink)',
+              }}
             >
-              <span className="text-base font-medium">{opt.label}</span>
+              <span className="font-display" style={{ fontSize: 16, fontWeight: 500 }}>{opt.label}</span>
             </button>
           ))}
         </div>
       </div>
 
-      <div className="mt-10 text-center">
-        <p className="text-xs text-[#686868]">
-          Ce diagnostic ne tient pas compte du budget. Il se base uniquement sur votre profil de fumeur.
-        </p>
-      </div>
+      <p className="text-[11px] text-ink-3 text-center leading-relaxed mt-6">
+        Ce diagnostic se base sur votre profil de fumeur, pas sur votre budget.
+      </p>
     </div>
   )
 }

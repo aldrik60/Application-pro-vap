@@ -1,22 +1,126 @@
 @import "tailwindcss";
 
+/* Les fontes Cormorant Garamond + Manrope sont chargées via <link> dans index.html. */
+
+/* ═════════════════════════════════════════════════════════════════════════
+   PRO'VAP — Design tokens
+   Direction : Apple × Hermès (cuir, papier brûlé, typo éditoriale).
+   Dark par défaut (umber + cuir), light auto (ivoire papier).
+   ═════════════════════════════════════════════════════════════════════════ */
+
 @theme {
-  --color-bg: #28282D;
-  --color-surface: #1E1E22;
-  --color-primary: #B8482A;
-  --color-secondary: #CB8002;
-  --color-text: #F1F1F1;
-  --color-muted: #686868;
-  --color-border: #2E2E32;
-  --color-success: #2D9B55;
-  --color-danger: #C0392B;
+  /* — Couleurs marque (charte officielle) — */
+  --color-pv-black:      #020202;
+  --color-pv-charcoal:   #28282d;
+  --color-pv-gray-d:     #686868;
+  --color-pv-gray-l:     #938e87;
+  --color-pv-white:      #ffffff;
+  --color-pv-terracotta: #b8482a;   /* primary */
+  --color-pv-ochre:      #cb8002;   /* secondary / gold */
+  --color-pv-ivory:      #f6f1e8;   /* paper warm */
 
-  --font-display: "Bebas Neue", sans-serif;
-  --font-body: "Poppins", sans-serif;
+  /* — Rôles (dark par défaut) — */
+  --color-bg:         #161618;
+  --color-bg-elev:    #1f1f22;
+  --color-bg-card:    #25252a;
+  --color-bg-paper:   #f6f1e8;       /* ivoire papier pour cartes inversées */
+  --color-bg-stroke:  rgba(255, 255, 255, 0.07);
 
-  --radius-card: 14px;
-  --radius-input: 10px;
+  --color-ink:        #f6f1e8;       /* ivoire warm */
+  --color-ink-2:      rgba(246, 241, 232, 0.72);
+  --color-ink-3:      rgba(246, 241, 232, 0.48);
+  --color-ink-4:      rgba(246, 241, 232, 0.28);
+
+  --color-line:        rgba(246, 241, 232, 0.10);
+  --color-line-strong: rgba(246, 241, 232, 0.20);
+
+  --color-accent:    #b8482a;
+  --color-accent-2:  #cb8002;
+  --color-success:   #7a8a5e;
+  --color-danger:    #c84a2a;
+
+  /* — Anciens alias compatibilité (pas casser le code existant pendant la migration) — */
+  --color-surface:    #1f1f22;
+  --color-surface-2:  #25252a;
+  --color-border:     rgba(246, 241, 232, 0.10);
+  --color-text:       #f6f1e8;
+  --color-text-muted: rgba(246, 241, 232, 0.72);
+  --color-text-dim:   rgba(246, 241, 232, 0.48);
+  --color-primary:    #b8482a;
+  --color-secondary:  #cb8002;
+  --color-warning:    #cb8002;
+  --color-focus-ring: rgba(184, 72, 42, 0.55);
+
+  /* — Typographie — */
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-body:    'Manrope', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* — Géométrie — */
+  --radius-xs:   6px;
+  --radius-sm:  10px;
+  --radius-md:  14px;
+  --radius-lg:  20px;
+  --radius-xl:  28px;
+  --radius-pill: 999px;
+  --radius-card: 14px;     /* alias compatibilité */
+  --radius-input: 10px;    /* alias compatibilité */
+
+  /* — Espacements — */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px;
+  --s-5: 20px; --s-6: 24px; --s-7: 32px; --s-8: 40px; --s-9: 56px;
+
+  /* — Ombres — */
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.2), 0 8px 24px rgba(0, 0, 0, 0.22);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.25), 0 24px 48px -8px rgba(0, 0, 0, 0.5);
+
+  /* — Durées d'animation — */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 500ms;
 }
+
+/* ─── Fallback :root pour le mode sombre (défaut) ──────────────────────── */
+/* Garantit que les CSS variables sont accessibles au runtime via var(--…),
+   indépendamment de la propagation Tailwind 4 @theme. */
+:root {
+  --color-bg-paper: #f6f1e8;
+}
+
+/* ─── Mode clair automatique (ivoire papier) ─────────────────────────────── */
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-bg:         #f6f1e8;
+    --color-bg-elev:    #fbf7ee;
+    --color-bg-card:    #ffffff;
+    --color-bg-paper:   #28282d;
+    --color-bg-stroke:  rgba(40, 40, 45, 0.07);
+
+    --color-ink:        #1a1a1c;
+    --color-ink-2:      rgba(26, 26, 28, 0.72);
+    --color-ink-3:      rgba(26, 26, 28, 0.48);
+    --color-ink-4:      rgba(26, 26, 28, 0.28);
+
+    --color-line:        rgba(40, 40, 45, 0.10);
+    --color-line-strong: rgba(40, 40, 45, 0.22);
+
+    --color-surface:    #fbf7ee;
+    --color-surface-2:  #ffffff;
+    --color-border:     rgba(40, 40, 45, 0.10);
+    --color-text:       #1a1a1c;
+    --color-text-muted: rgba(26, 26, 28, 0.72);
+    --color-text-dim:   rgba(26, 26, 28, 0.48);
+
+    --color-focus-ring: rgba(184, 72, 42, 0.40);
+
+    --shadow-soft: 0 1px 2px rgba(40, 40, 45, 0.05), 0 6px 18px rgba(40, 40, 45, 0.07);
+    --shadow-lift: 0 1px 2px rgba(40, 40, 45, 0.06), 0 16px 32px -8px rgba(40, 40, 45, 0.18);
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   Reset & base
+   ═════════════════════════════════════════════════════════════════════════ */
 
 * {
   box-sizing: border-box;
@@ -28,195 +132,303 @@ html, body, #root {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  background-color: #28282D;
-  color: #F1F1F1;
-  font-family: "Poppins", sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
-body {
-  overscroll-behavior: none;
+body { overscroll-behavior: none; }
+
+/* Scrollbar discrète */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--color-bg-elev); }
+::-webkit-scrollbar-thumb { background: var(--color-line-strong); border-radius: 2px; }
+
+.hide-scrollbar { scrollbar-width: none; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ═════════════════════════════════════════════════════════════════════════
+   Atoms typographiques
+   ═════════════════════════════════════════════════════════════════════════ */
+
+.font-display { font-family: var(--font-display); }
+.font-body    { font-family: var(--font-body); }
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+.display-italic {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #1E1E22; }
-::-webkit-scrollbar-thumb { background: #2E2E32; border-radius: 2px; }
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+}
 
-/* Bebas Neue helper */
-.font-display { font-family: "Bebas Neue", sans-serif; }
+.hairline { height: 1px; background: var(--color-line); border: 0; }
 
-/* Page containers */
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Grain papier pour cartes ivoire inversées (style Hermès) */
+.grain { position: relative; }
+.grain::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.18  0 0 0 0 0.14  0 0 0 0 0.10  0 0 0 0.4 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
+  mix-blend-mode: multiply;
+  opacity: 0.3;
+}
+
+/* Filet doré (séparateur premium) */
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-pv-ochre) 30%, var(--color-pv-ochre) 70%, transparent);
+  opacity: 0.5;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   Focus accessible (WCAG 2.1 AA)
+   ═════════════════════════════════════════════════════════════════════════ */
+
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   Pages & layout
+   ═════════════════════════════════════════════════════════════════════════ */
+
 .page {
   min-height: 100vh;
-  padding-bottom: 80px;
-  background-color: #28282D;
+  padding-bottom: 96px;
+  background-color: var(--color-bg);
 }
 
-/* Card */
+/* ═════════════════════════════════════════════════════════════════════════
+   Cards
+   ═════════════════════════════════════════════════════════════════════════ */
+
 .card {
-  background-color: #1E1E22;
-  border-radius: 14px;
-  border: 0.5px solid #2E2E32;
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-line);
 }
 
-/* Left accent border (gold) */
+.card-elev {
+  background-color: var(--color-bg-elev);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-line);
+}
+
+/* Carte papier ivoire — toujours ivoire indépendamment du mode (Hermès paper).
+   Le grain et la bordure assurent la distinction visuelle dans les deux thèmes. */
+.card-paper {
+  background-color: #f6f1e8;
+  color: #28282d;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(40, 40, 45, 0.12);
+}
+
+.stat-card {
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-line);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .accent-left {
-  border-left: 3px solid #CB8002 !important;
-  border-radius: 0 14px 14px 0 !important;
+  border-left: 3px solid var(--color-pv-ochre) !important;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0 !important;
   padding-left: 14px;
 }
 
-/* Input base */
+/* ═════════════════════════════════════════════════════════════════════════
+   Inputs
+   ═════════════════════════════════════════════════════════════════════════ */
+
 .input {
-  background-color: #1E1E22;
-  border: 1px solid #2E2E32;
-  border-radius: 10px;
-  color: #F1F1F1;
-  font-family: "Poppins", sans-serif;
+  background-color: var(--color-bg-elev);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  color: var(--color-ink);
+  font-family: var(--font-body);
   padding: 12px 16px;
   width: 100%;
   font-size: 14px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color var(--duration-base), box-shadow var(--duration-base);
 }
-.input:focus { border-color: #B8482A; }
-.input::placeholder { color: #686868; }
+.input:focus {
+  border-color: var(--color-pv-terracotta);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+.input::placeholder { color: var(--color-ink-3); }
+.input:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* Select */
 select.input {
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23686868' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23938e87' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 36px;
 }
+textarea.input { resize: vertical; min-height: 80px; }
 
-/* Buttons */
-.btn-primary {
-  background-color: #B8482A;
-  color: #F1F1F1;
-  border: none;
-  border-radius: 14px;
-  padding: 14px 24px;
-  font-family: "Poppins", sans-serif;
+/* ═════════════════════════════════════════════════════════════════════════
+   Buttons — style pill, lettres espacées, premium
+   ═════════════════════════════════════════════════════════════════════════ */
+
+.btn-primary,
+.btn-secondary,
+.btn-gold,
+.btn-danger,
+.btn-ghost,
+.btn-ivory {
+  font-family: var(--font-body);
   font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: var(--radius-pill);
+  padding: 16px 22px;
   width: 100%;
-  transition: opacity 0.2s, transform 0.1s;
+  cursor: pointer;
+  transition: opacity var(--duration-base), transform var(--duration-fast), background-color var(--duration-base);
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
 }
-.btn-primary:hover { opacity: 0.9; }
-.btn-primary:active { transform: scale(0.98); }
 
-.btn-secondary {
+.btn-primary { background-color: var(--color-pv-terracotta); color: var(--color-pv-ivory); }
+.btn-primary:hover:not(:disabled) { opacity: 0.92; }
+.btn-primary:active:not(:disabled) { transform: scale(0.985); }
+
+.btn-secondary,
+.btn-ghost {
   background-color: transparent;
-  color: #B8482A;
-  border: 1px solid #B8482A;
-  border-radius: 14px;
-  padding: 13px 24px;
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  width: 100%;
-  transition: background-color 0.2s;
+  color: var(--color-ink-2);
+  border: 1px solid var(--color-line-strong);
 }
-.btn-secondary:hover { background-color: rgba(184,72,42,0.1); }
-
-.btn-gold {
-  background-color: #CB8002;
-  color: #F1F1F1;
-  border: none;
-  border-radius: 14px;
-  padding: 14px 24px;
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  width: 100%;
-  transition: opacity 0.2s;
-}
-.btn-gold:hover { opacity: 0.9; }
-
-.btn-danger {
-  background-color: #C0392B;
-  color: #F1F1F1;
-  border: none;
-  border-radius: 14px;
-  padding: 14px 24px;
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  width: 100%;
-  transition: opacity 0.2s;
+.btn-secondary:hover:not(:disabled),
+.btn-ghost:hover:not(:disabled) {
+  background-color: rgba(184, 72, 42, 0.06);
+  color: var(--color-ink);
 }
 
-/* Badge animations */
+.btn-gold { background-color: var(--color-pv-ochre); color: var(--color-pv-charcoal); }
+.btn-gold:hover:not(:disabled) { opacity: 0.92; }
+
+.btn-danger { background-color: var(--color-danger); color: var(--color-pv-ivory); }
+.btn-danger:hover:not(:disabled) { opacity: 0.92; }
+
+.btn-ivory {
+  background-color: var(--color-bg-paper);
+  color: var(--color-pv-charcoal);
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-gold:disabled,
+.btn-danger:disabled,
+.btn-ghost:disabled,
+.btn-ivory:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   Animations
+   ═════════════════════════════════════════════════════════════════════════ */
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(0.78); }
+  21%      { transform: scale(1); }
+  58%      { transform: scale(1); }
+}
+@keyframes pulseRing {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
 }
 
-@keyframes pulse-ring {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+.animate-fade-in-up { animation: fadeInUp var(--duration-slow) ease forwards; }
+.animate-fade-in    { animation: fadeIn var(--duration-base) ease forwards; }
+.animate-breathe    { animation: breathe 19s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
-@keyframes breathe-in {
-  from { transform: scale(1); }
-  to { transform: scale(1.2); }
-}
+/* ═════════════════════════════════════════════════════════════════════════
+   Misc utilitaires
+   ═════════════════════════════════════════════════════════════════════════ */
 
-@keyframes breathe-out {
-  from { transform: scale(1.2); }
-  to { transform: scale(1); }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.4s ease forwards;
-}
-
-/* Stat cards */
-.stat-card {
-  background-color: #1E1E22;
-  border-radius: 14px;
-  border: 0.5px solid #2E2E32;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* Tab bar active indicator */
-.tab-active { color: #B8482A; }
-.tab-inactive { color: #686868; }
-
-/* Progress bar */
 .progress-track {
-  background-color: #2E2E32;
-  border-radius: 999px;
-  height: 8px;
+  background-color: var(--color-line);
+  border-radius: var(--radius-pill);
+  height: 3px;
   overflow: hidden;
 }
 .progress-fill {
   height: 100%;
-  border-radius: 999px;
-  background-color: #B8482A;
-  transition: width 0.5s ease;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--color-pv-terracotta), var(--color-pv-ochre));
+  transition: width var(--duration-slow) ease;
 }
 .progress-fill-gold {
   height: 100%;
-  border-radius: 999px;
-  background-color: #CB8002;
-  transition: width 0.5s ease;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-pv-ochre);
+  transition: width var(--duration-slow) ease;
 }
 
-/* Divider */
-.divider { border: none; border-top: 1px solid #2E2E32; }
+.divider { border: none; border-top: 1px solid var(--color-line); }
 
-/* Textarea */
-textarea.input { resize: vertical; min-height: 80px; }
+/* Logo : inverser en mode clair (le SVG source est blanc) */
+@media (prefers-color-scheme: light) {
+  .pv-logo, [data-pv-logo] { filter: invert(1) brightness(0.15); }
+}

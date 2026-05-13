@@ -34,3 +34,13 @@ createRoot(document.getElementById('root')!).render(
     </ErrorBoundary>
   </StrictMode>,
 )
+
+// Enregistrement du service worker (PWA + offline cache).
+// Désactivé en développement pour éviter les caches indésirables pendant le HMR Vite.
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // Échec silencieux : l'app fonctionne sans SW, pas un blocage.
+    })
+  })
+}

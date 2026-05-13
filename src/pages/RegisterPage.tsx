@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import toast from 'react-hot-toast'
+import { ProVapLogo } from '../components/ProVapLogo'
 
 export function RegisterPage() {
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
+  const [acceptTerms, setAcceptTerms] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
@@ -16,87 +18,128 @@ export function RegisterPage() {
       toast.error('Veuillez remplir tous les champs')
       return
     }
-
-    if (password.length < 6) {
-      toast.error('Le mot de passe doit contenir au moins 6 caractères')
+    if (password.length < 8) {
+      toast.error('Le mot de passe doit contenir au moins 8 caractères')
       return
     }
-
+    if (!acceptTerms) {
+      toast.error('Vous devez accepter la politique de confidentialité.')
+      return
+    }
     try {
       setLoading(true)
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: {
-            full_name: name,
-          }
-        }
+        options: { data: { full_name: name } },
       })
       if (error) throw error
-      
-      toast.success('Compte créé avec succès ! Bienvenue.')
+      toast.success('Compte créé. Bienvenue.')
       navigate('/')
     } catch (error: any) {
-      toast.error(error.message || 'Une erreur s\'est produite')
+      toast.error(error.message || "Une erreur s'est produite")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="page p-6 flex flex-col justify-center min-h-screen pb-6">
-      <div className="text-center mb-10">
-        <h1 className="font-display text-5xl text-[#B8482A] mb-2">REJOINDRE PRO'VAP</h1>
-        <p className="text-[#686868]">Votre aventure commence ici</p>
+    <div className="min-h-screen flex flex-col bg-bg" style={{ padding: '32px 28px' }}>
+      <header className="flex justify-center">
+        <ProVapLogo height={22} />
+      </header>
+
+      <div className="flex-1 flex flex-col justify-center pt-6">
+        <div className="text-center mb-8">
+          <span className="eyebrow text-pv-ochre">Bienvenue</span>
+          <h1
+            className="display mt-3 text-ink"
+            style={{ fontSize: 36, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
+          >
+            Votre aventure <span className="display-italic">commence ici.</span>
+          </h1>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <div>
+            <label className="eyebrow block mb-2">Prénom ou pseudo</label>
+            <input
+              type="text"
+              className="input text-base"
+              placeholder="Alex"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              disabled={loading}
+              autoComplete="given-name"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="eyebrow block mb-2">Adresse email</label>
+            <input
+              type="email"
+              className="input text-base"
+              placeholder="vous@email.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              disabled={loading}
+              autoComplete="email"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="eyebrow block mb-2">Mot de passe (8 caractères minimum)</label>
+            <input
+              type="password"
+              className="input text-base tracking-widest"
+              placeholder="••••••••"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              disabled={loading}
+              autoComplete="new-password"
+              minLength={8}
+              required
+            />
+          </div>
+
+          <label className="flex items-start gap-3 text-xs text-ink-3 leading-relaxed">
+            <input
+              type="checkbox"
+              checked={acceptTerms}
+              onChange={e => setAcceptTerms(e.target.checked)}
+              disabled={loading}
+              className="mt-0.5 accent-[var(--color-pv-terracotta)] w-4 h-4 shrink-0"
+            />
+            <span>
+              J'ai lu et j'accepte la{' '}
+              <Link to="/mentions-legales" className="text-pv-ochre hover:underline" target="_blank" rel="noopener noreferrer">
+                politique de confidentialité
+              </Link>{' '}
+              et les mentions légales. Je confirme être majeur(e).
+            </span>
+          </label>
+
+          <button type="submit" className="btn-primary mt-2" disabled={loading || !acceptTerms}>
+            {loading ? 'Création…' : 'Créer mon compte'}
+          </button>
+        </form>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        <div>
-          <label className="block text-sm text-[#F1F1F1] mb-2 font-medium">Prénom ou Pseudo</label>
-          <input 
-            type="text" 
-            className="input text-lg" 
-            placeholder="Alex"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            disabled={loading}
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm text-[#F1F1F1] mb-2 font-medium">Adresse Email</label>
-          <input 
-            type="email" 
-            className="input text-lg" 
-            placeholder="vous@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={loading}
-          />
-        </div>
-        
-        <div className="mb-4">
-          <label className="block text-sm text-[#F1F1F1] mb-2 font-medium">Mot de passe</label>
-          <input 
-            type="password" 
-            className="input text-lg tracking-widest" 
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={loading}
-          />
-        </div>
-
-        <button type="submit" className="btn-primary mt-2" disabled={loading}>
-          {loading ? 'Création en cours...' : 'Créer mon compte'}
-        </button>
-      </form>
-
-      <div className="mt-8 text-center text-sm text-[#686868]">
-        Déjà un compte ?{' '}
-        <Link to="/login" className="text-[#CB8002] font-semibold hover:underline">
-          Se connecter
+      <div className="flex flex-col gap-4 items-center">
+        <p className="text-center text-sm text-ink-3">
+          Déjà un compte ?{' '}
+          <Link to="/login" className="text-pv-ochre font-semibold hover:underline">
+            Se connecter
+          </Link>
+        </p>
+        <Link
+          to="/mentions-legales"
+          className="text-center text-[10px] text-ink-3 hover:text-ink-2 transition-colors"
+          style={{ letterSpacing: '0.08em' }}
+        >
+          Mentions légales · Politique de confidentialité
         </Link>
       </div>
     </div>
