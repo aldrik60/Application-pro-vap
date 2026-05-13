@@ -11,6 +11,7 @@ import { Modal } from '../components/Modal'
 import { useShop } from '../hooks/useShop'
 import { IS_FULL } from '../lib/appMode'
 import { Vap, vapStageFromDays } from '../components/Vap'
+import { NotificationToggle } from '../components/NotificationToggle'
 import type { TobaccoType } from '../types'
 
 const SHOPS = [
@@ -463,6 +464,11 @@ export function ProfilePage() {
             disabled={exporting}
           />
         </div>
+      </section>
+
+      {/* ── Notifications ─────────────────────────────────────────────────── */}
+      <section className="px-5 mt-5">
+        <NotificationToggle />
       </section>
 
       {/* ── Compte ────────────────────────────────────────────────────────── */}

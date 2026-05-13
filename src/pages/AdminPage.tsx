@@ -7,7 +7,7 @@ import toast from 'react-hot-toast'
 import { Modal } from '../components/Modal'
 import { Pencil, Trash2, Plus, Check, X } from 'lucide-react'
 
-type Tab = 'dashboard' | 'utilisateurs' | 'temoignages' | 'messages' | 'articles' | 'videos'
+type Tab = 'dashboard' | 'utilisateurs' | 'temoignages' | 'messages' | 'articles' | 'videos' | 'push'
 
 // ─── Dashboard Tab ──────────────────────────────────────────────────────────────
 
@@ -499,6 +499,7 @@ export function AdminPage() {
     { id: 'messages', label: 'Messages' },
     { id: 'articles', label: 'Articles' },
     { id: 'videos', label: 'Vidéos' },
+    { id: 'push', label: 'Notifications' },
   ]
 
   return (
@@ -527,6 +528,144 @@ export function AdminPage() {
       {activeTab === 'messages' && <MessagesTab />}
       {activeTab === 'articles' && <ArticlesTab />}
       {activeTab === 'videos' && <VideosTab />}
+      {activeTab === 'push' && <PushTab />}
+    </div>
+  )
+}
+
+// ─── Push Notifications Tab ─────────────────────────────────────────────────────
+
+function PushTab() {
+  const [title, setTitle] = useState('')
+  const [body, setBody] = useState('')
+  const [url, setUrl] = useState('')
+  const [sending, setSending] = useState(false)
+  const [subscriberCount, setSubscriberCount] = useState<number | null>(null)
+  const [lastResult, setLastResult] = useState<{ sent: number; removed: number; total: number } | null>(null)
+
+  useEffect(() => {
+    supabase.from('push_subscriptions')
+      .select('*', { count: 'exact', head: true })
+      .eq('enabled', true)
+      .then(({ count }) => setSubscriberCount(count ?? 0))
+  }, [])
+
+  const send = async () => {
+    if (!title.trim() || !body.trim()) {
+      toast.error('Titre et message obligatoires.')
+      return
+    }
+    if (!confirm(`Envoyer cette notification à ${subscriberCount ?? '?'} abonné(s) ?`)) return
+
+    try {
+      setSending(true)
+      setLastResult(null)
+      const { data, error } = await supabase.functions.invoke('send-push', {
+        body: { title: title.trim(), body: body.trim(), url: url.trim() || '/' },
+      })
+      if (error) throw error
+      if (data?.error) throw new Error(data.error)
+
+      setLastResult({ sent: data.sent ?? 0, removed: data.removed ?? 0, total: data.total ?? 0 })
+      toast.success(`${data.sent ?? 0} notification(s) envoyée(s).`)
+      setTitle('')
+      setBody('')
+      setUrl('')
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Erreur lors de l'envoi."
+      toast.error(message)
+    } finally {
+      setSending(false)
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="card p-4">
+        <p className="text-[12px] uppercase font-semibold tracking-wider text-pv-ochre mb-1">État du réseau</p>
+        <p className="font-display text-3xl text-pv-ochre">
+          {subscriberCount === null ? '…' : subscriberCount}
+        </p>
+        <p className="text-xs text-ink-3 mt-1">
+          {subscriberCount === 1 ? 'client abonné' : 'clients abonnés aux notifications'}
+        </p>
+      </div>
+
+      <div className="card p-4 space-y-3">
+        <h3 className="text-sm font-semibold text-pv-ochre">Composer un push</h3>
+
+        <div>
+          <label className="block text-[10px] uppercase font-bold text-ink-3 tracking-wider mb-1">Titre</label>
+          <input
+            type="text"
+            className="input text-sm"
+            placeholder="Bonne nouvelle"
+            maxLength={50}
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            disabled={sending}
+          />
+          <p className="text-[10px] text-ink-3 mt-0.5">{title.length}/50 caractères</p>
+        </div>
+
+        <div>
+          <label className="block text-[10px] uppercase font-bold text-ink-3 tracking-wider mb-1">Message</label>
+          <textarea
+            className="input text-sm h-20"
+            placeholder="Votre conseiller a une nouveauté pour vous."
+            maxLength={140}
+            value={body}
+            onChange={e => setBody(e.target.value)}
+            disabled={sending}
+          />
+          <p className="text-[10px] text-ink-3 mt-0.5">{body.length}/140 caractères</p>
+        </div>
+
+        <div>
+          <label className="block text-[10px] uppercase font-bold text-ink-3 tracking-wider mb-1">
+            Lien d'ouverture (optionnel)
+          </label>
+          <input
+            type="text"
+            className="input text-sm"
+            placeholder="/contenu"
+            value={url}
+            onChange={e => setUrl(e.target.value)}
+            disabled={sending}
+          />
+          <p className="text-[10px] text-ink-3 mt-0.5">Page à ouvrir au clic. Vide = accueil.</p>
+        </div>
+
+        <button
+          onClick={send}
+          disabled={sending || !title.trim() || !body.trim()}
+          className="btn-primary text-sm py-3"
+        >
+          {sending ? 'Envoi…' : `Envoyer à tous les abonnés`}
+        </button>
+      </div>
+
+      {lastResult && (
+        <div className="card p-4 border-pv-ochre/30">
+          <p className="text-xs font-bold text-pv-ochre uppercase mb-1">Dernier envoi</p>
+          <p className="text-sm text-ink">
+            ✓ {lastResult.sent} reçue(s) sur {lastResult.total} abonné(s)
+            {lastResult.removed > 0 && (
+              <span className="block text-xs text-ink-3 mt-0.5">
+                {lastResult.removed} abonnement(s) expiré(s) supprimé(s).
+              </span>
+            )}
+          </p>
+        </div>
+      )}
+
+      <div className="card p-4">
+        <p className="text-xs text-ink-3 leading-relaxed">
+          <span className="font-semibold text-ink-2">Bon à savoir :</span> les clients doivent avoir
+          activé les notifications depuis leur profil. Sur iPhone, ils doivent avoir installé
+          l'application sur leur écran d'accueil (limitation Apple).
+        </p>
+      </div>
     </div>
   )
 }
