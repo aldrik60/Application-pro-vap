@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Bell, AlertTriangle, Share2, ChevronRight } from 'lucide-react'
+import { Bell, AlertTriangle, Share2, ChevronRight, BookOpen } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Badge } from '../types'
 import { Vap, vapStageFromDays, VAP_STAGES } from '../components/Vap'
@@ -377,6 +377,37 @@ export function HomePage() {
             <AlertTriangle size={18} strokeWidth={1.6} />
             <span>SOS — j'ai une envie</span>
           </button>
+        </Link>
+      </section>
+
+      {/* Guides & conseils — accès aux ressources */}
+      <section className="px-5 mt-3">
+        <Link to="/contenu" className="block">
+          <div className="card p-5 transition-transform active:scale-[0.98] hover:border-pv-terracotta/50">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 min-w-0">
+                <span
+                  className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
+                  style={{ background: 'rgba(184,72,42,0.12)', color: 'var(--color-pv-terracotta)' }}
+                >
+                  <BookOpen size={17} strokeWidth={1.4} />
+                </span>
+                <div className="min-w-0">
+                  <span className="eyebrow block">Ressources</span>
+                  <p
+                    className="font-display text-ink mt-1 leading-tight"
+                    style={{ fontSize: 19, fontWeight: 500, letterSpacing: '-0.01em' }}
+                  >
+                    Guides &amp; <span className="display-italic">conseils.</span>
+                  </p>
+                  <p className="text-[11px] text-ink-3 mt-1 leading-relaxed">
+                    Articles, FAQ, vidéos pour t'accompagner.
+                  </p>
+                </div>
+              </div>
+              <ChevronRight size={18} className="text-ink-3 shrink-0" strokeWidth={1.4} />
+            </div>
+          </div>
         </Link>
       </section>
 
