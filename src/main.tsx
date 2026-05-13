@@ -3,13 +3,16 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
-class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean, error: any }> {
-  constructor(props: any) {
+type ErrorBoundaryProps = { children: ReactNode }
+type ErrorBoundaryState = { hasError: boolean, error: Error | null }
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error: any) {
+  static getDerivedStateFromError(error: Error) {
     return { hasError: true, error };
   }
 

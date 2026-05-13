@@ -11,6 +11,7 @@ import { Modal } from '../components/Modal'
 import { useShop } from '../hooks/useShop'
 import { IS_FULL } from '../lib/appMode'
 import { Vap, vapStageFromDays } from '../components/Vap'
+import type { TobaccoType } from '../types'
 
 const SHOPS = [
   'Client Internet', 'Noyon', 'Compiègne', 'Clermont', 'Nogent-sur-Oise',
@@ -109,7 +110,7 @@ export function ProfilePage() {
         cigarettes_per_day: parseInt(cigsPerDay.toString()) || 0,
         pack_price: parseFloat(packPrice.toString()) || 0,
         preferred_shop: preferredShop || null,
-        tobacco_type: (tobaccoType as any) || null,
+        tobacco_type: (tobaccoType as TobaccoType) || null,
         age_range: ageRange || null,
         reward_name: rewardName || null,
         reward_amount: parseFloat(rewardAmount) || null,
@@ -168,8 +169,9 @@ export function ProfilePage() {
       await supabase.auth.signOut()
       toast.success('Compte supprimé.')
       navigate('/login', { replace: true })
-    } catch (e: any) {
-      toast.error(e?.message || 'Erreur lors de la suppression.')
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'Erreur lors de la suppression.'
+      toast.error(message)
     } finally {
       setDeleting(false)
     }

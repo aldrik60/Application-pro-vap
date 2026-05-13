@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
-import toast from 'react-hot-toast'
 import { X, Pause, Play } from 'lucide-react'
 
 /**

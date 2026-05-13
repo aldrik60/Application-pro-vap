@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import toast from 'react-hot-toast'
-import { ChevronLeft, ShoppingBag, Phone } from 'lucide-react'
+import { ChevronLeft, Phone } from 'lucide-react'
 import { useShop } from '../hooks/useShop'
+import type { TobaccoType } from '../types'
 
 const KITS = {
   cbd: {
@@ -196,7 +197,7 @@ export function DiagnosticKitPage() {
     try {
       setSaving(true)
       const { error } = await supabase.from('profiles').update({
-        tobacco_type: (answers.tobacco_type as any) || null,
+        tobacco_type: (answers.tobacco_type as TobaccoType) || null,
         kit_price: kit.price,
         smoker_profile: kit.name,
         recommended_nicotine_mg: nicotineMg,
@@ -207,7 +208,7 @@ export function DiagnosticKitPage() {
       await refreshProfile()
       toast.success('Votre recommandation a été enregistrée !')
       navigate('/profil')
-    } catch (e) {
+    } catch {
       toast.error('Erreur lors de la sauvegarde.')
     } finally {
       setSaving(false)

@@ -67,7 +67,7 @@ export function HomePage() {
   const { profile } = useAuth()
   const navigate = useNavigate()
   const [dailyMessage, setDailyMessage] = useState("Aujourd'hui compte. Demain aussi.")
-  const [badges, setBadges] = useState<Badge[]>([])
+  const [, setBadges] = useState<Badge[]>([])
 
   const quitDate = profile?.quit_date ? new Date(profile.quit_date) : null
   const now = new Date()

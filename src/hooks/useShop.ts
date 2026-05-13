@@ -8,9 +8,11 @@ export function useShop(shopName: string | null | undefined) {
 
   useEffect(() => {
     if (!shopName) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShop(null)
       return
     }
+    let cancelled = false
     setLoading(true)
     supabase
       .from('shops')
@@ -18,9 +20,11 @@ export function useShop(shopName: string | null | undefined) {
       .eq('name', shopName)
       .single()
       .then(({ data }) => {
+        if (cancelled) return
         setShop(data ?? null)
         setLoading(false)
       })
+    return () => { cancelled = true }
   }, [shopName])
 
   return { shop, loading }

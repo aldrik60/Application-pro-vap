@@ -19,6 +19,7 @@ export interface VapStageMeta {
   sub: string
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const VAP_STAGES: VapStageMeta[] = [
   { id: 1, day: 0,   title: 'Le départ',       sub: 'Le premier jour est le plus dur.' },
   { id: 2, day: 1,   title: 'Premier souffle', sub: 'La fumée commence à se lever.' },
@@ -31,6 +32,7 @@ export const VAP_STAGES: VapStageMeta[] = [
 /**
  * Détermine le stade courant à partir du nombre de jours sans tabac.
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function vapStageFromDays(days: number): VapStage {
   let stage: VapStage = 1
   for (const s of VAP_STAGES) {

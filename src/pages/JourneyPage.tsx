@@ -67,6 +67,7 @@ export function JourneyPage() {
     setLoading(false)
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchCheckins() }, [user])
 
   const handleSubmit = async (e: React.FormEvent) => {

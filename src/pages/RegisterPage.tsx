@@ -36,8 +36,9 @@ export function RegisterPage() {
       if (error) throw error
       toast.success('Compte créé. Bienvenue.')
       navigate('/')
-    } catch (error: any) {
-      toast.error(error.message || "Une erreur s'est produite")
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Une erreur s'est produite"
+      toast.error(message)
     } finally {
       setLoading(false)
     }

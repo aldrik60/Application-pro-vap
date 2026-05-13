@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { MessageCircle, X, Send, ChevronDown } from 'lucide-react'
+import { MessageCircle, Send, ChevronDown } from 'lucide-react'
 
 interface Message {
   id: string
@@ -125,6 +125,7 @@ export function ChatBot() {
   const sendMessage = (text: string) => {
     if (!text.trim()) return
 
+    // eslint-disable-next-line react-hooks/purity
     const userMsg: Message = { id: Date.now().toString(), from: 'user', text: text.trim() }
     setMessages(prev => [...prev, userMsg])
     setInput('')
@@ -139,6 +140,7 @@ export function ChatBot() {
       }
       setMessages(prev => [...prev, botMsg])
       setIsTyping(false)
+      // eslint-disable-next-line react-hooks/purity
     }, 800 + Math.random() * 400)
   }
 

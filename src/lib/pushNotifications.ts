@@ -32,7 +32,7 @@ export function getPushSupport(): PushSupportStatus {
 
   // Détection iOS Safari hors PWA : push impossible tant que l'app n'est pas
   // ajoutée à l'écran d'accueil (limitation Apple).
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as Window & { MSStream?: unknown }).MSStream
   // @ts-expect-error - standalone propriété non standard iOS
   const isStandalone = navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
   if (isIOS && !isStandalone) return 'ios-needs-install'
@@ -76,7 +76,7 @@ export async function subscribeUserToPush(userId: string): Promise<boolean> {
   if (!subscription) {
     subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY).buffer as ArrayBuffer,
     })
   }
 

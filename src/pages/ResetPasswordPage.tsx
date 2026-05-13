@@ -37,8 +37,9 @@ export function ResetPasswordPage() {
       if (error) throw error
       toast.success('Mot de passe mis à jour.')
       navigate('/', { replace: true })
-    } catch (error: any) {
-      toast.error(error?.message || 'Erreur lors de la mise à jour.')
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Erreur lors de la mise à jour.'
+      toast.error(message)
     } finally {
       setLoading(false)
     }

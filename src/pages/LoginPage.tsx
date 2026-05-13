@@ -25,8 +25,9 @@ export function LoginPage() {
       if (error) throw error
       toast.success('Bon retour parmi nous')
       navigate(from, { replace: true })
-    } catch (error: any) {
-      toast.error(error.message === 'Invalid login credentials' ? 'Identifiants incorrects' : "Une erreur s'est produite")
+    } catch (error) {
+      const message = error instanceof Error ? error.message : ''
+      toast.error(message === 'Invalid login credentials' ? 'Identifiants incorrects' : "Une erreur s'est produite")
     } finally {
       setLoading(false)
     }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../contexts/AuthContext'
 import { Profile, VaperStory, DailyMessage, ContentArticle } from '../types'
 import { format, parseISO, subDays, differenceInDays } from 'date-fns'
 import toast from 'react-hot-toast'
@@ -75,6 +76,7 @@ function DashboardTab() {
 // ─── Users Tab ──────────────────────────────────────────────────────────────────
 
 function UsersTab() {
+  const { user } = useAuth()
   const [users, setUsers] = useState<Profile[]>([])
   const [selectedUser, setSelectedUser] = useState<Profile | null>(null)
   const [noteText, setNoteText] = useState('')
@@ -92,7 +94,7 @@ function UsersTab() {
       await supabase.from('admin_notes').insert({
         user_id: selectedUser.id,
         note: noteText,
-        created_by: 'admin',
+        created_by: user?.id ?? null,
       })
       toast.success('Note enregistrée.')
       setNoteText('')
