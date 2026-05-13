@@ -560,6 +560,7 @@ function PushTab() {
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [profiles, setProfiles] = useState<ProfileLite[]>([])
+  const [shops, setShops] = useState<string[]>([])
 
   const loadCount = async () => {
     setRefreshing(true)
@@ -581,13 +582,18 @@ function PushTab() {
       .then(({ data }) => {
         if (data) setProfiles(data as ProfileLite[])
       })
+    // Liste canonique des boutiques (source de vérité, pas seulement celles
+    // avec au moins un client assigné)
+    supabase.from('shops')
+      .select('name')
+      .order('name', { ascending: true })
+      .then(({ data }) => {
+        if (data) setShops(data.map(s => s.name as string))
+      })
     // Rafraîchit toutes les 15s pendant que l'onglet est ouvert
     const interval = setInterval(loadCount, 15000)
     return () => clearInterval(interval)
   }, [])
-
-  // Liste unique des boutiques observées dans les profils
-  const shops = Array.from(new Set(profiles.map(p => p.preferred_shop).filter((s): s is string => !!s))).sort()
 
   // IDs ciblés selon le mode
   const targetIds: string[] | null = (() => {
