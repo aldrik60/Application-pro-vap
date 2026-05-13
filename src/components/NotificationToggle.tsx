@@ -27,8 +27,6 @@ export function NotificationToggle() {
     setStatus(getPushSupport())
   }, [])
 
-  if (status === 'unsupported') return null
-
   const handleEnable = async () => {
     if (!user) return
     try {
@@ -84,9 +82,17 @@ export function NotificationToggle() {
           Notifications
         </p>
 
+        {status === 'unsupported' && (
+          <p className="text-[12px] mt-1 leading-snug" style={{ color: 'var(--color-ink-3, #686868)' }}>
+            Votre navigateur ne prend pas en charge les notifications push.
+          </p>
+        )}
+
         {status === 'ios-needs-install' && (
           <p className="text-[12px] mt-1 leading-snug" style={{ color: 'var(--color-ink-3, #686868)' }}>
             Installez d'abord Pro'Vap sur votre écran d'accueil pour recevoir les notifications.
+            <br />
+            <span className="text-[11px]">Partage → « Sur l'écran d'accueil »</span>
           </p>
         )}
 
