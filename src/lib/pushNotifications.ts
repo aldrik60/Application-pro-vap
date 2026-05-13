@@ -12,7 +12,13 @@ import { supabase } from './supabase'
  * (clé publique VAPID — la clé privée reste côté serveur uniquement).
  */
 
-const VAPID_PUBLIC_KEY = (import.meta.env.VITE_VAPID_PUBLIC_KEY as string | undefined)?.trim()
+// Clé publique VAPID — par nature publique (envoyée au navigateur pour signer
+// les requêtes). Hardcodée pour éviter une étape de config Vercel manuelle.
+// Pour la changer, on regénère une paire avec `npx web-push generate-vapid-keys`
+// puis on met à jour ce fichier + le Vault Supabase (vault.secrets).
+const VAPID_PUBLIC_KEY_FALLBACK = 'BIK52orGJBZ60gYd5QSXe07vQ4EYY3hNQVZ1IJ0r9O9dCMxAT8U4TvH2cMb3-qznHcnS1RSxAdHpFxa_urHQrLk'
+
+const VAPID_PUBLIC_KEY = ((import.meta.env.VITE_VAPID_PUBLIC_KEY as string | undefined)?.trim()) || VAPID_PUBLIC_KEY_FALLBACK
 
 export type PushSupportStatus =
   | 'unsupported'           // Pas de support navigateur
