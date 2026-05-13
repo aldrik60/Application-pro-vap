@@ -9,6 +9,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { differenceInHours } from 'date-fns'
 import { IS_FULL } from '../lib/appMode'
+import { useUnreadMessages } from '../hooks/useUnreadMessages'
 
 // Jalons d'amélioration de santé après l'arrêt du tabac.
 // Sources : Santé publique France, Tabac Info Service, OMS, HAS.
@@ -64,7 +65,8 @@ function stageProgress(stage: 1 | 2 | 3 | 4 | 5 | 6, days: number): number {
 }
 
 export function HomePage() {
-  const { profile } = useAuth()
+  const { user, profile } = useAuth()
+  const unreadCount = useUnreadMessages(user?.id)
   const navigate = useNavigate()
   const [dailyMessage, setDailyMessage] = useState("Aujourd'hui compte. Demain aussi.")
   const [, setBadges] = useState<Badge[]>([])
@@ -163,10 +165,30 @@ export function HomePage() {
             <Share2 size={16} strokeWidth={1.4} />
           </button>
           <button
-            className="w-[38px] h-[38px] rounded-full border border-line-strong flex items-center justify-center text-ink transition-colors hover:border-pv-terracotta"
-            aria-label="Notifications"
+            onClick={() => navigate('/messages')}
+            className="relative w-[38px] h-[38px] rounded-full border border-line-strong flex items-center justify-center text-ink transition-colors hover:border-pv-terracotta"
+            aria-label={unreadCount > 0 ? `Notifications (${unreadCount} non lue${unreadCount > 1 ? 's' : ''})` : 'Notifications'}
           >
             <Bell size={16} strokeWidth={1.4} />
+            {unreadCount > 0 && (
+              <span
+                className="absolute flex items-center justify-center text-[10px] font-bold"
+                style={{
+                  top: -4,
+                  right: -4,
+                  minWidth: 18,
+                  height: 18,
+                  paddingLeft: 4,
+                  paddingRight: 4,
+                  borderRadius: 9,
+                  background: 'var(--color-pv-terracotta, #b8482a)',
+                  color: '#ffffff',
+                  border: '2px solid var(--color-bg, #f6f1e8)',
+                }}
+              >
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
           </button>
         </div>
       </header>

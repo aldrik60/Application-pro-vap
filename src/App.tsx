@@ -16,6 +16,7 @@ const LegalPage = lazy(() => import('./pages/LegalPage').then(m => ({ default: m
 const OnboardingPage = lazy(() => import('./pages/OnboardingPage').then(m => ({ default: m.OnboardingPage })))
 const JournalPage = lazy(() => import('./pages/JournalPage').then(m => ({ default: m.JournalPage })))
 const BoutiquesPage = lazy(() => import('./pages/BoutiquesPage').then(m => ({ default: m.BoutiquesPage })))
+const MessagesPage = lazy(() => import('./pages/MessagesPage').then(m => ({ default: m.MessagesPage })))
 const HomePage = lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })))
 const SosPage = lazy(() => import('./pages/SosPage').then(m => ({ default: m.SosPage })))
 const BadgesPage = lazy(() => import('./pages/BadgesPage').then(m => ({ default: m.BadgesPage })))
@@ -78,6 +79,7 @@ function App() {
               <Route path="/profil" element={<ProfilePage />} />
               <Route path="/journal" element={<JournalPage />} />
               <Route path="/boutiques" element={<BoutiquesPage />} />
+              <Route path="/messages" element={<MessagesPage />} />
 
               {/* Admin Route */}
               <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminPage /></ProtectedRoute>} />
