@@ -17,6 +17,7 @@ export function NotificationToggle() {
   const [status, setStatus] = useState<PushSupportStatus>('permission-default')
   const [loading, setLoading] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
+  const [showSoftPrompt, setShowSoftPrompt] = useState(false)
 
   useEffect(() => {
     setStatus(getPushSupport())
@@ -29,8 +30,15 @@ export function NotificationToggle() {
     !(window as Window & { MSStream?: unknown }).MSStream
   const isAndroid = typeof navigator !== 'undefined' && /Android/.test(navigator.userAgent)
 
+  // 1er clic → ouvre la modale explicative (pas de demande système)
+  const requestActivation = () => {
+    setShowSoftPrompt(true)
+  }
+
+  // Confirmation dans la modale → déclenche la vraie demande système
   const handleEnable = async () => {
     if (!user) return
+    setShowSoftPrompt(false)
     try {
       setLoading(true)
       const ok = await subscribeUserToPush(user.id)
@@ -136,7 +144,7 @@ export function NotificationToggle() {
                 Recevez vos messages quotidiens, rappels et félicitations directement sur votre téléphone.
               </p>
               <button
-                onClick={handleEnable}
+                onClick={requestActivation}
                 disabled={loading}
                 className="mt-3 px-4 py-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
                 style={{ background: '#b8482a', color: '#ffffff' }}
@@ -251,6 +259,72 @@ export function NotificationToggle() {
               </ol>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Soft prompt avant la demande système (évite de "brûler" la permission native) */}
+      {showSoftPrompt && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
+          style={{ background: 'rgba(31,31,36,0.45)', backdropFilter: 'blur(2px)' }}
+          onClick={() => setShowSoftPrompt(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl p-6"
+            style={{ background: '#ffffff', boxShadow: '0 20px 50px rgba(31,31,36,0.25)' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div
+                className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                style={{ background: '#cb8002', color: '#fff' }}
+              >
+                <Bell size={20} strokeWidth={1.8} />
+              </div>
+              <div>
+                <p
+                  className="font-semibold text-[15px] leading-tight"
+                  style={{ color: '#1f1f24', fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic' }}
+                >
+                  Restons en contact.
+                </p>
+              </div>
+            </div>
+
+            <p className="text-[13px] leading-relaxed mb-4" style={{ color: '#686868' }}>
+              Pro'Vap vous enverra :
+            </p>
+            <ul className="space-y-1.5 text-[13px] mb-5" style={{ color: '#1f1f24' }}>
+              <li className="flex gap-2"><span style={{ color: '#cb8002' }}>·</span> Votre message du jour</li>
+              <li className="flex gap-2"><span style={{ color: '#cb8002' }}>·</span> Vos félicitations aux paliers atteints</li>
+              <li className="flex gap-2"><span style={{ color: '#cb8002' }}>·</span> Les rappels et nouveautés de votre boutique</li>
+            </ul>
+            <p className="text-[11px] mb-5" style={{ color: '#686868' }}>
+              Aucun spam. Vous pourrez désactiver à tout moment depuis votre profil.
+            </p>
+
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowSoftPrompt(false)}
+                className="flex-1 px-4 py-3 rounded-lg text-sm font-semibold transition-colors"
+                style={{
+                  background: 'transparent',
+                  color: '#686868',
+                  border: '1px solid rgba(40,40,45,0.18)',
+                }}
+              >
+                Pas maintenant
+              </button>
+              <button
+                onClick={handleEnable}
+                disabled={loading}
+                className="flex-1 px-4 py-3 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
+                style={{ background: '#b8482a', color: '#ffffff' }}
+              >
+                {loading ? '…' : 'Activer'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

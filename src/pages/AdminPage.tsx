@@ -542,12 +542,22 @@ function PushTab() {
   const [sending, setSending] = useState(false)
   const [subscriberCount, setSubscriberCount] = useState<number | null>(null)
   const [lastResult, setLastResult] = useState<{ sent: number; removed: number; total: number } | null>(null)
+  const [refreshing, setRefreshing] = useState(false)
 
-  useEffect(() => {
-    supabase.from('push_subscriptions')
+  const loadCount = async () => {
+    setRefreshing(true)
+    const { count } = await supabase.from('push_subscriptions')
       .select('*', { count: 'exact', head: true })
       .eq('enabled', true)
-      .then(({ count }) => setSubscriberCount(count ?? 0))
+    setSubscriberCount(count ?? 0)
+    setRefreshing(false)
+  }
+
+  useEffect(() => {
+    loadCount()
+    // Rafraîchit toutes les 15s pendant que l'onglet est ouvert
+    const interval = setInterval(loadCount, 15000)
+    return () => clearInterval(interval)
   }, [])
 
   const send = async () => {
@@ -581,14 +591,24 @@ function PushTab() {
 
   return (
     <div className="space-y-4">
-      <div className="card p-4">
-        <p className="text-[12px] uppercase font-semibold tracking-wider text-pv-ochre mb-1">État du réseau</p>
-        <p className="font-display text-3xl text-pv-ochre">
-          {subscriberCount === null ? '…' : subscriberCount}
-        </p>
-        <p className="text-xs text-ink-3 mt-1">
-          {subscriberCount === 1 ? 'client abonné' : 'clients abonnés aux notifications'}
-        </p>
+      <div className="card p-4 flex items-start justify-between gap-3">
+        <div>
+          <p className="text-[12px] uppercase font-semibold tracking-wider text-pv-ochre mb-1">État du réseau</p>
+          <p className="font-display text-3xl text-pv-ochre">
+            {subscriberCount === null ? '…' : subscriberCount}
+          </p>
+          <p className="text-xs text-ink-3 mt-1">
+            {subscriberCount === 1 ? 'client abonné' : 'clients abonnés aux notifications'}
+          </p>
+        </div>
+        <button
+          onClick={loadCount}
+          disabled={refreshing}
+          aria-label="Actualiser"
+          className="text-xs text-pv-ochre hover:underline px-2 py-1 disabled:opacity-50"
+        >
+          {refreshing ? '…' : '↻ Actualiser'}
+        </button>
       </div>
 
       <div className="card p-4 space-y-3">
