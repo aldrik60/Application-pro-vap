@@ -15,6 +15,10 @@ dist-ssr
 # Claude Code worktrees (working copies, never committed)
 .claude/
 
+# QR codes générés localement (artefacts de partage, pas du code source)
+qr-provap*.png
+qr-provap*.svg
+
 # Environment variables (NEVER commit these)
 .env
 .env.local
