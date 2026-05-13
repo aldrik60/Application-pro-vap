@@ -230,7 +230,7 @@ function StepSmoker({
         </div>
       </div>
       <div className="flex gap-2.5">
-        <button onClick={onBack} className="btn-ghost" style={{ flex: '0 0 auto', padding: '16px 24px' }}>
+        <button onClick={onBack} className="btn-ghost" style={{ flex: '0 0 auto', padding: '16px 24px', width: 'auto' }}>
           Retour
         </button>
         <button onClick={onContinue} className="btn-primary" style={{ flex: 1 }}>
@@ -332,7 +332,7 @@ function StepBoutique({
         </div>
       </div>
       <div className="flex gap-2.5 pt-3">
-        <button onClick={onBack} className="btn-ghost" style={{ flex: '0 0 auto', padding: '16px 24px' }}>
+        <button onClick={onBack} className="btn-ghost" style={{ flex: '0 0 auto', padding: '16px 24px', width: 'auto' }}>
           Retour
         </button>
         <button
