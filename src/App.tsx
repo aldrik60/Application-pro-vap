@@ -51,7 +51,6 @@ function Layout() {
     <>
       <Outlet />
       <BottomNav />
-      <InstallPrompt />
     </>
   )
 }
@@ -92,6 +91,7 @@ function App() {
             )}
           </Routes>
         </Suspense>
+        <InstallPrompt />
         <Toaster
           position="top-center"
           toastOptions={{
