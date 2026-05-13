@@ -1,10 +1,29 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { Vap } from '../components/Vap'
 import { ProVapLogo } from '../components/ProVapLogo'
-import { Shop } from '../types'
+import { Shop, ShopData } from '../types'
+
+interface BoutiqueItem {
+  id: Shop
+  name: string
+  addr: string
+  hours: string
+}
+
+const SHOP_ORDER: Shop[] = [
+  'Noyon', 'Compiègne', 'Clermont', 'Nogent-sur-Oise',
+  'Breteuil', 'Beauvais', 'Ferrières-en-Bray', 'Client Internet',
+]
+
+const INTERNET_BOUTIQUE: BoutiqueItem = {
+  id: 'Client Internet',
+  name: 'Client Internet',
+  addr: 'Site provap.fr',
+  hours: 'En ligne',
+}
 
 /**
  * Onboarding 3 écrans après création de compte.
@@ -16,22 +35,29 @@ import { Shop } from '../types'
  * Direction : Apple × Hermès, serif italique, ample, sans pression.
  */
 
-const BOUTIQUES: { id: Shop; name: string; addr: string; hours: string; km: number }[] = [
-  { id: 'Noyon',             name: 'Noyon',             addr: '4 rue de Paris',         hours: '10h–18h',   km: 65 },
-  { id: 'Compiègne',         name: 'Compiègne',         addr: '23 rue Solférino',       hours: '10h–19h',   km: 52 },
-  { id: 'Clermont',          name: 'Clermont',          addr: '12 rue de la République', hours: '10h–19h',   km: 38 },
-  { id: 'Nogent-sur-Oise',   name: 'Nogent-sur-Oise',   addr: '8 avenue de Gaulle',     hours: '10h–19h',   km: 45 },
-  { id: 'Breteuil',          name: 'Breteuil',          addr: '6 place du Bourg',       hours: '10h–18h30', km: 78 },
-  { id: 'Beauvais',          name: 'Beauvais',          addr: '8 place Jeanne-Hachette', hours: '10h–19h',   km: 38 },
-  { id: 'Ferrières-en-Bray', name: 'Ferrières-en-Bray', addr: '11 rue Principale',      hours: '10h–18h',   km: 92 },
-  { id: 'Client Internet',   name: 'Client Internet',   addr: 'Site provap.fr',         hours: 'En ligne',  km: 0 },
-]
-
 export function OnboardingPage() {
   const { user, profile, refreshProfile } = useAuth()
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
   const [saving, setSaving] = useState(false)
+  const [boutiques, setBoutiques] = useState<BoutiqueItem[]>([])
+
+  useEffect(() => {
+    let cancelled = false
+    supabase.from('shops').select('*').then(({ data }) => {
+      if (cancelled || !data) return
+      const fromDb: BoutiqueItem[] = (data as ShopData[]).map(s => ({
+        id: s.name as Shop,
+        name: s.name,
+        addr: s.address ?? '',
+        hours: s.hours ?? '',
+      }))
+      const byId = new Map(fromDb.map(b => [b.id, b]))
+      byId.set(INTERNET_BOUTIQUE.id, INTERNET_BOUTIQUE)
+      setBoutiques(SHOP_ORDER.map(id => byId.get(id)).filter((b): b is BoutiqueItem => !!b))
+    })
+    return () => { cancelled = true }
+  }, [])
 
   // Étape 2 — profil fumeur
   const [cigsPerDay, setCigsPerDay] = useState<number>(profile?.cigarettes_per_day || 18)
@@ -85,6 +111,7 @@ export function OnboardingPage() {
         )}
         {step === 3 && (
           <StepBoutique
+            boutiques={boutiques}
             selected={selectedShop}
             onSelect={setSelectedShop}
             onBack={() => setStep(2)}
@@ -254,8 +281,9 @@ function NumberStepper({
 /* ─── Étape 3 — Boutique de référence ─────────────────────────────────── */
 
 function StepBoutique({
-  selected, onSelect, onBack, onFinish, saving,
+  boutiques, selected, onSelect, onBack, onFinish, saving,
 }: {
+  boutiques: BoutiqueItem[]
   selected: Shop | ''
   onSelect: (s: Shop) => void
   onBack: () => void
@@ -277,7 +305,7 @@ function StepBoutique({
         </p>
 
         <div className="mt-6 flex flex-col gap-2">
-          {BOUTIQUES.map(b => {
+          {boutiques.map(b => {
             const isSelected = selected === b.id
             return (
               <button

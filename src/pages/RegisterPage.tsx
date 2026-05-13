@@ -37,7 +37,22 @@ export function RegisterPage() {
       toast.success('Compte créé. Bienvenue.')
       navigate('/')
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Une erreur s'est produite"
+      const raw = error instanceof Error ? error.message : ''
+      const lower = raw.toLowerCase()
+      let message = "Une erreur s'est produite"
+      if (lower.includes('already registered') || lower.includes('already in use') || lower.includes('user already')) {
+        message = 'Un compte existe déjà avec cette adresse email.'
+      } else if (lower.includes('invalid') && lower.includes('email')) {
+        message = 'Adresse email invalide.'
+      } else if (lower.includes('password') && (lower.includes('short') || lower.includes('at least'))) {
+        message = 'Mot de passe trop court (minimum 8 caractères).'
+      } else if (lower.includes('password') && lower.includes('character')) {
+        message = 'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caractère spécial.'
+      } else if (lower.includes('rate limit') || lower.includes('too many')) {
+        message = 'Trop de tentatives. Patientez quelques minutes.'
+      } else if (lower.includes('weak') || lower.includes('compromis') || lower.includes('pwned')) {
+        message = 'Ce mot de passe a déjà été divulgué dans une fuite de données. Choisissez-en un autre.'
+      }
       toast.error(message)
     } finally {
       setLoading(false)
@@ -91,7 +106,7 @@ export function RegisterPage() {
           </div>
 
           <div>
-            <label className="eyebrow block mb-2">Mot de passe (8 caractères minimum)</label>
+            <label className="eyebrow block mb-2">Mot de passe</label>
             <input
               type="password"
               className="input text-base tracking-widest"
@@ -103,6 +118,9 @@ export function RegisterPage() {
               minLength={8}
               required
             />
+            <p className="text-[11px] text-ink-3 mt-1.5 leading-relaxed">
+              8 caractères minimum, avec au moins une majuscule, une minuscule, un chiffre et un caractère spécial.
+            </p>
           </div>
 
           <label className="flex items-start gap-3 text-xs text-ink-3 leading-relaxed">

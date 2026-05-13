@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { X, Share, Plus, Download } from 'lucide-react'
 
 const DISMISSED_KEY = 'provap_install_dismissed_v1'
-const SHOW_DELAY_MS = 30000
+const SHOW_DELAY_MS = 5000
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>

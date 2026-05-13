@@ -1,12 +1,13 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { supabase } from '../lib/supabase'
 import { Phone, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Shop } from '../types'
+import { Shop, ShopData } from '../types'
 
 /**
  * Page Boutiques — Le réseau Pro'Vap.
- * Carte abstraite Picardie + boutique de référence sticky + liste des autres.
+ * Données dynamiques depuis Supabase (table `shops`).
  */
 
 interface Boutique {
@@ -17,15 +18,17 @@ interface Boutique {
   phone?: string
 }
 
-const BOUTIQUES: Boutique[] = [
-  { id: 'Noyon',             name: 'Noyon',             addr: '4 rue de Paris, 60400',                hours: '10h–18h',   phone: '03 44 44 44 44' },
-  { id: 'Compiègne',         name: 'Compiègne',         addr: '23 rue Solférino, 60200',              hours: '10h–19h',   phone: '03 44 20 56 78' },
-  { id: 'Clermont',          name: 'Clermont',          addr: '12 rue de la République, 60600',       hours: '10h–19h',   phone: '03 44 50 20 20' },
-  { id: 'Nogent-sur-Oise',   name: 'Nogent-sur-Oise',   addr: '8 avenue de Gaulle, 60180',            hours: '10h–19h',   phone: '03 44 55 30 30' },
-  { id: 'Breteuil',          name: 'Breteuil',          addr: '6 place du Bourg, 60120',              hours: '10h–18h30', phone: '03 22 29 10 10' },
-  { id: 'Beauvais',          name: 'Beauvais',          addr: '8 place Jeanne-Hachette, 60000',       hours: '10h–19h',   phone: '03 44 06 40 40' },
-  { id: 'Ferrières-en-Bray', name: 'Ferrières-en-Bray', addr: '11 rue Principale, 76220',             hours: '10h–18h',   phone: '02 35 90 00 00' },
-  { id: 'Client Internet',   name: 'provap.fr',         addr: 'Boutique en ligne',                    hours: '24h / 24',  phone: undefined },
+const INTERNET_BOUTIQUE: Boutique = {
+  id: 'Client Internet',
+  name: 'provap.fr',
+  addr: 'Boutique en ligne',
+  hours: '24h / 24',
+  phone: undefined,
+}
+
+const SHOP_ORDER: Shop[] = [
+  'Noyon', 'Compiègne', 'Clermont', 'Nogent-sur-Oise',
+  'Breteuil', 'Beauvais', 'Ferrières-en-Bray', 'Client Internet',
 ]
 
 // Positions abstraites sur la carte Picardie pour les 8 boutiques
@@ -44,9 +47,30 @@ export function BoutiquesPage() {
   const navigate = useNavigate()
   const { profile } = useAuth()
   const fav = profile?.preferred_shop
-  const favBoutique = BOUTIQUES.find(b => b.id === fav)
-  const others = BOUTIQUES.filter(b => b.id !== fav)
-  const favIndex = BOUTIQUES.findIndex(b => b.id === fav)
+  const [boutiques, setBoutiques] = useState<Boutique[]>([])
+
+  useEffect(() => {
+    let cancelled = false
+    supabase.from('shops').select('*').then(({ data }) => {
+      if (cancelled || !data) return
+      const fromDb: Boutique[] = (data as ShopData[]).map(s => ({
+        id: s.name as Shop,
+        name: s.name,
+        addr: s.address ?? '',
+        hours: s.hours ?? '',
+        phone: s.phone ?? undefined,
+      }))
+      // Garantit la présence de Client Internet et ordre cohérent
+      const byId = new Map(fromDb.map(b => [b.id, b]))
+      byId.set(INTERNET_BOUTIQUE.id, INTERNET_BOUTIQUE)
+      setBoutiques(SHOP_ORDER.map(id => byId.get(id)).filter((b): b is Boutique => !!b))
+    })
+    return () => { cancelled = true }
+  }, [])
+
+  const favBoutique = boutiques.find(b => b.id === fav)
+  const others = boutiques.filter(b => b.id !== fav)
+  const favIndex = boutiques.findIndex(b => b.id === fav)
 
   return (
     <div className="page pb-32">
