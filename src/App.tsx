@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { BottomNav } from './components/BottomNav'
+import { InstallPrompt } from './components/InstallPrompt'
 import { Toaster } from 'react-hot-toast'
 import { IS_FULL } from './lib/appMode'
 
@@ -33,6 +34,7 @@ function Layout() {
     <>
       <Outlet />
       <BottomNav />
+      <InstallPrompt />
     </>
   )
 }

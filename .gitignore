@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Claude Code worktrees (working copies, never committed)
+.claude/
+
 # Environment variables (NEVER commit these)
 .env
 .env.local
