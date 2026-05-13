@@ -535,44 +535,122 @@ export function AdminPage() {
 
 // ─── Push Notifications Tab ─────────────────────────────────────────────────────
 
+type TargetMode = 'all' | 'shop' | 'users'
+
+type ProfileLite = {
+  id: string
+  name: string
+  email: string
+  preferred_shop: string | null
+}
+
 function PushTab() {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
   const [url, setUrl] = useState('')
   const [sending, setSending] = useState(false)
   const [subscriberCount, setSubscriberCount] = useState<number | null>(null)
+  const [subscribedUserIds, setSubscribedUserIds] = useState<Set<string>>(new Set())
   const [lastResult, setLastResult] = useState<{ sent: number; removed: number; total: number } | null>(null)
   const [refreshing, setRefreshing] = useState(false)
 
+  // Targeting
+  const [mode, setMode] = useState<TargetMode>('all')
+  const [selectedShop, setSelectedShop] = useState<string>('')
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [profiles, setProfiles] = useState<ProfileLite[]>([])
+
   const loadCount = async () => {
     setRefreshing(true)
-    const { count } = await supabase.from('push_subscriptions')
-      .select('*', { count: 'exact', head: true })
+    const { data } = await supabase.from('push_subscriptions')
+      .select('user_id')
       .eq('enabled', true)
-    setSubscriberCount(count ?? 0)
+    const ids = new Set<string>((data ?? []).map(r => r.user_id as string))
+    setSubscribedUserIds(ids)
+    setSubscriberCount(ids.size)
     setRefreshing(false)
   }
 
   useEffect(() => {
     loadCount()
+    // Liste des profils pour le ciblage (par boutique / utilisateur)
+    supabase.from('profiles')
+      .select('id, name, email, preferred_shop')
+      .order('name', { ascending: true })
+      .then(({ data }) => {
+        if (data) setProfiles(data as ProfileLite[])
+      })
     // Rafraîchit toutes les 15s pendant que l'onglet est ouvert
     const interval = setInterval(loadCount, 15000)
     return () => clearInterval(interval)
   }, [])
+
+  // Liste unique des boutiques observées dans les profils
+  const shops = Array.from(new Set(profiles.map(p => p.preferred_shop).filter((s): s is string => !!s))).sort()
+
+  // IDs ciblés selon le mode
+  const targetIds: string[] | null = (() => {
+    if (mode === 'shop') {
+      if (!selectedShop) return []
+      return profiles.filter(p => p.preferred_shop === selectedShop).map(p => p.id)
+    }
+    if (mode === 'users') return selectedUserIds
+    return null // 'all' = pas de filtre
+  })()
+
+  // Combien d'abonnés (avec push activé) sont dans la cible
+  const targetedSubscribers = targetIds === null
+    ? subscriberCount ?? 0
+    : targetIds.filter(id => subscribedUserIds.has(id)).length
+
+  const matchingProfiles = searchQuery.trim().length > 0
+    ? profiles.filter(p => {
+        const q = searchQuery.toLowerCase()
+        return p.name?.toLowerCase().includes(q) || p.email?.toLowerCase().includes(q)
+      }).slice(0, 8)
+    : []
+
+  const toggleUser = (id: string) => {
+    setSelectedUserIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
+  }
+
+  const selectedProfilesMap = new Map(profiles.map(p => [p.id, p]))
 
   const send = async () => {
     if (!title.trim() || !body.trim()) {
       toast.error('Titre et message obligatoires.')
       return
     }
-    if (!confirm(`Envoyer cette notification à ${subscriberCount ?? '?'} abonné(s) ?`)) return
+    if (mode === 'shop' && !selectedShop) {
+      toast.error('Choisissez une boutique.')
+      return
+    }
+    if (mode === 'users' && selectedUserIds.length === 0) {
+      toast.error('Sélectionnez au moins un utilisateur.')
+      return
+    }
+    if (targetedSubscribers === 0) {
+      toast.error('Aucun abonné dans la cible — vérifiez votre sélection.')
+      return
+    }
+    const audienceLabel = mode === 'all'
+      ? `${targetedSubscribers} abonné(s)`
+      : mode === 'shop'
+        ? `${targetedSubscribers} abonné(s) de la boutique ${selectedShop}`
+        : `${targetedSubscribers} utilisateur(s) abonné(s) sur ${selectedUserIds.length} sélectionné(s)`
+    if (!confirm(`Envoyer cette notification à ${audienceLabel} ?`)) return
 
     try {
       setSending(true)
       setLastResult(null)
-      const { data, error } = await supabase.functions.invoke('send-push', {
-        body: { title: title.trim(), body: body.trim(), url: url.trim() || undefined },
-      })
+      const payload: { title: string; body: string; url?: string; target?: string[] } = {
+        title: title.trim(),
+        body: body.trim(),
+        url: url.trim() || undefined,
+      }
+      if (targetIds !== null) payload.target = targetIds
+      const { data, error } = await supabase.functions.invoke('send-push', { body: payload })
       if (error) throw error
       if (data?.error) throw new Error(data.error)
 
@@ -588,6 +666,11 @@ function PushTab() {
       setSending(false)
     }
   }
+
+  const sendDisabled = sending || !title.trim() || !body.trim()
+    || (mode === 'shop' && !selectedShop)
+    || (mode === 'users' && selectedUserIds.length === 0)
+    || targetedSubscribers === 0
 
   return (
     <div className="space-y-4">
@@ -609,6 +692,123 @@ function PushTab() {
         >
           {refreshing ? '…' : '↻ Actualiser'}
         </button>
+      </div>
+
+      {/* ─── Ciblage ─── */}
+      <div className="card p-4 space-y-3">
+        <h3 className="text-sm font-semibold text-pv-ochre">Cibler</h3>
+        <div className="grid grid-cols-3 gap-1.5 p-1 rounded-[10px]" style={{ background: 'var(--color-bg-elev)' }}>
+          {([
+            { id: 'all' as TargetMode, label: 'Tous' },
+            { id: 'shop' as TargetMode, label: 'Par boutique' },
+            { id: 'users' as TargetMode, label: 'Utilisateurs' },
+          ]).map(seg => (
+            <button
+              key={seg.id}
+              type="button"
+              onClick={() => setMode(seg.id)}
+              className={`text-xs py-2 rounded-[8px] transition-colors ${
+                mode === seg.id
+                  ? 'bg-pv-terracotta text-pv-ivory font-semibold'
+                  : 'text-ink-2 hover:text-ink'
+              }`}
+            >
+              {seg.label}
+            </button>
+          ))}
+        </div>
+
+        {mode === 'shop' && (
+          <div>
+            <label className="block text-[10px] uppercase font-bold text-ink-3 tracking-wider mb-1">Boutique</label>
+            <select
+              className="input text-sm"
+              value={selectedShop}
+              onChange={e => setSelectedShop(e.target.value)}
+            >
+              <option value="">Choisir une boutique…</option>
+              {shops.map(s => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {mode === 'users' && (
+          <div className="space-y-2">
+            {selectedUserIds.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {selectedUserIds.map(id => {
+                  const p = selectedProfilesMap.get(id)
+                  if (!p) return null
+                  const subscribed = subscribedUserIds.has(id)
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => toggleUser(id)}
+                      className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px]"
+                      style={{
+                        background: subscribed ? 'rgba(184,72,42,0.15)' : 'rgba(40,40,45,0.10)',
+                        color: subscribed ? 'var(--color-pv-terracotta)' : 'var(--color-ink-3)',
+                        border: '1px solid currentColor',
+                      }}
+                      title={subscribed ? 'Abonné aux notifs' : 'Pas d\'abonnement push actif'}
+                    >
+                      {p.name}
+                      <X size={11} strokeWidth={1.8} />
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+            <input
+              type="text"
+              className="input text-sm"
+              placeholder="Rechercher un client par nom ou email…"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
+            {matchingProfiles.length > 0 && (
+              <div className="card p-1 max-h-56 overflow-y-auto" style={{ background: 'var(--color-bg-elev)' }}>
+                {matchingProfiles.map(p => {
+                  const isSelected = selectedUserIds.includes(p.id)
+                  const subscribed = subscribedUserIds.has(p.id)
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => toggleUser(p.id)}
+                      className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left hover:bg-bg-card rounded-[8px]"
+                    >
+                      <div className="min-w-0">
+                        <p className="text-sm text-ink truncate">{p.name}</p>
+                        <p className="text-[11px] text-ink-3 truncate">
+                          {p.email}{p.preferred_shop ? ` · ${p.preferred_shop}` : ''}
+                          {!subscribed && <span className="text-ink-4"> · pas abonné</span>}
+                        </p>
+                      </div>
+                      {isSelected
+                        ? <Check size={14} className="text-pv-terracotta shrink-0" strokeWidth={2} />
+                        : <Plus size={14} className="text-ink-3 shrink-0" strokeWidth={1.6} />
+                      }
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        <p className="text-[11px] text-ink-3">
+          {mode === 'all' && `${targetedSubscribers} abonné(s) recevront ce push.`}
+          {mode === 'shop' && (selectedShop
+            ? `${targetedSubscribers} abonné(s) sur ${targetIds?.length ?? 0} client(s) ${selectedShop}.`
+            : 'Choisissez une boutique pour cibler ses clients.')}
+          {mode === 'users' && (selectedUserIds.length > 0
+            ? `${targetedSubscribers} abonné(s) sur ${selectedUserIds.length} utilisateur(s) sélectionné(s).`
+            : 'Recherchez et sélectionnez des utilisateurs.')}
+        </p>
       </div>
 
       <div className="card p-4 space-y-3">
@@ -658,10 +858,16 @@ function PushTab() {
 
         <button
           onClick={send}
-          disabled={sending || !title.trim() || !body.trim()}
+          disabled={sendDisabled}
           className="btn-primary text-sm py-3"
         >
-          {sending ? 'Envoi…' : `Envoyer à tous les abonnés`}
+          {sending
+            ? 'Envoi…'
+            : mode === 'all'
+              ? `Envoyer à ${targetedSubscribers} abonné(s)`
+              : mode === 'shop'
+                ? `Envoyer aux abonnés ${selectedShop || '…'} (${targetedSubscribers})`
+                : `Envoyer aux utilisateurs sélectionnés (${targetedSubscribers})`}
         </button>
       </div>
 
