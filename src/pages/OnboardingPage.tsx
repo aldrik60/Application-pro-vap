@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
+import toast from 'react-hot-toast'
 import { Vap } from '../components/Vap'
 import { ProVapLogo } from '../components/ProVapLogo'
 import { Shop, ShopData } from '../types'
@@ -73,14 +74,18 @@ export function OnboardingPage() {
     }
     try {
       setSaving(true)
-      await supabase.from('profiles').update({
+      const { error } = await supabase.from('profiles').update({
         cigarettes_per_day: cigsPerDay,
         pack_price: packPrice,
         preferred_shop: selectedShop || null,
         onboarding_completed: true,
       }).eq('id', user.id)
+      if (error) throw error
       await refreshProfile()
-      navigate('/profil')
+      navigate('/', { replace: true })
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Erreur lors de l'enregistrement."
+      toast.error(message)
     } finally {
       setSaving(false)
     }
