@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmez votre nouvelle adresse Pro'Vap</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #F6F1E8; font-family: Georgia, 'Times New Roman', serif; color: #28282d;">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="background-color: #F6F1E8; padding: 32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; background-color: #FFFFFF; border-radius: 14px; border: 1px solid rgba(40,40,45,0.08); overflow: hidden;">
+
+          <!-- Header -->
+          <tr>
+            <td align="center" style="padding: 40px 32px 24px 32px;">
+              <img src="https://application-pro-vap.vercel.app/icons/icon-512.png" alt="Pro'Vap" width="64" height="64" style="display: block; width: 64px; height: 64px; border-radius: 14px;">
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding: 0 40px 8px 40px;">
+              <p style="margin: 0; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #B8482A; text-align: center;">Nouvelle adresse</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 40px 24px 40px;">
+              <h1 style="margin: 0; font-family: Georgia, 'Times New Roman', serif; font-weight: 500; font-size: 32px; line-height: 1.2; letter-spacing: -0.01em; color: #28282d; text-align: center;">
+                Confirmez votre <em style="color: #B8482A;">nouvel email.</em>
+              </h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 40px 24px 40px;">
+              <p style="margin: 0; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 15px; line-height: 1.6; color: rgba(40,40,45,0.78); text-align: center;">
+                Vous avez demandé à modifier l'adresse email associée à votre compte Pro'Vap. Confirmez ce changement pour utiliser <strong style="color: #28282d;">{{ .NewEmail }}</strong> comme nouvelle adresse.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 40px 32px 40px;">
+              <p style="margin: 0; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13px; line-height: 1.6; color: rgba(40,40,45,0.60); text-align: center;">
+                Ancienne adresse : {{ .Email }}
+              </p>
+            </td>
+          </tr>
+
+          <!-- CTA -->
+          <tr>
+            <td align="center" style="padding: 0 40px 32px 40px;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td align="center" style="background-color: #B8482A; border-radius: 999px;">
+                    <a href="{{ .ConfirmationURL }}" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.04em; color: #FFFFFF; text-decoration: none; border-radius: 999px;">
+                      Confirmer ce changement
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Fallback link -->
+          <tr>
+            <td style="padding: 0 40px 32px 40px;">
+              <p style="margin: 0; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; line-height: 1.6; color: rgba(40,40,45,0.50); text-align: center;">
+                Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>
+                <a href="{{ .ConfirmationURL }}" style="color: #B8482A; word-break: break-all;">{{ .ConfirmationURL }}</a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding: 0 40px;">
+              <div style="height: 1px; background-color: rgba(40,40,45,0.08);"></div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 24px 40px 32px 40px;">
+              <p style="margin: 0 0 8px 0; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; line-height: 1.6; color: rgba(40,40,45,0.50); text-align: center;">
+                Vous n'êtes pas à l'origine de cette demande ? Ignorez cet email, votre adresse actuelle reste active.
+              </p>
+              <p style="margin: 16px 0 0 0; font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 13px; color: #CB8002; text-align: center;">
+                L'équipe Pro'Vap
+              </p>
+              <p style="margin: 4px 0 0 0; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10px; color: rgba(40,40,45,0.40); text-align: center;">
+                Réseau de boutiques en Picardie · Votre compagnon vers la liberté
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
