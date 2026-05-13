@@ -40,8 +40,8 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Navigation principale"
-      className="fixed bottom-0 left-0 right-0 z-50 bg-bg border-t border-line flex items-stretch pb-3"
-      style={{ height: 78 }}
+      className="fixed bottom-0 left-1/2 z-50 bg-bg border-t border-line flex items-stretch pb-3 w-full"
+      style={{ height: 78, maxWidth: 480, transform: 'translateX(-50%)' }}
     >
       <NavLink to="/" end className={({ isActive }) => tabClass(isActive)} aria-label="Accueil">
         {({ isActive }) => (
