@@ -175,29 +175,96 @@ export function SosPage() {
         </p>
 
         <div className="relative" style={{ width: 260, height: 260, marginTop: 28, marginBottom: 28 }}>
-          {/* Cercles concentriques */}
-          <div className="absolute rounded-full" style={{ inset: -42, border: '0.5px solid rgba(246,241,232,0.08)' }} />
-          <div className="absolute rounded-full" style={{ inset: -20, border: '0.5px solid rgba(246,241,232,0.12)' }} />
-          {/* Orbe qui respire */}
+          {/* Onde la plus extérieure — respiration lente du décor */}
+          <div
+            className="absolute rounded-full"
+            style={{
+              inset: -72,
+              border: '0.5px solid rgba(246,241,232,0.05)',
+              animation: paused ? 'none' : 'sosRingFar 19s ease-in-out infinite',
+            }}
+          />
+          {/* Cercle médian */}
+          <div
+            className="absolute rounded-full"
+            style={{
+              inset: -42,
+              border: '0.5px solid rgba(246,241,232,0.09)',
+              animation: paused ? 'none' : 'sosRingMid 19s ease-in-out infinite',
+            }}
+          />
+          {/* Cercle proche, teinté ochre */}
+          <div
+            className="absolute rounded-full"
+            style={{
+              inset: -16,
+              border: '1px solid rgba(203,128,2,0.18)',
+              animation: paused ? 'none' : 'sosRingNear 19s ease-in-out infinite',
+            }}
+          />
+
+          {/* Halo lumineux flou qui s'expand */}
+          <div
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              inset: -30,
+              background:
+                'radial-gradient(circle, rgba(203,128,2,0.35) 0%, rgba(184,72,42,0.18) 45%, transparent 75%)',
+              filter: 'blur(24px)',
+              animation: paused ? 'none' : 'sosHaloPulse 19s ease-in-out infinite',
+            }}
+          />
+
+          {/* Onde d'énergie qui se propage (radial expansion) */}
+          {!paused && (
+            <div
+              key={`wave-${cycle}-${phaseIdx}`}
+              className="absolute rounded-full pointer-events-none"
+              style={{
+                inset: 0,
+                border: '1px solid rgba(203,128,2,0.6)',
+                animation: 'sosWave 2.4s ease-out forwards',
+              }}
+            />
+          )}
+
+          {/* Orbe principal qui respire */}
           <div
             className="absolute rounded-full"
             style={{
               inset: 0,
-              background: 'radial-gradient(60% 60% at 35% 30%, rgba(203,128,2,0.4), rgba(184,72,42,0.4) 55%, rgba(80,30,18,0.7) 100%)',
-              boxShadow: '0 0 80px rgba(184,72,42,0.3), inset 0 0 60px rgba(0,0,0,0.5), inset 6px 6px 30px rgba(255,220,200,0.18)',
+              background:
+                'radial-gradient(60% 60% at 35% 30%, rgba(203,128,2,0.55), rgba(184,72,42,0.48) 55%, rgba(80,30,18,0.8) 100%)',
+              boxShadow:
+                '0 0 100px rgba(184,72,42,0.45), inset 0 0 60px rgba(0,0,0,0.5), inset 6px 6px 30px rgba(255,220,200,0.22)',
               animation: paused ? 'none' : 'sosBreathe 19s ease-in-out infinite',
             }}
           />
+
+          {/* Reflet intérieur qui rotation lente */}
+          <div
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              inset: 12,
+              background:
+                'conic-gradient(from 0deg, transparent 0%, rgba(255,220,200,0.12) 25%, transparent 50%, rgba(203,128,2,0.1) 75%, transparent 100%)',
+              mixBlendMode: 'overlay',
+              animation: paused ? 'none' : 'sosShimmer 12s linear infinite',
+            }}
+          />
+
           {/* Chiffre central */}
           <div className="absolute inset-0 flex items-center justify-center">
             <span
+              key={`num-${currentPhase}-${secondsInPhase}`}
               className="font-display tabular"
               style={{
                 fontSize: 100,
                 fontWeight: 400,
                 color: 'var(--color-pv-ivory)',
                 letterSpacing: '-0.02em',
-                textShadow: '0 4px 24px rgba(0,0,0,0.5)',
+                textShadow: '0 4px 24px rgba(0,0,0,0.5), 0 0 30px rgba(203,128,2,0.3)',
+                animation: paused ? 'none' : 'sosNumberPop 1s ease-out',
               }}
             >
               {secondsInPhase}
@@ -230,10 +297,57 @@ export function SosPage() {
       </footer>
 
       <style>{`
+        /* Cycle 4-7-8 = 19s. Phases: 0→21% inhale, 21→58% hold, 58→100% exhale */
         @keyframes sosBreathe {
-          0%, 100% { transform: scale(0.78); }
-          21%      { transform: scale(1); }
-          58%      { transform: scale(1); }
+          0%   { transform: scale(0.7);  filter: brightness(0.72) saturate(0.85); }
+          21%  { transform: scale(1.04); filter: brightness(1.28) saturate(1.18); }
+          58%  { transform: scale(1.00); filter: brightness(1.05) saturate(1.00); }
+          100% { transform: scale(0.7);  filter: brightness(0.72) saturate(0.85); }
+        }
+        @keyframes sosHaloPulse {
+          0%   { opacity: 0.35; transform: scale(0.88); }
+          21%  { opacity: 0.95; transform: scale(1.12); }
+          58%  { opacity: 0.65; transform: scale(1.04); }
+          100% { opacity: 0.35; transform: scale(0.88); }
+        }
+        @keyframes sosRingNear {
+          0%, 100% { transform: scale(0.94); opacity: 0.55; }
+          21%      { transform: scale(1.08); opacity: 1; }
+          58%      { transform: scale(1.04); opacity: 0.82; }
+        }
+        @keyframes sosRingMid {
+          0%, 100% { transform: scale(0.96); opacity: 0.5; }
+          21%      { transform: scale(1.05); opacity: 0.9; }
+          58%      { transform: scale(1.03); opacity: 0.7; }
+        }
+        @keyframes sosRingFar {
+          0%, 100% { transform: scale(0.98); opacity: 0.35; }
+          21%      { transform: scale(1.03); opacity: 0.7; }
+          58%      { transform: scale(1.02); opacity: 0.55; }
+        }
+        @keyframes sosWave {
+          0%   { transform: scale(1);   opacity: 0.5; }
+          100% { transform: scale(1.6); opacity: 0; }
+        }
+        @keyframes sosShimmer {
+          0%   { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes sosNumberPop {
+          0%   { transform: scale(0.85); opacity: 0.4; filter: blur(2px); }
+          30%  { transform: scale(1.06); opacity: 1;   filter: blur(0); }
+          100% { transform: scale(1);    opacity: 1;   filter: blur(0); }
+        }
+        @keyframes fadeInUp {
+          0%   { opacity: 0; transform: translateY(12px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .sos-no-motion, .sos-no-motion * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
         }
       `}</style>
     </div>
