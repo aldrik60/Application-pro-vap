@@ -114,14 +114,17 @@ export function MessagesPage() {
 
         {!loading && messages.length > 0 && (
           <div className="flex flex-col gap-3">
-            {messages.map(msg => (
+            {messages.map(msg => {
+              const hasLink = !!msg.url && msg.url.trim() !== '' && msg.url.trim() !== '/'
+              return (
               <button
                 key={msg.id}
-                onClick={() => msg.url && navigate(msg.url)}
-                className="card p-4 text-left transition-all active:scale-[0.99] hover:border-pv-ochre/30"
+                onClick={() => hasLink && navigate(msg.url!)}
+                disabled={!hasLink}
+                className="card p-4 text-left transition-all active:scale-[0.99] hover:border-pv-ochre/30 disabled:cursor-default"
                 style={{
                   position: 'relative',
-                  cursor: msg.url ? 'pointer' : 'default',
+                  cursor: hasLink ? 'pointer' : 'default',
                 }}
               >
                 {isUnread(msg.created_at) && (
@@ -152,7 +155,7 @@ export function MessagesPage() {
                 >
                   {msg.body}
                 </p>
-                {msg.url && (
+                {hasLink && (
                   <span
                     className="inline-block mt-3 text-[12px] font-semibold"
                     style={{ color: 'var(--color-pv-terracotta, #b8482a)' }}
@@ -161,7 +164,8 @@ export function MessagesPage() {
                   </span>
                 )}
               </button>
-            ))}
+              )
+            })}
           </div>
         )}
       </section>

@@ -571,7 +571,7 @@ function PushTab() {
       setSending(true)
       setLastResult(null)
       const { data, error } = await supabase.functions.invoke('send-push', {
-        body: { title: title.trim(), body: body.trim(), url: url.trim() || '/' },
+        body: { title: title.trim(), body: body.trim(), url: url.trim() || undefined },
       })
       if (error) throw error
       if (data?.error) throw new Error(data.error)
