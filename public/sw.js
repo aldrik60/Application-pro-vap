@@ -1,4 +1,4 @@
-const CACHE_NAME = 'provap-cache-v2';
+const CACHE_NAME = 'provap-cache-v3';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -10,44 +10,55 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', (event) => {
+  // Active immédiatement la nouvelle version sans attendre la fermeture des onglets
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        // Soft fail if some assets are missing during dev
         return cache.addAll(urlsToCache).catch(err => console.log('SW install cache error', err));
       })
   );
 });
 
 self.addEventListener('fetch', (event) => {
+  const req = event.request;
+
+  // Stratégie network-first pour les navigations et les assets hachés (JS/CSS de Vite)
+  // → garantit qu'on a toujours le dernier index.html et les bons bundles
+  const isNavigate = req.mode === 'navigate';
+  const isHashedAsset = /\/assets\/.+\-[A-Za-z0-9_]+\.(js|css)$/.test(new URL(req.url).pathname);
+
+  if (isNavigate || isHashedAsset) {
+    event.respondWith(
+      fetch(req)
+        .then((res) => {
+          // Met à jour le cache avec la réponse fraîche
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, copy)).catch(() => {});
+          return res;
+        })
+        .catch(() => caches.match(req).then(c => c || caches.match('/index.html')))
+    );
+    return;
+  }
+
+  // Stratégie cache-first pour les icônes / manifest (changent rarement)
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request).catch(() => {
-          // Serve index.html for navigation requests offline mapping
-          if (event.request.mode === 'navigate') {
-            return caches.match('/index.html');
-          }
-        });
-      }
-    )
+    caches.match(req).then((cached) => cached || fetch(req))
   );
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
+    (async () => {
+      // Nettoie les anciens caches
+      const names = await caches.keys();
+      await Promise.all(
+        names.filter(n => n !== CACHE_NAME).map(n => caches.delete(n))
       );
-    })
+      // Prend le contrôle des onglets ouverts immédiatement
+      await self.clients.claim();
+    })()
   );
 });
 
