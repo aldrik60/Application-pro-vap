@@ -265,13 +265,26 @@ export function NotificationToggle() {
       {/* Soft prompt avant la demande système (évite de "brûler" la permission native) */}
       {showSoftPrompt && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
-          style={{ background: 'rgba(31,31,36,0.45)', backdropFilter: 'blur(2px)' }}
+          className="fixed inset-0 flex items-center justify-center"
+          style={{
+            zIndex: 100,
+            background: 'rgba(31,31,36,0.5)',
+            backdropFilter: 'blur(3px)',
+            paddingTop: 'env(safe-area-inset-top, 0px)',
+            paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
+            paddingLeft: 16,
+            paddingRight: 16,
+          }}
           onClick={() => setShowSoftPrompt(false)}
         >
           <div
             className="w-full max-w-md rounded-2xl p-6"
-            style={{ background: '#ffffff', boxShadow: '0 20px 50px rgba(31,31,36,0.25)' }}
+            style={{
+              background: '#ffffff',
+              boxShadow: '0 20px 50px rgba(31,31,36,0.25)',
+              maxHeight: 'calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 32px)',
+              overflowY: 'auto',
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 mb-4">
