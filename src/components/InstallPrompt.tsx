@@ -1,9 +1,22 @@
 import { useEffect, useState } from 'react'
 import { X, Share, Plus, Download, MoreVertical } from 'lucide-react'
 
-const DISMISSED_KEY = 'provap_install_dismissed_v1'
+const DISMISSED_KEY = 'provap_install_dismissed_v2'
+const DISMISS_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 jours
 const SHOW_DELAY_MS = 3000
 const ANDROID_PROMPT_FALLBACK_MS = 8000
+
+function isDismissedRecently(): boolean {
+  const raw = localStorage.getItem(DISMISSED_KEY)
+  if (!raw) return false
+  const ts = parseInt(raw, 10)
+  if (Number.isNaN(ts)) return false
+  return (Date.now() - ts) < DISMISS_TTL_MS
+}
+
+function markDismissed() {
+  localStorage.setItem(DISMISSED_KEY, String(Date.now()))
+}
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>
@@ -22,8 +35,8 @@ export function InstallPrompt() {
     const cssStandalone = window.matchMedia('(display-mode: standalone)').matches
     if (navStandalone || cssStandalone) return
 
-    // Déjà refusé une fois
-    if (localStorage.getItem(DISMISSED_KEY) === '1') return
+    // Déjà refusé récemment (TTL 7 jours puis re-prompt)
+    if (isDismissedRecently()) return
 
     const ua = navigator.userAgent
     const isIOS = /iPad|iPhone|iPod/.test(ua) &&
@@ -69,14 +82,14 @@ export function InstallPrompt() {
     await deferred.prompt()
     const { outcome } = await deferred.userChoice
     if (outcome === 'accepted') {
-      localStorage.setItem(DISMISSED_KEY, '1')
+      markDismissed()
     }
     setMode('hidden')
     setDeferred(null)
   }
 
   const dismiss = () => {
-    localStorage.setItem(DISMISSED_KEY, '1')
+    markDismissed()
     setMode('hidden')
   }
 
