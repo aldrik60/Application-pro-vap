@@ -6,6 +6,7 @@ import toast from 'react-hot-toast'
 import { Vap } from '../components/Vap'
 import { ProVapLogo } from '../components/ProVapLogo'
 import { Shop, ShopData } from '../types'
+import { getPushSupport, subscribeUserToPush } from '../lib/pushNotifications'
 
 interface BoutiqueItem {
   id: Shop
@@ -82,6 +83,15 @@ export function OnboardingPage() {
       }).eq('id', user.id)
       if (error) throw error
       await refreshProfile()
+
+      // Opt-in notifications par défaut : on tente la souscription pendant
+      // que le geste utilisateur (clic sur Sceller) est encore actif.
+      // Échec silencieux si refus / non supporté / iOS pas encore installé.
+      const support = getPushSupport()
+      if (support === 'permission-default') {
+        try { await subscribeUserToPush(user.id) } catch { /* silencieux */ }
+      }
+
       navigate('/', { replace: true })
     } catch (e) {
       const message = e instanceof Error ? e.message : "Erreur lors de l'enregistrement."
