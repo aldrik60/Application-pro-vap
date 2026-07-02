@@ -41,7 +41,7 @@ export function LoginPage() {
 
       <div className="flex-1 flex flex-col justify-center">
         <div className="text-center mb-10">
-          <span className="eyebrow text-pv-ochre">Bon retour</span>
+          <span className="eyebrow text-gold-text">Bon retour</span>
           <h1
             className="display mt-3 text-ink"
             style={{ fontSize: 40, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
@@ -88,7 +88,7 @@ export function LoginPage() {
 
           <Link
             to="/forgot-password"
-            className="text-center text-sm text-ink-3 hover:text-pv-ochre transition-colors"
+            className="text-center text-sm text-ink-3 hover:text-gold-text transition-colors"
           >
             Mot de passe oublié ?
           </Link>
@@ -98,13 +98,13 @@ export function LoginPage() {
       <div className="flex flex-col gap-4 items-center">
         <p className="text-center text-sm text-ink-3">
           Pas encore de compte ?{' '}
-          <Link to="/register" className="text-pv-ochre font-semibold hover:underline">
+          <Link to="/register" className="text-gold-text font-semibold hover:underline">
             Créer un compte
           </Link>
         </p>
         <Link
           to="/mentions-legales"
-          className="text-center text-[10px] text-ink-3 hover:text-ink-2 transition-colors"
+          className="text-center text-[11px] text-ink-3 hover:text-ink-2 transition-colors"
           style={{ letterSpacing: '0.08em' }}
         >
           Mentions légales · Politique de confidentialité

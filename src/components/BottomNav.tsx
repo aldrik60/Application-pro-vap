@@ -52,7 +52,7 @@ export function BottomNav() {
         {({ isActive }) => (
           <>
             <Home size={20} strokeWidth={1.4} />
-            <span className="text-[10px]" style={{ letterSpacing: '0.08em', fontWeight: 500 }}>Accueil</span>
+            <span className="text-[11px]" style={{ letterSpacing: '0.08em', fontWeight: 500 }}>Accueil</span>
             {isActive && <ActiveDot />}
           </>
         )}
@@ -62,7 +62,7 @@ export function BottomNav() {
         {({ isActive }) => (
           <>
             <Award size={20} strokeWidth={1.4} />
-            <span className="text-[10px]" style={{ letterSpacing: '0.08em', fontWeight: 500 }}>Étapes</span>
+            <span className="text-[11px]" style={{ letterSpacing: '0.08em', fontWeight: 500 }}>Étapes</span>
             {isActive && <ActiveDot />}
           </>
         )}
@@ -88,7 +88,7 @@ export function BottomNav() {
           }}
         >
           <SosIcon size={22} stroke={1.6} />
-          <span className="text-[9px] font-semibold mt-0.5" style={{ letterSpacing: '0.16em' }}>SOS</span>
+          <span className="text-[10px] font-semibold mt-0.5" style={{ letterSpacing: '0.16em' }}>SOS</span>
         </button>
       </div>
 
@@ -96,7 +96,7 @@ export function BottomNav() {
         {({ isActive }) => (
           <>
             <VapeIcon size={20} stroke={1.4} />
-            <span className="text-[10px]" style={{ letterSpacing: '0.08em', fontWeight: 500 }}>Vape</span>
+            <span className="text-[11px]" style={{ letterSpacing: '0.08em', fontWeight: 500 }}>Vape</span>
             {isActive && <ActiveDot />}
           </>
         )}
@@ -106,7 +106,7 @@ export function BottomNav() {
         {({ isActive }) => (
           <>
             <User size={20} strokeWidth={1.4} />
-            <span className="text-[10px]" style={{ letterSpacing: '0.08em', fontWeight: 500 }}>Profil</span>
+            <span className="text-[11px]" style={{ letterSpacing: '0.08em', fontWeight: 500 }}>Profil</span>
             {isActive && <ActiveDot />}
           </>
         )}
@@ -117,7 +117,7 @@ export function BottomNav() {
           {({ isActive }) => (
             <>
               <Settings size={20} strokeWidth={1.4} />
-              <span className="text-[10px]" style={{ letterSpacing: '0.08em', fontWeight: 500 }}>Admin</span>
+              <span className="text-[11px]" style={{ letterSpacing: '0.08em', fontWeight: 500 }}>Admin</span>
               {isActive && <ActiveDot />}
             </>
           )}

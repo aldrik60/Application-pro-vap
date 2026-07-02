@@ -176,13 +176,13 @@ function OnbHeader({ step, onSkip }: { step: number; onSkip: () => void }) {
       <div className="flex justify-between items-center">
         <ProVapLogo height={18} />
         <div className="flex items-center gap-4">
-          <span className="text-[10px] text-ink-3" style={{ letterSpacing: '0.2em' }}>
+          <span className="text-[11px] text-ink-3" style={{ letterSpacing: '0.2em' }}>
             0{step} / 03
           </span>
           <button
             onClick={onSkip}
-            className="text-[10px] text-ink-3 hover:text-ink transition-colors"
-            style={{ letterSpacing: '0.16em', textTransform: 'uppercase', fontWeight: 600 }}
+            className="text-[11px] text-ink-3 hover:text-ink transition-colors"
+            style={{ letterSpacing: '0.16em', textTransform: 'uppercase', fontWeight: 600, padding: 12, margin: -12 }}
           >
             Passer
           </button>
@@ -191,7 +191,7 @@ function OnbHeader({ step, onSkip }: { step: number; onSkip: () => void }) {
       <div className="mt-3 rounded-full overflow-hidden" style={{ height: 2, background: 'var(--color-line)' }}>
         <div
           className="h-full transition-all duration-500"
-          style={{ width: `${(step / 3) * 100}%`, background: 'var(--color-pv-ochre)' }}
+          style={{ width: `${(step / 3) * 100}%`, background: 'var(--color-gold-text)' }}
         />
       </div>
     </>
@@ -206,7 +206,7 @@ function StepWelcome({ onContinue }: { onContinue: () => void }) {
       <div className="flex-1 flex flex-col items-center justify-center text-center">
         <Vap stage={1} size={180} withScene />
         <div className="mt-4">
-          <p className="display-italic text-pv-ochre" style={{ fontSize: 16 }}>Bienvenue.</p>
+          <p className="display-italic text-gold-text" style={{ fontSize: 16 }}>Bienvenue.</p>
           <h1
             className="display mt-3 text-ink"
             style={{ fontSize: 38, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
@@ -255,7 +255,7 @@ function StepSmoker({
   return (
     <>
       <div className="flex-1 pt-8">
-        <span className="eyebrow text-pv-terracotta">Étape 02</span>
+        <span className="eyebrow text-flame-text">Étape 02</span>
         <h1
           className="display mt-3 text-ink"
           style={{ fontSize: 34, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
@@ -310,7 +310,7 @@ function StepSmoker({
                 </select>
               </div>
             )}
-            <p className="mt-2 text-[11px] text-ink-3 leading-relaxed">
+            <p className="mt-2 text-[12px] text-ink-3 leading-relaxed">
               Pas encore arrêté ? Laissez « Aujourd'hui » — votre compteur démarre maintenant.
             </p>
             <div className="mt-2 hairline" />
@@ -364,7 +364,7 @@ function NumberStepper({
         <button
           onClick={() => onChange(dec(value))}
           aria-label="Diminuer"
-          className="w-9 h-9 rounded-full border border-line-strong flex items-center justify-center text-ink hover:bg-bg-elev transition-colors"
+          className="w-11 h-11 rounded-full border border-line-strong flex items-center justify-center text-ink hover:bg-bg-elev transition-colors"
           style={{ fontSize: 18, lineHeight: 1 }}
         >−</button>
         <span
@@ -377,7 +377,7 @@ function NumberStepper({
         <button
           onClick={() => onChange(inc(value))}
           aria-label="Augmenter"
-          className="w-9 h-9 rounded-full border border-line-strong flex items-center justify-center text-ink hover:bg-bg-elev transition-colors"
+          className="w-11 h-11 rounded-full border border-line-strong flex items-center justify-center text-ink hover:bg-bg-elev transition-colors"
           style={{ fontSize: 18, lineHeight: 1 }}
         >+</button>
       </div>
@@ -401,7 +401,7 @@ function StepBoutique({
   return (
     <>
       <div className="flex-1 pt-8 pb-4 overflow-y-auto">
-        <span className="eyebrow text-pv-terracotta">Étape 03</span>
+        <span className="eyebrow text-flame-text">Étape 03</span>
         <h1
           className="display mt-3 text-ink"
           style={{ fontSize: 34, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
@@ -423,15 +423,15 @@ function StepBoutique({
                 style={{
                   padding: '14px 16px',
                   background: isSelected ? 'var(--color-bg-elev)' : 'transparent',
-                  border: '1px solid ' + (isSelected ? 'var(--color-pv-ochre)' : 'var(--color-line)'),
+                  border: '1px solid ' + (isSelected ? 'var(--color-gold-text)' : 'var(--color-line)'),
                   borderRadius: 'var(--radius-md)',
                   color: 'var(--color-ink)',
                 }}
               >
-                <PinIcon color={isSelected ? 'var(--color-pv-ochre)' : 'var(--color-ink-3)'} />
+                <PinIcon color={isSelected ? 'var(--color-gold-text)' : 'var(--color-ink-3)'} />
                 <div className="flex-1 min-w-0">
                   <p className="font-display text-ink" style={{ fontSize: 16, fontWeight: 500 }}>{b.name}</p>
-                  <p className="text-[10px] text-ink-3 mt-0.5">{b.addr} · {b.hours}</p>
+                  <p className="text-[11px] text-ink-3 mt-0.5">{b.addr} · {b.hours}</p>
                 </div>
                 {isSelected && <CheckIcon />}
               </button>
@@ -469,7 +469,7 @@ function PinIcon({ color }: { color: string }) {
 function CheckIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-      stroke="var(--color-pv-ochre)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      stroke="var(--color-gold-text)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <path d="m5 12 5 5L20 7"/>
     </svg>
   )

@@ -61,7 +61,7 @@ export function ResetPasswordPage() {
 
       <div className="flex-1 flex flex-col justify-center">
         <div className="text-center mb-8">
-          <span className="eyebrow text-pv-ochre">Sécurisé</span>
+          <span className="eyebrow text-gold-text">Sécurisé</span>
           <h1
             className="display mt-3 text-ink"
             style={{ fontSize: 36, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}

@@ -227,7 +227,7 @@ export function ProfilePage() {
               <p className="font-display text-ink" style={{ fontSize: 26, fontWeight: 500 }}>
                 {profile?.name || 'Votre nom'}
               </p>
-              <p className="text-[10px] text-ink-3 mt-1" style={{ letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              <p className="text-[11px] text-ink-3 mt-1" style={{ letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                 Membre · {daysSmokeFree} jour{daysSmokeFree > 1 ? 's' : ''}
               </p>
             </div>
@@ -246,7 +246,7 @@ export function ProfilePage() {
       {/* Pacte personnel — carte ivoire avec grain */}
       <section className="px-5 mt-4">
         <div className="card-paper grain relative p-5">
-          <span className="eyebrow" style={{ color: 'rgba(40,40,45,0.6)' }}>Pacte personnel</span>
+          <span className="eyebrow" style={{ color: 'rgba(40,40,45,0.7)' }}>Pacte personnel</span>
           <p
             className="display-italic mt-3"
             style={{ fontSize: 17, lineHeight: 1.45, color: 'rgba(40,40,45,0.85)' }}
@@ -256,7 +256,7 @@ export function ProfilePage() {
           <div className="mt-4" style={{ height: 1, background: 'rgba(40,40,45,0.12)' }} />
           <div className="mt-3 flex justify-between items-end">
             <div>
-              <span className="font-semibold" style={{ fontSize: 9, letterSpacing: '0.16em', color: 'rgba(40,40,45,0.55)', textTransform: 'uppercase' }}>
+              <span className="font-semibold" style={{ fontSize: 10, letterSpacing: '0.16em', color: 'rgba(40,40,45,0.7)', textTransform: 'uppercase' }}>
                 Signé
               </span>
               <p
@@ -267,7 +267,7 @@ export function ProfilePage() {
               </p>
             </div>
             <span
-              style={{ fontSize: 10, letterSpacing: '0.14em', color: 'rgba(40,40,45,0.5)', textTransform: 'uppercase' }}
+              style={{ fontSize: 11, letterSpacing: '0.14em', color: 'rgba(40,40,45,0.7)', textTransform: 'uppercase' }}
             >
               {todayLabel}
             </span>
@@ -316,10 +316,10 @@ export function ProfilePage() {
               <label className="eyebrow block mb-2">Cig. par jour</label>
               <div className="flex items-center border border-line bg-bg-elev rounded-md overflow-hidden">
                 <button type="button" onClick={() => setCigsPerDay(v => Math.max(0, v - 1))}
-                  className="w-10 h-11 flex items-center justify-center text-ink-3 hover:text-ink hover:bg-bg-card transition-colors text-xl font-light">−</button>
+                  className="w-11 h-11 flex items-center justify-center text-ink-3 hover:text-ink hover:bg-bg-card transition-colors text-xl font-light">−</button>
                 <span className="flex-1 text-center text-ink font-display" style={{ fontSize: 20, fontWeight: 500 }}>{cigsPerDay}</span>
                 <button type="button" onClick={() => setCigsPerDay(v => v + 1)}
-                  className="w-10 h-11 flex items-center justify-center text-ink-3 hover:text-ink hover:bg-bg-card transition-colors text-xl font-light">+</button>
+                  className="w-11 h-11 flex items-center justify-center text-ink-3 hover:text-ink hover:bg-bg-card transition-colors text-xl font-light">+</button>
               </div>
             </div>
             <div>
@@ -357,7 +357,7 @@ export function ProfilePage() {
 
       {/* ── Objectif plaisir ──────────────────────────────────────────────── */}
       <section className="px-6 mt-7">
-        <span className="eyebrow text-pv-ochre">Objectif plaisir</span>
+        <span className="eyebrow text-gold-text">Objectif plaisir</span>
       </section>
       <section className="px-5 mt-3">
         <div className="card p-5 space-y-4">
@@ -379,7 +379,7 @@ export function ProfilePage() {
       {IS_FULL && preferredShop && (
         <>
           <section className="px-6 mt-7">
-            <span className="eyebrow text-pv-terracotta">Mon conseiller Pro'Vap</span>
+            <span className="eyebrow text-flame-text">Mon conseiller Pro'Vap</span>
           </section>
           <section className="px-5 mt-3">
             <div className="card p-5">
@@ -389,19 +389,19 @@ export function ProfilePage() {
               <div className="mt-3 space-y-2">
                 {shopData?.address && (
                   <p className="text-sm text-ink-3 flex items-start gap-2">
-                    <MapPin size={13} className="text-pv-terracotta shrink-0 mt-0.5" strokeWidth={1.5} />
+                    <MapPin size={13} className="text-flame-text shrink-0 mt-0.5" strokeWidth={1.5} />
                     {shopData.address}
                   </p>
                 )}
                 {shopData?.phone && (
                   <p className="text-sm text-ink-3 flex items-center gap-2">
-                    <Phone size={13} className="text-pv-terracotta shrink-0" strokeWidth={1.5} />
+                    <Phone size={13} className="text-flame-text shrink-0" strokeWidth={1.5} />
                     {shopData.phone}
                   </p>
                 )}
                 {shopData?.hours && (
                   <p className="text-sm text-ink-3 flex items-center gap-2">
-                    <Clock size={13} className="text-pv-terracotta shrink-0" strokeWidth={1.5} />
+                    <Clock size={13} className="text-flame-text shrink-0" strokeWidth={1.5} />
                     {shopData.hours}
                   </p>
                 )}
@@ -465,17 +465,17 @@ export function ProfilePage() {
       {/* ── Compte ────────────────────────────────────────────────────────── */}
       <section className="px-5 mt-5 space-y-3">
         <button onClick={signOut}
-          className="w-full flex items-center justify-center gap-2 text-pv-terracotta text-sm py-3 font-medium">
+          className="w-full flex items-center justify-center gap-2 text-flame-text text-sm py-3 font-medium">
           <LogOut size={15} strokeWidth={1.5} /> Me déconnecter
         </button>
 
         <button onClick={() => setDeleteModalOpen(true)}
-          className="w-full flex items-center justify-center gap-2 text-ink-3 text-xs py-2 hover:text-danger transition-colors">
+          className="w-full flex items-center justify-center gap-2 text-ink-3 text-xs py-3 hover:text-danger transition-colors">
           <Trash2 size={13} strokeWidth={1.3} /> Supprimer mon compte
         </button>
 
         <button onClick={() => navigate('/mentions-legales')}
-          className="w-full text-center text-ink-3 text-xs py-2 hover:text-pv-ochre transition-colors">
+          className="w-full text-center text-ink-3 text-xs py-3 hover:text-gold-text transition-colors">
           Mentions légales · Politique de confidentialité
         </button>
       </section>
@@ -488,7 +488,7 @@ export function ProfilePage() {
       <Modal isOpen={appointmentModalOpen} onClose={() => setAppointmentModalOpen(false)} title="Demande de rendez-vous">
         <form onSubmit={handleAppointmentSubmit} className="flex flex-col gap-4">
           <p className="text-sm text-ink-3">
-            Boutique : <span className="text-pv-ochre font-semibold">{preferredShop}</span>
+            Boutique : <span className="text-gold-text font-semibold">{preferredShop}</span>
           </p>
           <div>
             <label className="eyebrow block mb-2">Votre nom</label>
@@ -556,12 +556,12 @@ function ProfStat({ label, value, accent }: { label: string; value: string; acce
         style={{
           fontSize: 22,
           fontWeight: 500,
-          color: accent ? 'var(--color-pv-ochre)' : 'var(--color-ink)',
+          color: accent ? 'var(--color-gold-text)' : 'var(--color-ink)',
         }}
       >
         {value}
       </p>
-      <p className="text-[10px] text-ink-3 mt-1.5" style={{ letterSpacing: '0.06em' }}>{label}</p>
+      <p className="text-[11px] text-ink-3 mt-1.5" style={{ letterSpacing: '0.06em' }}>{label}</p>
     </div>
   )
 }

@@ -144,21 +144,21 @@ export function SosPage() {
         <button
           onClick={() => navigate(-1)}
           aria-label="Quitter"
-          className="w-9 h-9 rounded-full flex items-center justify-center transition-opacity hover:opacity-100"
+          className="w-11 h-11 rounded-full flex items-center justify-center transition-opacity hover:opacity-100"
           style={{ border: '1px solid rgba(246,241,232,0.25)', color: 'rgba(246,241,232,0.7)' }}
         >
           <X size={14} strokeWidth={1.5} />
         </button>
         <span
           className="text-pv-ivory/50 font-semibold"
-          style={{ fontSize: 10, letterSpacing: '0.24em', textTransform: 'uppercase' }}
+          style={{ fontSize: 11, letterSpacing: '0.24em', textTransform: 'uppercase' }}
         >
           Cycle {String(cycle).padStart(2, '0')} / {String(CYCLES_TOTAL).padStart(2, '0')}
         </span>
         <button
           onClick={() => setPaused(p => !p)}
           aria-label={paused ? 'Reprendre' : 'Pause'}
-          className="w-9 h-9 rounded-full flex items-center justify-center transition-opacity"
+          className="w-11 h-11 rounded-full flex items-center justify-center transition-opacity"
           style={{ border: '1px solid rgba(246,241,232,0.25)', color: 'rgba(246,241,232,0.7)' }}
         >
           {paused ? <Play size={14} strokeWidth={1.5} /> : <Pause size={14} strokeWidth={1.5} />}
@@ -169,7 +169,7 @@ export function SosPage() {
       <main className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-8">
         <p
           className="text-pv-ochre font-semibold"
-          style={{ fontSize: 10, letterSpacing: '0.32em', textTransform: 'uppercase' }}
+          style={{ fontSize: 11, letterSpacing: '0.32em', textTransform: 'uppercase' }}
         >
           {meta.eyebrow}
         </p>

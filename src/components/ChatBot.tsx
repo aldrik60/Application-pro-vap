@@ -170,7 +170,7 @@ export function ChatBot() {
             </div>
             <div className="flex-1">
               <h2 className="font-semibold text-text text-sm">Conseil Pro'Vap</h2>
-              <p className="text-[10px] text-success font-medium">En ligne</p>
+              <p className="text-[11px] text-success font-medium">En ligne</p>
             </div>
             <button
               onClick={() => setIsOpen(false)}
@@ -226,7 +226,7 @@ export function ChatBot() {
           {/* Quick Questions */}
           {messages.length <= 2 && (
             <div className="px-4 pb-2">
-              <p className="text-[10px] text-text-muted mb-2 uppercase font-semibold tracking-wider">Questions fréquentes</p>
+              <p className="text-[11px] text-text-muted mb-2 uppercase font-semibold tracking-wider">Questions fréquentes</p>
               <div className="flex flex-wrap gap-2">
                 {QUICK_QUESTIONS.map((q, i) => (
                   <button

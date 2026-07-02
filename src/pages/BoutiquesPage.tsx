@@ -139,21 +139,21 @@ export function BoutiquesPage() {
       {/* Boutique de référence */}
       {favBoutique ? (
         <section className="px-5 mt-5">
-          <span className="eyebrow text-pv-terracotta">Votre boutique de référence</span>
+          <span className="eyebrow text-flame-text">Votre boutique de référence</span>
           <div
             className="mt-3 p-5 flex items-center gap-3.5"
             style={{
               background: 'var(--color-bg-card)',
-              border: '1px solid var(--color-pv-ochre)',
+              border: '1px solid var(--color-gold-text)',
               borderRadius: 'var(--radius-md)',
             }}
           >
-            <PinSvg color="var(--color-pv-ochre)" size={20} />
+            <PinSvg color="var(--color-gold-text)" size={20} />
             <div className="flex-1 min-w-0">
               <p className="font-display text-ink" style={{ fontSize: 20, fontWeight: 500 }}>
                 {favBoutique.name}
               </p>
-              <p className="text-[11px] text-ink-3 mt-1">
+              <p className="text-[12px] text-ink-3 mt-1">
                 {favBoutique.addr} · {favBoutique.hours}
               </p>
             </div>
@@ -161,7 +161,7 @@ export function BoutiquesPage() {
               <a
                 href={`tel:${favBoutique.phone.replace(/\s/g, '')}`}
                 aria-label={`Appeler ${favBoutique.name}`}
-                className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-transform active:scale-95"
+                className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 transition-transform active:scale-95"
                 style={{
                   background: 'var(--color-pv-terracotta)',
                   color: 'var(--color-pv-ivory)',
@@ -179,7 +179,7 @@ export function BoutiquesPage() {
               Aucune boutique de référence sélectionnée.{' '}
               <button
                 onClick={() => navigate('/profil')}
-                className="text-pv-ochre underline-offset-2 hover:underline"
+                className="text-gold-text underline-offset-2 hover:underline"
               >
                 Choisir depuis le profil.
               </button>
@@ -202,7 +202,7 @@ export function BoutiquesPage() {
             <PinSvg color="var(--color-ink-3)" size={16} strokeWidth={1.3} />
             <div className="flex-1 min-w-0">
               <p className="font-display text-ink" style={{ fontSize: 17 }}>{b.name}</p>
-              <p className="text-[11px] text-ink-3 mt-0.5 truncate">{b.addr}</p>
+              <p className="text-[12px] text-ink-3 mt-0.5 truncate">{b.addr}</p>
             </div>
             {b.phone ? (
               <a

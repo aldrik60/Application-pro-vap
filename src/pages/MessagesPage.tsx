@@ -140,7 +140,7 @@ export function MessagesPage() {
                     aria-label="Non lu"
                   />
                 )}
-                <div className="eyebrow text-pv-ochre" style={{ fontSize: 10 }}>
+                <div className="eyebrow text-gold-text" style={{ fontSize: 11 }}>
                   {formatDate(msg.created_at)}
                 </div>
                 <h3

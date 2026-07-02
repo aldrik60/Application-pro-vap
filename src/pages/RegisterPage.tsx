@@ -67,7 +67,7 @@ export function RegisterPage() {
 
       <div className="flex-1 flex flex-col justify-center pt-6">
         <div className="text-center mb-8">
-          <span className="eyebrow text-pv-ochre">Bienvenue</span>
+          <span className="eyebrow text-gold-text">Bienvenue</span>
           <h1
             className="display mt-3 text-ink"
             style={{ fontSize: 36, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
@@ -118,7 +118,7 @@ export function RegisterPage() {
               minLength={8}
               required
             />
-            <p className="text-[11px] text-ink-3 mt-1.5 leading-relaxed">
+            <p className="text-[12px] text-ink-3 mt-1.5 leading-relaxed">
               8 caractères minimum, avec au moins une majuscule, une minuscule, un chiffre et un caractère spécial.
             </p>
           </div>
@@ -129,11 +129,11 @@ export function RegisterPage() {
               checked={acceptTerms}
               onChange={e => setAcceptTerms(e.target.checked)}
               disabled={loading}
-              className="mt-0.5 accent-[var(--color-pv-terracotta)] w-4 h-4 shrink-0"
+              className="mt-0.5 accent-[var(--color-pv-terracotta)] w-5 h-5 shrink-0"
             />
             <span>
               J'ai lu et j'accepte la{' '}
-              <Link to="/mentions-legales" className="text-pv-ochre hover:underline" target="_blank" rel="noopener noreferrer">
+              <Link to="/mentions-legales" className="text-gold-text hover:underline" target="_blank" rel="noopener noreferrer">
                 politique de confidentialité
               </Link>{' '}
               et les mentions légales. Je confirme être majeur(e).
@@ -149,13 +149,13 @@ export function RegisterPage() {
       <div className="flex flex-col gap-4 items-center">
         <p className="text-center text-sm text-ink-3">
           Déjà un compte ?{' '}
-          <Link to="/login" className="text-pv-ochre font-semibold hover:underline">
+          <Link to="/login" className="text-gold-text font-semibold hover:underline">
             Se connecter
           </Link>
         </p>
         <Link
           to="/mentions-legales"
-          className="text-center text-[10px] text-ink-3 hover:text-ink-2 transition-colors"
+          className="text-center text-[11px] text-ink-3 hover:text-ink-2 transition-colors"
           style={{ letterSpacing: '0.08em' }}
         >
           Mentions légales · Politique de confidentialité

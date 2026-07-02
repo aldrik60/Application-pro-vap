@@ -228,7 +228,7 @@ export function DiagnosticKitPage() {
         </button>
 
         <div className="mt-8">
-          <span className="eyebrow text-pv-ochre">Votre recommandation</span>
+          <span className="eyebrow text-gold-text">Votre recommandation</span>
           <h1
             className="display mt-3 text-ink"
             style={{ fontSize: 36, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
@@ -242,7 +242,7 @@ export function DiagnosticKitPage() {
           <div className="flex justify-between items-start gap-3">
             <div className="flex items-center gap-3">
               <span className="text-3xl">{kit.icon}</span>
-              <p className="font-display text-pv-ochre" style={{ fontSize: 22, fontWeight: 500 }}>
+              <p className="font-display text-gold-text" style={{ fontSize: 22, fontWeight: 500 }}>
                 {kit.name}
               </p>
             </div>
@@ -261,7 +261,7 @@ export function DiagnosticKitPage() {
                 border: '1px solid rgba(184, 72, 42, 0.30)',
               }}
             >
-              <span className="font-display text-pv-terracotta" style={{ fontSize: 17, fontWeight: 500 }}>
+              <span className="font-display text-flame-text" style={{ fontSize: 17, fontWeight: 500 }}>
                 {nicotineMg}
               </span>
             </div>
@@ -275,7 +275,7 @@ export function DiagnosticKitPage() {
         {/* Amortization */}
         <div className="card p-5 mt-3" style={{ borderColor: 'rgba(122, 138, 94, 0.30)' }}>
           <p className="text-sm text-ink leading-relaxed">
-            À <span className="font-semibold text-pv-ochre">{packPrice.toFixed(2)}€</span> le paquet, votre kit sera amorti en environ{' '}
+            À <span className="font-semibold text-gold-text">{packPrice.toFixed(2)}€</span> le paquet, votre kit sera amorti en environ{' '}
             <span className="font-semibold text-success">{daysToAmortize} jours</span>. Ensuite, chaque euro est un bénéfice net.
           </p>
         </div>
@@ -292,7 +292,7 @@ export function DiagnosticKitPage() {
           )}
         </div>
 
-        <p className="text-[11px] text-ink-3 text-center leading-relaxed mt-6">
+        <p className="text-[12px] text-ink-3 text-center leading-relaxed mt-6">
           Recommandation indicative. Nos conseillers Pro'Vap peuvent affiner ce diagnostic en boutique.
         </p>
       </div>
@@ -308,7 +308,7 @@ export function DiagnosticKitPage() {
         >
           <ChevronLeft size={18} /> {step > 0 ? 'Précédent' : 'Retour'}
         </button>
-        <span className="text-[10px] text-ink-3" style={{ letterSpacing: '0.2em' }}>
+        <span className="text-[11px] text-ink-3" style={{ letterSpacing: '0.2em' }}>
           {String(step + 1).padStart(2, '0')} / {String(QUESTIONS.length).padStart(2, '0')}
         </span>
       </div>
@@ -316,12 +316,12 @@ export function DiagnosticKitPage() {
       <div className="mt-3 rounded-full overflow-hidden" style={{ height: 2, background: 'var(--color-line)' }}>
         <div
           className="h-full transition-all duration-500"
-          style={{ width: `${progressPercent}%`, background: 'var(--color-pv-ochre)' }}
+          style={{ width: `${progressPercent}%`, background: 'var(--color-gold-text)' }}
         />
       </div>
 
       <div className="flex-1 flex flex-col justify-center pt-8">
-        <span className="eyebrow text-pv-terracotta">Diagnostic kit · Question {step + 1}</span>
+        <span className="eyebrow text-flame-text">Diagnostic kit · Question {step + 1}</span>
         <h2
           className="display mt-3 text-ink"
           style={{ fontSize: 26, fontWeight: 400, letterSpacing: '-0.015em', lineHeight: 1.2 }}
@@ -337,9 +337,9 @@ export function DiagnosticKitPage() {
               className="w-full text-left p-4 transition-all active:scale-[0.98]"
               style={{
                 borderRadius: 'var(--radius-md)',
-                border: '1px solid ' + (selected === opt.value ? 'var(--color-pv-ochre)' : 'var(--color-line)'),
+                border: '1px solid ' + (selected === opt.value ? 'var(--color-gold-text)' : 'var(--color-line)'),
                 background: selected === opt.value ? 'rgba(203,128,2,0.06)' : 'var(--color-bg-elev)',
-                color: selected === opt.value ? 'var(--color-pv-ochre)' : 'var(--color-ink)',
+                color: selected === opt.value ? 'var(--color-gold-text)' : 'var(--color-ink)',
               }}
             >
               <span className="font-display" style={{ fontSize: 16, fontWeight: 500 }}>{opt.label}</span>
@@ -348,7 +348,7 @@ export function DiagnosticKitPage() {
         </div>
       </div>
 
-      <p className="text-[11px] text-ink-3 text-center leading-relaxed mt-6">
+      <p className="text-[12px] text-ink-3 text-center leading-relaxed mt-6">
         Ce diagnostic se base sur votre profil de fumeur, pas sur votre budget.
       </p>
     </div>

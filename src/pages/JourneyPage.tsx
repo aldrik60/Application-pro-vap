@@ -127,7 +127,7 @@ export function JourneyPage() {
         <button
           onClick={() => setIsModalOpen(true)}
           aria-label="Nouveau point d'étape"
-          className="w-[38px] h-[38px] rounded-full border border-line-strong flex items-center justify-center text-pv-terracotta transition-colors hover:bg-bg-elev shrink-0 mt-1"
+          className="w-11 h-11 rounded-full border border-line-strong flex items-center justify-center text-flame-text transition-colors hover:bg-bg-elev shrink-0 mt-1"
         >
           <PlusCircle size={18} strokeWidth={1.4} />
         </button>
@@ -145,14 +145,14 @@ export function JourneyPage() {
                 top: -20,
                 opacity: 0.06,
                 fontSize: 200,
-                color: 'var(--color-pv-ochre)',
+                color: 'var(--color-gold-text)',
                 lineHeight: 0.7,
                 fontWeight: 500,
               }}
             >
               {String(Math.round(currentMg)).padStart(2, '0')}
             </div>
-            <span className="eyebrow text-pv-terracotta">Taux actuel</span>
+            <span className="eyebrow text-flame-text">Taux actuel</span>
             <div className="flex items-baseline gap-1 mt-3">
               <span
                 className="font-display tabular text-ink"
@@ -216,9 +216,9 @@ export function JourneyPage() {
             <div
               className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
               style={{
-                border: '1px solid ' + (s.current ? 'var(--color-pv-ochre)' : s.done ? 'var(--color-line-strong)' : 'var(--color-line)'),
+                border: '1px solid ' + (s.current ? 'var(--color-gold-text)' : s.done ? 'var(--color-line-strong)' : 'var(--color-line)'),
                 background: s.current ? 'var(--color-bg-card)' : 'transparent',
-                color: s.done ? 'var(--color-pv-ochre)' : 'var(--color-ink-4)',
+                color: s.done ? 'var(--color-gold-text)' : 'var(--color-ink-4)',
                 fontFamily: 'var(--font-display)',
                 fontStyle: 'italic',
                 fontSize: 15,
@@ -232,12 +232,12 @@ export function JourneyPage() {
                 <span className="display-italic text-ink-3 text-sm">mg/ml</span>{' '}
                 <span className="text-ink-3 text-sm">· {s.label}</span>
               </p>
-              <p className="text-[11px] text-ink-3 mt-0.5">Jour {s.day}</p>
+              <p className="text-[12px] text-ink-3 mt-0.5">Jour {s.day}</p>
             </div>
             {s.current && (
               <span
-                className="text-pv-ochre font-semibold"
-                style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase' }}
+                className="text-gold-text font-semibold"
+                style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase' }}
               >
                 En cours
               </span>
@@ -249,7 +249,7 @@ export function JourneyPage() {
       {/* Conseil Pro'Vap */}
       <section className="px-5 mt-6">
         <div className="card-elev p-5">
-          <span className="eyebrow text-pv-terracotta">Un conseil</span>
+          <span className="eyebrow text-flame-text">Un conseil</span>
           <p
             className="display-italic text-ink mt-2"
             style={{ fontSize: 18, lineHeight: 1.4 }}
@@ -290,7 +290,7 @@ export function JourneyPage() {
                     color: 'var(--color-ink)',
                     fontSize: 12,
                   }}
-                  itemStyle={{ color: 'var(--color-pv-ochre)' }}
+                  itemStyle={{ color: 'var(--color-gold-text)' }}
                   labelStyle={{ color: 'var(--color-ink-3)', marginBottom: 4 }}
                 />
                 <Line
@@ -300,7 +300,7 @@ export function JourneyPage() {
                   stroke="var(--color-pv-terracotta)"
                   strokeWidth={2.5}
                   dot={{ fill: 'var(--color-bg-card)', stroke: 'var(--color-pv-terracotta)', strokeWidth: 2, r: 4 }}
-                  activeDot={{ r: 6, fill: 'var(--color-pv-ochre)', stroke: 'var(--color-bg-card)' }}
+                  activeDot={{ r: 6, fill: 'var(--color-gold-text)', stroke: 'var(--color-bg-card)' }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -315,8 +315,8 @@ export function JourneyPage() {
             <span className="eyebrow">Historique · {checkins.length} point{checkins.length > 1 ? 's' : ''} d'étape</span>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="text-pv-ochre text-[11px] hover:underline"
-              style={{ letterSpacing: '0.06em' }}
+              className="text-gold-text text-[12px] hover:underline"
+              style={{ letterSpacing: '0.06em', padding: 12, margin: -12 }}
             >
               + Ajouter
             </button>
@@ -337,15 +337,15 @@ export function JourneyPage() {
                     {c.nicotine_mg}
                     <span className="display-italic text-ink-3 text-sm"> mg/ml</span>
                   </p>
-                  <p className="text-[11px] text-ink-3 mt-0.5 truncate">
+                  <p className="text-[12px] text-ink-3 mt-0.5 truncate">
                     {format(parseISO(c.date), 'd MMMM yyyy', { locale: fr })} · {c.eliquid_name}
                   </p>
                   {c.notes && (
-                    <p className="text-[11px] display-italic text-ink-2 mt-1 line-clamp-2">"{c.notes}"</p>
+                    <p className="text-[12px] display-italic text-ink-2 mt-1 line-clamp-2">"{c.notes}"</p>
                   )}
                 </div>
                 <span
-                  className="text-[10px] capitalize shrink-0 px-2 py-1 rounded-full"
+                  className="text-[11px] capitalize shrink-0 px-2 py-1 rounded-full"
                   style={{
                     color:
                       c.feeling === 'difficile' ? 'var(--color-danger)' :

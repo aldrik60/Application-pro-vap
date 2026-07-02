@@ -41,7 +41,7 @@ export function ForgotPasswordPage() {
 
       <div className="flex-1 flex flex-col justify-center pt-10">
         <div className="text-center mb-8">
-          <span className="eyebrow text-pv-ochre">Sans souci</span>
+          <span className="eyebrow text-gold-text">Sans souci</span>
           <h1
             className="display mt-3 text-ink"
             style={{ fontSize: 36, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
@@ -55,7 +55,7 @@ export function ForgotPasswordPage() {
 
         {sent ? (
           <div className="card p-7 text-center">
-            <div className="display-italic text-pv-ochre mb-2" style={{ fontSize: 28 }}>
+            <div className="display-italic text-gold-text mb-2" style={{ fontSize: 28 }}>
               C'est envoyé.
             </div>
             <p className="text-sm text-ink-2 leading-relaxed mb-5">

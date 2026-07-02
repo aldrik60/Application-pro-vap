@@ -19,6 +19,12 @@
   --color-pv-ochre:      #cb8002;   /* secondary / gold */
   --color-pv-ivory:      #f6f1e8;   /* paper warm */
 
+  /* — Accents TEXTE (contraste WCAG garanti dans les deux modes) —
+     Les couleurs brutes pv-* restent pour les fonds (btn-gold, chips) et
+     les scènes sombres fixes (SOS). Pour du texte, utiliser ces rôles. */
+  --color-gold-text:  #cb8002;      /* 5,7:1 sur fond sombre ; assombri en clair */
+  --color-flame-text: #d4623f;      /* terracotta éclairci, 4,8:1 sur fond sombre */
+
   /* — Rôles (dark par défaut) — */
   --color-bg:         #161618;
   --color-bg-elev:    #1f1f22;
@@ -28,7 +34,7 @@
 
   --color-ink:        #f6f1e8;       /* ivoire warm */
   --color-ink-2:      rgba(246, 241, 232, 0.72);
-  --color-ink-3:      rgba(246, 241, 232, 0.48);
+  --color-ink-3:      rgba(246, 241, 232, 0.55);
   --color-ink-4:      rgba(246, 241, 232, 0.28);
 
   --color-line:        rgba(246, 241, 232, 0.10);
@@ -45,7 +51,7 @@
   --color-border:     rgba(246, 241, 232, 0.10);
   --color-text:       #f6f1e8;
   --color-text-muted: rgba(246, 241, 232, 0.72);
-  --color-text-dim:   rgba(246, 241, 232, 0.48);
+  --color-text-dim:   rgba(246, 241, 232, 0.55);
   --color-primary:    #b8482a;
   --color-secondary:  #cb8002;
   --color-warning:    #cb8002;
@@ -98,8 +104,14 @@
 
     --color-ink:        #1a1a1c;
     --color-ink-2:      rgba(26, 26, 28, 0.72);
-    --color-ink-3:      rgba(26, 26, 28, 0.48);
+    --color-ink-3:      rgba(26, 26, 28, 0.64);
     --color-ink-4:      rgba(26, 26, 28, 0.28);
+
+    /* Accents texte assombris pour tenir 4,5:1 sur ivoire */
+    --color-gold-text:  #8a5902;
+    --color-flame-text: #a63e22;
+    --color-secondary:  #8a5902;
+    --color-accent-2:   #8a5902;
 
     --color-line:        rgba(40, 40, 45, 0.10);
     --color-line-strong: rgba(40, 40, 45, 0.22);
@@ -109,7 +121,7 @@
     --color-border:     rgba(40, 40, 45, 0.10);
     --color-text:       #1a1a1c;
     --color-text-muted: rgba(26, 26, 28, 0.72);
-    --color-text-dim:   rgba(26, 26, 28, 0.48);
+    --color-text-dim:   rgba(26, 26, 28, 0.64);
 
     --color-focus-ring: rgba(184, 72, 42, 0.40);
 
@@ -172,7 +184,7 @@ body { overscroll-behavior: none; }
 
 .eyebrow {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;

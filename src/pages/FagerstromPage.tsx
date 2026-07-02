@@ -76,7 +76,7 @@ export function FagerstromPage() {
 
   const interpretation = (() => {
     if (totalScore <= 2) return { level: 'Dépendance faible', advice: 'Votre dépendance physique est faible. La vape avec un taux réduit (3 à 6 mg/ml) suffira à combler les envies comportementales.', color: 'var(--color-success)' }
-    if (totalScore <= 4) return { level: 'Dépendance faible à modérée', advice: 'Une dépendance légère. Un dosage entre 6 et 9 mg/ml vous assurera une transition douce.', color: 'var(--color-pv-ochre)' }
+    if (totalScore <= 4) return { level: 'Dépendance faible à modérée', advice: 'Une dépendance légère. Un dosage entre 6 et 9 mg/ml vous assurera une transition douce.', color: 'var(--color-gold-text)' }
     if (totalScore <= 6) return { level: 'Dépendance modérée', advice: 'La dépendance physique est présente. Nous recommandons un e-liquide autour de 12 mg/ml pour éviter le manque.', color: 'var(--color-pv-terracotta)' }
     return { level: 'Dépendance forte à très forte', advice: "Votre dépendance est importante. Démarrez fort (16 à 20 mg/ml ou sels de nicotine) — la descente viendra ensuite.", color: 'var(--color-danger)' }
   })()
@@ -108,7 +108,7 @@ export function FagerstromPage() {
         </button>
 
         <div className="flex-1 flex flex-col items-center justify-center text-center">
-          <span className="eyebrow text-pv-ochre">Votre résultat</span>
+          <span className="eyebrow text-gold-text">Votre résultat</span>
           <h1
             className="display mt-3 text-ink"
             style={{ fontSize: 36, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
@@ -142,7 +142,7 @@ export function FagerstromPage() {
           </p>
 
           <div className="card p-5 mt-6 max-w-[340px] text-left">
-            <span className="eyebrow text-pv-terracotta">Recommandation Pro'Vap</span>
+            <span className="eyebrow text-flame-text">Recommandation Pro'Vap</span>
             <p className="text-sm text-ink leading-relaxed mt-3">
               {interpretation.advice}
             </p>
@@ -168,7 +168,7 @@ export function FagerstromPage() {
         >
           <ChevronLeft size={18} /> {currentStep > 0 ? 'Précédent' : 'Retour'}
         </button>
-        <span className="text-[10px] text-ink-3" style={{ letterSpacing: '0.2em' }}>
+        <span className="text-[11px] text-ink-3" style={{ letterSpacing: '0.2em' }}>
           0{currentStep + 1} / 06
         </span>
       </div>
@@ -176,12 +176,12 @@ export function FagerstromPage() {
       <div className="mt-3 rounded-full overflow-hidden" style={{ height: 2, background: 'var(--color-line)' }}>
         <div
           className="h-full transition-all duration-500"
-          style={{ width: `${progressPercent}%`, background: 'var(--color-pv-ochre)' }}
+          style={{ width: `${progressPercent}%`, background: 'var(--color-gold-text)' }}
         />
       </div>
 
       <div className="flex-1 flex flex-col justify-center pt-8">
-        <span className="eyebrow text-pv-terracotta">Question {currentStep + 1}</span>
+        <span className="eyebrow text-flame-text">Question {currentStep + 1}</span>
         <h2
           className="display mt-3 text-ink"
           style={{ fontSize: 28, fontWeight: 400, letterSpacing: '-0.015em', lineHeight: 1.2 }}
@@ -197,9 +197,9 @@ export function FagerstromPage() {
               className="w-full text-left p-4 transition-all active:scale-[0.98]"
               style={{
                 borderRadius: 'var(--radius-md)',
-                border: '1px solid ' + (selected === idx ? 'var(--color-pv-ochre)' : 'var(--color-line)'),
+                border: '1px solid ' + (selected === idx ? 'var(--color-gold-text)' : 'var(--color-line)'),
                 background: selected === idx ? 'rgba(203,128,2,0.06)' : 'var(--color-bg-elev)',
-                color: selected === idx ? 'var(--color-pv-ochre)' : 'var(--color-ink)',
+                color: selected === idx ? 'var(--color-gold-text)' : 'var(--color-ink)',
               }}
             >
               <span className="font-display" style={{ fontSize: 18, fontWeight: 500 }}>{option.text}</span>
@@ -208,7 +208,7 @@ export function FagerstromPage() {
         </div>
       </div>
 
-      <p className="text-[11px] text-ink-3 text-center mt-8 leading-relaxed">
+      <p className="text-[12px] text-ink-3 text-center mt-8 leading-relaxed">
         Test médical validé par la Haute Autorité de Santé. Évalue la dépendance physique à la nicotine.
       </p>
     </div>

@@ -22,10 +22,10 @@ export function BadgeCard({ badge, unlocked }: BadgeCardProps) {
         </div>
       )}
       <span className="text-4xl mb-2">{badge.icon}</span>
-      <span className="text-[10px] font-bold uppercase leading-tight text-text">
+      <span className="text-[11px] font-bold uppercase leading-tight text-text">
         {badge.title}
       </span>
-      <span className="text-[9px] text-text-muted mt-1">
+      <span className="text-[10px] text-text-muted mt-1">
         J+{badge.day_threshold}
       </span>
     </div>

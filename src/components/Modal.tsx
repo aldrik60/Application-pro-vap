@@ -58,7 +58,7 @@ export function Modal({ isOpen, onClose, title, children, fullScreen = false }: 
           <button
             onClick={onClose}
             aria-label="Fermer"
-            className="p-2 bg-surface rounded-full text-text hover:bg-border transition-colors"
+            className="p-3 bg-surface rounded-full text-text hover:bg-border transition-colors"
           >
             <X size={20} />
           </button>

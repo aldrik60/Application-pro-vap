@@ -26,7 +26,7 @@ export function LegalPage() {
         <h1 className="display text-ink mt-2" style={{ fontSize: 32 }}>
           Mentions <span className="display-italic">légales.</span>
         </h1>
-        <p className="text-[11px] text-ink-3 mt-2" style={{ letterSpacing: '0.06em' }}>
+        <p className="text-[12px] text-ink-3 mt-2" style={{ letterSpacing: '0.06em' }}>
           Dernière mise à jour : {today}
         </p>
       </header>
@@ -37,7 +37,7 @@ export function LegalPage() {
 
         {/* ── 1. ÉDITEUR ──────────────────────────────────────────────────────── */}
         <section>
-          <h2 className="text-lg font-semibold text-pv-ochre mb-3">1. Éditeur de l'application</h2>
+          <h2 className="text-lg font-semibold text-gold-text mb-3">1. Éditeur de l'application</h2>
           <div className="card p-4 space-y-1.5 text-ink">
             <p><strong>Raison sociale :</strong> Pro'Vap SAS</p>
             <p><strong>Forme juridique :</strong> SAS (Société par Actions Simplifiée) au capital de 3 000 €</p>
@@ -53,7 +53,7 @@ export function LegalPage() {
 
         {/* ── 2. HÉBERGEMENT ───────────────────────────────────────────────────── */}
         <section>
-          <h2 className="text-lg font-semibold text-pv-ochre mb-3">2. Hébergement</h2>
+          <h2 className="text-lg font-semibold text-gold-text mb-3">2. Hébergement</h2>
           <div className="card p-4 space-y-1.5 text-ink">
             <p><strong>Application web :</strong> Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis.</p>
             <p><strong>Base de données :</strong> Supabase Inc., 970 Toa Payoh North, #07-04, Singapore 318992 (instance hébergée en Union européenne, région eu-west-1, Irlande).</p>
@@ -62,7 +62,7 @@ export function LegalPage() {
 
         {/* ── 3. PROPRIÉTÉ INTELLECTUELLE ─────────────────────────────────────── */}
         <section>
-          <h2 className="text-lg font-semibold text-pv-ochre mb-3">3. Propriété intellectuelle</h2>
+          <h2 className="text-lg font-semibold text-gold-text mb-3">3. Propriété intellectuelle</h2>
           <p className="text-ink">
             L'ensemble des contenus de l'application (textes, graphismes, logo, icônes, photographies, vidéos, code source) est la propriété exclusive de Pro'Vap SAS ou est utilisé avec autorisation. Toute reproduction, distribution, modification ou exploitation sans accord écrit préalable est interdite.
           </p>
@@ -70,13 +70,13 @@ export function LegalPage() {
 
         {/* ── 4. POLITIQUE DE CONFIDENTIALITÉ ─────────────────────────────────── */}
         <section>
-          <h2 className="font-display text-3xl text-pv-terracotta mb-3 mt-10 tracking-wider">POLITIQUE DE CONFIDENTIALITÉ</h2>
+          <h2 className="font-display text-3xl text-flame-text mb-3 mt-10 tracking-wider">POLITIQUE DE CONFIDENTIALITÉ</h2>
           <p className="text-ink-3 text-xs mb-4">Conforme au Règlement Général sur la Protection des Données (RGPD).</p>
 
           <h3 className="text-base font-semibold text-ink mt-4 mb-2">4.1 Responsable du traitement</h3>
           <p className="text-ink">
             Pro'Vap SAS, 5 esplanade Marguerite Perey, 60200 Compiègne, représentée par Antony Antic.
-            Contact RGPD : <span className="text-pv-ochre">contact@provap.fr</span>.
+            Contact RGPD : <span className="text-gold-text">contact@provap.fr</span>.
           </p>
 
           <h3 className="text-base font-semibold text-ink mt-4 mb-2">4.2 Données collectées</h3>
@@ -113,7 +113,7 @@ export function LegalPage() {
             <li><strong>Rectification :</strong> modification de votre profil à tout moment depuis l'app.</li>
             <li><strong>Effacement :</strong> suppression complète et définitive depuis l'onglet Profil ("Supprimer mon compte").</li>
             <li><strong>Opposition / limitation :</strong> à exercer par email à contact@provap.fr.</li>
-            <li><strong>Réclamation :</strong> auprès de la CNIL (<span className="text-pv-ochre">www.cnil.fr</span>) si vous estimez vos droits non respectés.</li>
+            <li><strong>Réclamation :</strong> auprès de la CNIL (<span className="text-gold-text">www.cnil.fr</span>) si vous estimez vos droits non respectés.</li>
           </ul>
 
           <h3 className="text-base font-semibold text-ink mt-4 mb-2">4.7 Hébergement et transferts</h3>
@@ -139,10 +139,10 @@ export function LegalPage() {
 
         {/* ── 5. DISCLAIMER MÉDICAL ──────────────────────────────────────────── */}
         <section>
-          <h2 className="text-lg font-semibold text-pv-ochre mb-3">5. Avertissement</h2>
+          <h2 className="text-lg font-semibold text-gold-text mb-3">5. Avertissement</h2>
           <div className="card p-4 bg-pv-terracotta/5 border-pv-terracotta/30 text-ink">
             <p>
-              Cette application est un outil d'accompagnement personnel et ne constitue ni un avis médical, ni un traitement, ni un dispositif médical. Les informations affichées sont indicatives. Pour toute question médicale liée à l'arrêt du tabac, consultez un professionnel de santé ou contactez <strong className="text-pv-ochre">Tabac Info Service au 3989</strong> (appel non surtaxé du lundi au samedi, 8h-20h).
+              Cette application est un outil d'accompagnement personnel et ne constitue ni un avis médical, ni un traitement, ni un dispositif médical. Les informations affichées sont indicatives. Pour toute question médicale liée à l'arrêt du tabac, consultez un professionnel de santé ou contactez <strong className="text-gold-text">Tabac Info Service au 3989</strong> (appel non surtaxé du lundi au samedi, 8h-20h).
             </p>
           </div>
         </section>

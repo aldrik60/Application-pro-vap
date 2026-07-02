@@ -104,7 +104,7 @@ export function NotificationToggle() {
             <p className="text-[12px] mt-1 leading-snug" style={{ color: 'var(--color-ink-3, #686868)' }}>
               Installez d'abord Pro'Vap sur votre écran d'accueil pour activer les notifications.
               <br />
-              <span className="text-[11px]">Partage → « Sur l'écran d'accueil »</span>
+              <span className="text-[12px]">Partage → « Sur l'écran d'accueil »</span>
             </p>
           )}
 
@@ -312,7 +312,7 @@ export function NotificationToggle() {
               <li className="flex gap-2"><span style={{ color: '#cb8002' }}>·</span> Vos félicitations aux paliers atteints</li>
               <li className="flex gap-2"><span style={{ color: '#cb8002' }}>·</span> Les rappels et nouveautés de votre boutique</li>
             </ul>
-            <p className="text-[11px] mb-5" style={{ color: '#686868' }}>
+            <p className="text-[12px] mb-5" style={{ color: '#686868' }}>
               Aucun spam. Vous pourrez désactiver à tout moment depuis votre profil.
             </p>
 

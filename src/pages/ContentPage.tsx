@@ -246,7 +246,7 @@ export function ContentPage() {
               className="card p-5 text-left transition-transform active:scale-[0.98] hover:border-pv-terracotta/50"
               onClick={() => setSelectedArticle(article)}
             >
-              <span className="eyebrow text-pv-terracotta">{article.category}</span>
+              <span className="eyebrow text-flame-text">{article.category}</span>
               <p
                 className="font-display text-ink mt-2"
                 style={{ fontSize: 19, fontWeight: 500, letterSpacing: '-0.01em', lineHeight: 1.2 }}
@@ -274,7 +274,7 @@ export function ContentPage() {
               >
                 <span className="text-sm text-ink pr-2 leading-snug font-medium">{item.question}</span>
                 {openFaq === idx
-                  ? <ChevronUp size={15} className="shrink-0 text-pv-ochre" strokeWidth={1.4} />
+                  ? <ChevronUp size={15} className="shrink-0 text-gold-text" strokeWidth={1.4} />
                   : <ChevronDown size={15} className="shrink-0 text-ink-3" strokeWidth={1.4} />}
               </button>
               {openFaq === idx && (
@@ -294,8 +294,8 @@ export function ContentPage() {
             <span className="eyebrow">Histoires de vapoteurs</span>
             <button
               onClick={() => setIsStoryModalOpen(true)}
-              className="flex items-center gap-1.5 text-pv-ochre text-[11px] hover:underline"
-              style={{ letterSpacing: '0.06em' }}
+              className="flex items-center gap-1.5 text-gold-text text-[12px] hover:underline"
+              style={{ letterSpacing: '0.06em', padding: 12, margin: -12 }}
             >
               <PlusCircle size={13} strokeWidth={1.4} /> Partager
             </button>
@@ -304,7 +304,7 @@ export function ContentPage() {
           <div className="flex gap-2 overflow-x-auto pb-2 mb-3 hide-scrollbar px-1">
             <button
               onClick={() => setShopFilter('all')}
-              className="whitespace-nowrap px-3 py-1.5 rounded-full text-[11px] transition-colors"
+              className="whitespace-nowrap px-3 py-1.5 rounded-full text-[12px] transition-colors"
               style={{
                 background: shopFilter === 'all' ? 'var(--color-pv-ochre)' : 'transparent',
                 color: shopFilter === 'all' ? 'var(--color-pv-charcoal)' : 'var(--color-ink-3)',
@@ -319,7 +319,7 @@ export function ContentPage() {
               <button
                 key={s}
                 onClick={() => setShopFilter(s)}
-                className="whitespace-nowrap px-3 py-1.5 rounded-full text-[11px] transition-colors"
+                className="whitespace-nowrap px-3 py-1.5 rounded-full text-[12px] transition-colors"
                 style={{
                   background: shopFilter === s ? 'var(--color-pv-ochre)' : 'transparent',
                   color: shopFilter === s ? 'var(--color-pv-charcoal)' : 'var(--color-ink-3)',
@@ -352,7 +352,7 @@ export function ContentPage() {
                   </p>
                   <div className="flex justify-between items-center pt-2"
                     style={{ borderTop: '1px solid var(--color-line)' }}>
-                    <span className="text-pv-ochre text-xs font-semibold">{story.author_name}</span>
+                    <span className="text-gold-text text-xs font-semibold">{story.author_name}</span>
                     <span className="eyebrow text-ink-3">{story.shop}</span>
                   </div>
                 </div>
@@ -367,17 +367,17 @@ export function ContentPage() {
         <span className="eyebrow">Vidéos &amp; conseils</span>
         <div className="card mt-3 p-8 text-center" style={{ borderStyle: 'dashed' }}>
           <p className="display-italic text-ink-2" style={{ fontSize: 20 }}>Bientôt disponible.</p>
-          <p className="text-[11px] text-ink-3 mt-2 leading-relaxed">
+          <p className="text-[12px] text-ink-3 mt-2 leading-relaxed">
             Des vidéos de conseils et témoignages sont en préparation.
           </p>
         </div>
       </section>
 
       {/* Disclaimer */}
-      <p className="text-[10px] text-ink-3 text-center leading-relaxed mt-7 px-6">
+      <p className="text-[11px] text-ink-3 text-center leading-relaxed mt-7 px-6">
         Les informations affichées sont indicatives et ne remplacent pas l'avis d'un professionnel de santé.
         Pour un accompagnement gratuit et confidentiel, contactez{' '}
-        <span className="text-pv-ochre font-semibold">Tabac Info Service au 3989</span>.
+        <span className="text-gold-text font-semibold">Tabac Info Service au 3989</span>.
       </p>
 
       {/* Article Modal */}
@@ -390,7 +390,7 @@ export function ContentPage() {
         <div className="pt-0">
           {selectedArticle?.summary && (
             <p
-              className="display-italic text-pv-ochre mb-6 leading-relaxed"
+              className="display-italic text-gold-text mb-6 leading-relaxed"
               style={{ fontSize: 18 }}
             >
               {selectedArticle.summary}

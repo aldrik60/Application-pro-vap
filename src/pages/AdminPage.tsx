@@ -54,9 +54,9 @@ function DashboardTab() {
   if (loading) return <div className="flex justify-center py-12"><div className="w-8 h-8 border-2 border-pv-ochre border-t-transparent rounded-full animate-spin" /></div>
 
   const items = [
-    { label: 'Utilisateurs total', value: stats.totalUsers, color: 'text-pv-ochre' },
+    { label: 'Utilisateurs total', value: stats.totalUsers, color: 'text-gold-text' },
     { label: 'Nouveaux cette semaine', value: stats.newThisWeek, color: 'text-success' },
-    { label: 'Jours sans tabac (moy.)', value: stats.avgDaysSmokeFree, color: 'text-pv-terracotta' },
+    { label: 'Jours sans tabac (moy.)', value: stats.avgDaysSmokeFree, color: 'text-flame-text' },
     { label: 'Envies surmontées (total)', value: stats.totalCravingsOvercome, color: 'text-ink' },
     { label: 'Témoignages en attente', value: stats.pendingStories, color: stats.pendingStories > 0 ? 'text-danger' : 'text-ink-3' },
   ]
@@ -65,7 +65,7 @@ function DashboardTab() {
     <div className="grid grid-cols-2 gap-3">
       {items.map((item, i) => (
         <div key={i} className="card p-4">
-          <p className="text-[10px] text-ink-3 uppercase font-bold tracking-wider mb-1">{item.label}</p>
+          <p className="text-[11px] text-ink-3 uppercase font-bold tracking-wider mb-1">{item.label}</p>
           <p className={`text-3xl font-display ${item.color}`}>{item.value}</p>
         </div>
       ))}
@@ -119,7 +119,7 @@ function UsersTab() {
               onClick={() => setSelectedUser(u)}
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-pv-ochre/20 flex items-center justify-center font-display text-lg text-pv-ochre">
+                <div className="w-9 h-9 rounded-full bg-pv-ochre/20 flex items-center justify-center font-display text-lg text-gold-text">
                   {u.name.charAt(0).toUpperCase()}
                 </div>
                 <div>
@@ -128,7 +128,7 @@ function UsersTab() {
                 </div>
               </div>
               <div className="text-right">
-                <span className="block text-xs font-bold text-pv-ochre">{u.preferred_shop || 'Aucune'}</span>
+                <span className="block text-xs font-bold text-gold-text">{u.preferred_shop || 'Aucune'}</span>
                 {days !== null && <span className="block text-xs text-ink-3">J+{days}</span>}
               </div>
             </div>
@@ -145,7 +145,7 @@ function UsersTab() {
               </div>
               <div>
                 <h2 className="text-xl font-semibold text-ink">{selectedUser.name}</h2>
-                <p className="text-sm text-pv-ochre">{selectedUser.email}</p>
+                <p className="text-sm text-gold-text">{selectedUser.email}</p>
                 <p className="text-xs text-ink-3 mt-0.5">
                   Inscrit le {format(parseISO(selectedUser.created_at), 'dd/MM/yyyy')}
                 </p>
@@ -164,7 +164,7 @@ function UsersTab() {
                 { label: 'Nicotine (mg)', value: selectedUser.recommended_nicotine_mg ? `${selectedUser.recommended_nicotine_mg} mg` : '-' },
               ].map((item, i) => (
                 <div key={i} className="bg-bg-elev border border-line rounded-[14px] p-3">
-                  <span className="block text-[10px] text-ink-3 uppercase font-bold mb-1">{item.label}</span>
+                  <span className="block text-[11px] text-ink-3 uppercase font-bold mb-1">{item.label}</span>
                   <span className="block text-ink text-sm font-medium">{item.value}</span>
                 </div>
               ))}
@@ -172,7 +172,7 @@ function UsersTab() {
 
             {selectedUser.reward_name && (
               <div className="card p-4 border-pv-ochre/30">
-                <h3 className="text-xs font-bold text-pv-ochre uppercase mb-1">Objectif Plaisir</h3>
+                <h3 className="text-xs font-bold text-gold-text uppercase mb-1">Objectif Plaisir</h3>
                 <p className="text-ink font-medium">{selectedUser.reward_name}</p>
                 <p className="text-sm text-ink-3">{selectedUser.reward_amount ? `${selectedUser.reward_amount}€` : '-'}</p>
               </div>
@@ -180,7 +180,7 @@ function UsersTab() {
 
             <div>
               <h3 className="text-sm font-semibold text-ink mb-2">
-                Notes Conseiller <span className="text-[10px] text-danger font-normal">(privé, non visible par le client)</span>
+                Notes Conseiller <span className="text-[11px] text-danger font-normal">(privé, non visible par le client)</span>
               </h3>
               <textarea
                 className="input h-28 text-sm"
@@ -233,7 +233,7 @@ function StoriesTab() {
               <span className="text-sm font-semibold text-ink">{s.author_name} — {s.shop}</span>
               <span className="block text-xs text-ink-3">{format(parseISO(s.created_at), 'dd/MM/yyyy')}</span>
             </div>
-            <span className={`text-[10px] px-2 py-1 rounded border ${s.is_published ? 'bg-success/10 text-success border-success/30' : 'bg-pv-terracotta/10 text-pv-terracotta border-pv-terracotta/30'}`}>
+            <span className={`text-[11px] px-2 py-1 rounded border ${s.is_published ? 'bg-success/10 text-success border-success/30' : 'bg-pv-terracotta/10 text-flame-text border-pv-terracotta/30'}`}>
               {s.is_published ? 'Publié' : 'En attente'}
             </span>
           </div>
@@ -304,7 +304,7 @@ function MessagesTab() {
     <div className="space-y-4">
       {/* Add new */}
       <div className="card p-4 space-y-3">
-        <h3 className="text-sm font-semibold text-pv-ochre">Ajouter un message</h3>
+        <h3 className="text-sm font-semibold text-gold-text">Ajouter un message</h3>
         <div className="grid grid-cols-3 gap-2">
           <input type="number" className="input text-sm" placeholder="Jour" min="1" max="90" value={newDay} onChange={e => setNewDay(e.target.value)} />
           <textarea className="input text-sm col-span-2 h-16" placeholder="Message (utilisez 'vous')" value={newText} onChange={e => setNewText(e.target.value)} />
@@ -320,7 +320,7 @@ function MessagesTab() {
           <div key={m.id} className="card p-3">
             {editingId === m.id ? (
               <div className="space-y-2">
-                <span className="text-xs text-pv-ochre font-bold">J+{m.day_number}</span>
+                <span className="text-xs text-gold-text font-bold">J+{m.day_number}</span>
                 <textarea className="input text-sm h-20" value={editText} onChange={e => setEditText(e.target.value)} />
                 <div className="flex gap-2">
                   <button onClick={() => saveEdit(m.id)} className="flex-1 bg-success text-white text-sm py-2 rounded-lg font-medium"><Check size={14} className="inline mr-1" />Valider</button>
@@ -329,10 +329,10 @@ function MessagesTab() {
               </div>
             ) : (
               <div className="flex items-start gap-3">
-                <span className="text-xs font-bold text-pv-ochre w-8 shrink-0 pt-0.5">J+{m.day_number}</span>
+                <span className="text-xs font-bold text-gold-text w-8 shrink-0 pt-0.5">J+{m.day_number}</span>
                 <p className="text-sm text-ink-3 flex-1 leading-snug">{m.message}</p>
                 <div className="flex gap-1">
-                  <button onClick={() => startEdit(m)} className="p-1.5 text-ink-3 hover:text-pv-ochre"><Pencil size={13} /></button>
+                  <button onClick={() => startEdit(m)} className="p-1.5 text-ink-3 hover:text-gold-text"><Pencil size={13} /></button>
                   <button onClick={() => remove(m.id)} className="p-1.5 text-ink-3 hover:text-danger"><Trash2 size={13} /></button>
                 </div>
               </div>
@@ -393,12 +393,12 @@ function ArticlesTab() {
           <div key={a.id} className="card p-4">
             <div className="flex justify-between items-start gap-2">
               <div className="flex-1">
-                <span className="text-[10px] text-pv-terracotta font-bold uppercase">{a.category}</span>
+                <span className="text-[11px] text-flame-text font-bold uppercase">{a.category}</span>
                 <h3 className="text-sm font-semibold text-ink mt-0.5">{a.title}</h3>
                 <p className="text-xs text-ink-3 mt-1 line-clamp-2">{a.summary}</p>
               </div>
               <div className="flex gap-1">
-                <button onClick={() => openEdit(a)} className="p-2 text-ink-3 hover:text-pv-ochre"><Pencil size={15} /></button>
+                <button onClick={() => openEdit(a)} className="p-2 text-ink-3 hover:text-gold-text"><Pencil size={15} /></button>
                 <button onClick={() => remove(a.id)} className="p-2 text-ink-3 hover:text-danger"><Trash2 size={15} /></button>
               </div>
             </div>
@@ -461,7 +461,7 @@ function VideosTab() {
   return (
     <div className="space-y-4">
       <div className="card p-4 space-y-3">
-        <h3 className="text-sm font-semibold text-pv-ochre">Ajouter une vidéo YouTube</h3>
+        <h3 className="text-sm font-semibold text-gold-text">Ajouter une vidéo YouTube</h3>
         <input className="input text-sm" placeholder="Titre de la vidéo" value={title} onChange={e => setTitle(e.target.value)} />
         <input className="input text-sm" placeholder="URL YouTube (https://...)" value={url} onChange={e => setUrl(e.target.value)} />
         <button onClick={add} disabled={!title || !url} className="btn-primary text-sm py-2.5">
@@ -505,7 +505,7 @@ export function AdminPage() {
   return (
     <div className="page p-4 pb-24">
       <header className="mb-5 mt-2">
-        <h1 className="text-3xl font-display text-pv-ochre tracking-wider mb-1">PANNEAU ADMIN</h1>
+        <h1 className="text-3xl font-display text-gold-text tracking-wider mb-1">PANNEAU ADMIN</h1>
         <p className="text-ink-3 text-sm">Gestion du réseau Pro'Vap</p>
       </header>
 
@@ -682,8 +682,8 @@ function PushTab() {
     <div className="space-y-4">
       <div className="card p-4 flex items-start justify-between gap-3">
         <div>
-          <p className="text-[12px] uppercase font-semibold tracking-wider text-pv-ochre mb-1">État du réseau</p>
-          <p className="font-display text-3xl text-pv-ochre">
+          <p className="text-[12px] uppercase font-semibold tracking-wider text-gold-text mb-1">État du réseau</p>
+          <p className="font-display text-3xl text-gold-text">
             {subscriberCount === null ? '…' : subscriberCount}
           </p>
           <p className="text-xs text-ink-3 mt-1">
@@ -694,7 +694,7 @@ function PushTab() {
           onClick={loadCount}
           disabled={refreshing}
           aria-label="Actualiser"
-          className="text-xs text-pv-ochre hover:underline px-2 py-1 disabled:opacity-50"
+          className="text-xs text-gold-text hover:underline px-2 py-1 disabled:opacity-50"
         >
           {refreshing ? '…' : '↻ Actualiser'}
         </button>
@@ -702,7 +702,7 @@ function PushTab() {
 
       {/* ─── Ciblage ─── */}
       <div className="card p-4 space-y-3">
-        <h3 className="text-sm font-semibold text-pv-ochre">Cibler</h3>
+        <h3 className="text-sm font-semibold text-gold-text">Cibler</h3>
         <div className="grid grid-cols-3 gap-1.5 p-1 rounded-[10px]" style={{ background: 'var(--color-bg-elev)' }}>
           {([
             { id: 'all' as TargetMode, label: 'Tous' },
@@ -726,7 +726,7 @@ function PushTab() {
 
         {mode === 'shop' && (
           <div>
-            <label className="block text-[10px] uppercase font-bold text-ink-3 tracking-wider mb-1">Boutique</label>
+            <label className="block text-[11px] uppercase font-bold text-ink-3 tracking-wider mb-1">Boutique</label>
             <select
               className="input text-sm"
               value={selectedShop}
@@ -753,7 +753,7 @@ function PushTab() {
                       key={id}
                       type="button"
                       onClick={() => toggleUser(id)}
-                      className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px]"
+                      className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px]"
                       style={{
                         background: subscribed ? 'rgba(184,72,42,0.15)' : 'rgba(40,40,45,0.10)',
                         color: subscribed ? 'var(--color-pv-terracotta)' : 'var(--color-ink-3)',
@@ -789,13 +789,13 @@ function PushTab() {
                     >
                       <div className="min-w-0">
                         <p className="text-sm text-ink truncate">{p.name}</p>
-                        <p className="text-[11px] text-ink-3 truncate">
+                        <p className="text-[12px] text-ink-3 truncate">
                           {p.email}{p.preferred_shop ? ` · ${p.preferred_shop}` : ''}
                           {!subscribed && <span className="text-ink-4"> · pas abonné</span>}
                         </p>
                       </div>
                       {isSelected
-                        ? <Check size={14} className="text-pv-terracotta shrink-0" strokeWidth={2} />
+                        ? <Check size={14} className="text-flame-text shrink-0" strokeWidth={2} />
                         : <Plus size={14} className="text-ink-3 shrink-0" strokeWidth={1.6} />
                       }
                     </button>
@@ -806,7 +806,7 @@ function PushTab() {
           </div>
         )}
 
-        <p className="text-[11px] text-ink-3">
+        <p className="text-[12px] text-ink-3">
           {mode === 'all' && `${targetedSubscribers} abonné(s) recevront ce push.`}
           {mode === 'shop' && (selectedShop
             ? `${targetedSubscribers} abonné(s) sur ${targetIds?.length ?? 0} client(s) ${selectedShop}.`
@@ -818,10 +818,10 @@ function PushTab() {
       </div>
 
       <div className="card p-4 space-y-3">
-        <h3 className="text-sm font-semibold text-pv-ochre">Composer un push</h3>
+        <h3 className="text-sm font-semibold text-gold-text">Composer un push</h3>
 
         <div>
-          <label className="block text-[10px] uppercase font-bold text-ink-3 tracking-wider mb-1">Titre</label>
+          <label className="block text-[11px] uppercase font-bold text-ink-3 tracking-wider mb-1">Titre</label>
           <input
             type="text"
             className="input text-sm"
@@ -831,11 +831,11 @@ function PushTab() {
             onChange={e => setTitle(e.target.value)}
             disabled={sending}
           />
-          <p className="text-[10px] text-ink-3 mt-0.5">{title.length}/50 caractères</p>
+          <p className="text-[11px] text-ink-3 mt-0.5">{title.length}/50 caractères</p>
         </div>
 
         <div>
-          <label className="block text-[10px] uppercase font-bold text-ink-3 tracking-wider mb-1">Message</label>
+          <label className="block text-[11px] uppercase font-bold text-ink-3 tracking-wider mb-1">Message</label>
           <textarea
             className="input text-sm h-20"
             placeholder="Votre conseiller a une nouveauté pour vous."
@@ -844,11 +844,11 @@ function PushTab() {
             onChange={e => setBody(e.target.value)}
             disabled={sending}
           />
-          <p className="text-[10px] text-ink-3 mt-0.5">{body.length}/140 caractères</p>
+          <p className="text-[11px] text-ink-3 mt-0.5">{body.length}/140 caractères</p>
         </div>
 
         <div>
-          <label className="block text-[10px] uppercase font-bold text-ink-3 tracking-wider mb-1">
+          <label className="block text-[11px] uppercase font-bold text-ink-3 tracking-wider mb-1">
             Lien d'ouverture (optionnel)
           </label>
           <input
@@ -859,7 +859,7 @@ function PushTab() {
             onChange={e => setUrl(e.target.value)}
             disabled={sending}
           />
-          <p className="text-[10px] text-ink-3 mt-0.5">Page à ouvrir au clic. Vide = accueil.</p>
+          <p className="text-[11px] text-ink-3 mt-0.5">Page à ouvrir au clic. Vide = accueil.</p>
         </div>
 
         <button
@@ -879,7 +879,7 @@ function PushTab() {
 
       {lastResult && (
         <div className="card p-4 border-pv-ochre/30">
-          <p className="text-xs font-bold text-pv-ochre uppercase mb-1">Dernier envoi</p>
+          <p className="text-xs font-bold text-gold-text uppercase mb-1">Dernier envoi</p>
           <p className="text-sm text-ink">
             ✓ {lastResult.sent} reçue(s) sur {lastResult.total} abonné(s)
             {lastResult.removed > 0 && (

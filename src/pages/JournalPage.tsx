@@ -100,7 +100,7 @@ export function JournalPage() {
           <ChevronLeft size={22} />
         </button>
         <div>
-          <h1 className="font-display text-3xl text-pv-terracotta tracking-wider leading-none">JOURNAL</h1>
+          <h1 className="font-display text-3xl text-flame-text tracking-wider leading-none">JOURNAL</h1>
           <p className="text-ink-3 text-xs">Votre humeur, jour après jour</p>
         </div>
       </header>
@@ -108,7 +108,7 @@ export function JournalPage() {
       {/* Today's entry */}
       <section className="card p-5 space-y-5">
         <div>
-          <p className="text-[10px] text-ink-3 font-bold uppercase tracking-wider mb-1">
+          <p className="text-[11px] text-ink-3 font-bold uppercase tracking-wider mb-1">
             {todayEntryId ? 'Modifier' : 'Aujourd\'hui'}
           </p>
           <p className="text-ink font-semibold">{format(new Date(), 'EEEE d MMMM yyyy', { locale: fr })}</p>
@@ -132,7 +132,7 @@ export function JournalPage() {
                 aria-pressed={todayMood === m.level}
               >
                 <span className="text-3xl" aria-hidden>{m.emoji}</span>
-                <span className="text-[9px] text-ink-3 font-semibold uppercase tracking-wider leading-tight">
+                <span className="text-[10px] text-ink-3 font-semibold uppercase tracking-wider leading-tight">
                   {m.label}
                 </span>
               </button>
@@ -149,7 +149,7 @@ export function JournalPage() {
             onChange={e => setTodayNote(e.target.value)}
             maxLength={500}
           />
-          <p className="text-[10px] text-ink-3 text-right mt-1">{todayNote.length}/500</p>
+          <p className="text-[11px] text-ink-3 text-right mt-1">{todayNote.length}/500</p>
         </div>
 
         <label className="flex items-start gap-3 cursor-pointer">
@@ -205,17 +205,17 @@ export function JournalPage() {
                         {isToday ? 'Aujourd\'hui' : format(parseISO(e.date), 'd MMMM', { locale: fr })}
                       </span>
                       {isToday && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-pv-terracotta/10 text-pv-terracotta border border-pv-terracotta/30 font-semibold uppercase tracking-wider">
+                        <span className="text-[11px] px-1.5 py-0.5 rounded bg-pv-terracotta/10 text-flame-text border border-pv-terracotta/30 font-semibold uppercase tracking-wider">
                           Enregistré
                         </span>
                       )}
                       {e.relapsed && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-danger/10 text-danger border border-danger/30 font-semibold uppercase">
+                        <span className="text-[11px] px-1.5 py-0.5 rounded bg-danger/10 text-danger border border-danger/30 font-semibold uppercase">
                           Craquage
                         </span>
                       )}
                     </div>
-                    <p className="text-[10px] text-ink-3 capitalize" style={{ letterSpacing: '0.04em' }}>
+                    <p className="text-[11px] text-ink-3 capitalize" style={{ letterSpacing: '0.04em' }}>
                       {m.label}
                     </p>
                     {e.note && (

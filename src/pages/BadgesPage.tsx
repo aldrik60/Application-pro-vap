@@ -72,10 +72,10 @@ export function BadgesPage() {
         }}
       >
         <Vap stage={currentStage} size={180} withScene />
-        <p className="display-italic text-pv-ochre mt-2" style={{ fontSize: 22 }}>
+        <p className="display-italic text-gold-text mt-2" style={{ fontSize: 22 }}>
           « {VAP_STAGES[currentStage - 1].title} »
         </p>
-        <p className="text-[11px] text-ink-3 mt-1" style={{ letterSpacing: '0.12em' }}>
+        <p className="text-[12px] text-ink-3 mt-1" style={{ letterSpacing: '0.12em' }}>
           STADE {currentStage} SUR 6 · JOUR {daysSmokeFree}
         </p>
         <p className="text-xs text-ink-3 mt-3 max-w-[280px] leading-relaxed">
@@ -87,7 +87,7 @@ export function BadgesPage() {
       <section className="px-6 pt-6">
         <div className="flex justify-between items-center">
           <span className="eyebrow">Vos collections</span>
-          <span className="font-display tabular text-pv-ochre" style={{ fontSize: 18, fontWeight: 500 }}>
+          <span className="font-display tabular text-gold-text" style={{ fontSize: 18, fontWeight: 500 }}>
             {unlockedBadges.length}<span className="display-italic text-ink-3 text-sm"> / {badges.length}</span>
           </span>
         </div>
@@ -123,7 +123,7 @@ export function BadgesPage() {
                   style={{
                     width: 56, height: 56,
                     borderRadius: 8,
-                    border: '1px solid ' + (current ? 'var(--color-pv-ochre)' : 'var(--color-line-strong)'),
+                    border: '1px solid ' + (current ? 'var(--color-gold-text)' : 'var(--color-line-strong)'),
                     background: unlocked ? 'var(--color-bg-card)' : 'transparent',
                   }}
                 >
@@ -139,17 +139,17 @@ export function BadgesPage() {
                     style={{
                       fontSize: 20,
                       fontWeight: 500,
-                      color: current ? 'var(--color-pv-ochre)' : 'var(--color-ink)',
+                      color: current ? 'var(--color-gold-text)' : 'var(--color-ink)',
                     }}
                   >
                     {s.title}
                   </p>
-                  <p className="text-[11px] text-ink-3 mt-0.5">
+                  <p className="text-[12px] text-ink-3 mt-0.5">
                     Jour {s.day} · {s.sub}
                   </p>
                 </div>
                 {unlocked && (
-                  <Check size={16} className="text-pv-ochre shrink-0" strokeWidth={1.6} />
+                  <Check size={16} className="text-gold-text shrink-0" strokeWidth={1.6} />
                 )}
               </div>
 
@@ -162,15 +162,15 @@ export function BadgesPage() {
                       <span
                         key={b.id}
                         title={b.description}
-                        className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px]"
+                        className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px]"
                         style={{
                           letterSpacing: '0.06em',
                           background: isUnlocked ? 'rgba(184,72,42,0.10)' : 'transparent',
                           border: '1px solid ' + (isUnlocked ? 'rgba(184,72,42,0.40)' : 'var(--color-line)'),
-                          color: isUnlocked ? 'var(--color-pv-ochre)' : 'var(--color-ink-4)',
+                          color: isUnlocked ? 'var(--color-gold-text)' : 'var(--color-ink-4)',
                         }}
                       >
-                        <span style={{ fontSize: 10 }}>{b.icon}</span>
+                        <span style={{ fontSize: 11 }}>{b.icon}</span>
                         <span>{b.title}</span>
                       </span>
                     )
@@ -178,7 +178,7 @@ export function BadgesPage() {
                 </div>
               )}
               {stageBadges.length > 0 && (unlocked || current) && (
-                <p className="text-[10px] text-ink-3 mt-2 ml-[72px]" style={{ letterSpacing: '0.06em' }}>
+                <p className="text-[11px] text-ink-3 mt-2 ml-[72px]" style={{ letterSpacing: '0.06em' }}>
                   {stageUnlocked} / {stageBadges.length} badge{stageBadges.length > 1 ? 's' : ''}
                 </p>
               )}

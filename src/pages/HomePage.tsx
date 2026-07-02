@@ -168,7 +168,7 @@ export function HomePage() {
     return (
       <div className="page p-6 flex flex-col items-center justify-center text-center min-h-screen">
         <Vap stage={1} size={180} withScene />
-        <p className="eyebrow text-pv-ochre mt-2">Bienvenue</p>
+        <p className="eyebrow text-gold-text mt-2">Bienvenue</p>
         <h2 className="display text-3xl text-ink mt-3 mb-4">
           {profile?.name ? `Bonjour, ${profile.name}` : 'Bonjour'}
         </h2>
@@ -190,20 +190,20 @@ export function HomePage() {
         <div className="flex gap-2">
           <button
             onClick={handleShare}
-            className="w-[38px] h-[38px] rounded-full border border-line-strong flex items-center justify-center text-ink transition-colors hover:border-pv-terracotta"
+            className="w-11 h-11 rounded-full border border-line-strong flex items-center justify-center text-ink transition-colors hover:border-pv-terracotta"
             aria-label="Partager mon parcours"
           >
             <Share2 size={16} strokeWidth={1.4} />
           </button>
           <button
             onClick={() => navigate('/messages')}
-            className="relative w-[38px] h-[38px] rounded-full border border-line-strong flex items-center justify-center text-ink transition-colors hover:border-pv-terracotta"
+            className="relative w-11 h-11 rounded-full border border-line-strong flex items-center justify-center text-ink transition-colors hover:border-pv-terracotta"
             aria-label={unreadCount > 0 ? `Notifications (${unreadCount} non lue${unreadCount > 1 ? 's' : ''})` : 'Notifications'}
           >
             <Bell size={16} strokeWidth={1.4} />
             {unreadCount > 0 && (
               <span
-                className="absolute flex items-center justify-center text-[10px] font-bold"
+                className="absolute flex items-center justify-center text-[11px] font-bold"
                 style={{
                   top: -4,
                   right: -4,
@@ -253,16 +253,16 @@ export function HomePage() {
             {daysSmokeFree <= 1 ? 'jour' : 'jours'} sans tabac
           </div>
           {hoursSmokeFree > 0 && (
-            <div className="eyebrow text-pv-ochre mt-2">+ {hoursSmokeFree} heures</div>
+            <div className="eyebrow text-gold-text mt-2">+ {hoursSmokeFree} heures</div>
           )}
         </div>
 
         {/* Progress vers prochain stade Vap */}
-        <Link to="/badges" className="mt-5 flex items-center gap-3 group">
+        <Link to="/badges" className="mt-5 flex items-center gap-3 group" style={{ minHeight: 44 }}>
           <div className="flex-1 progress-track">
             <div className="progress-fill" style={{ width: `${vapProgress}%` }} />
           </div>
-          <div className="text-[11px] text-pv-ochre whitespace-nowrap" style={{ letterSpacing: '0.05em' }}>
+          <div className="text-[12px] text-gold-text whitespace-nowrap" style={{ letterSpacing: '0.05em' }}>
             Prochain palier · J+{vapNextDay}
           </div>
           <ChevronRight size={14} className="text-ink-3 transition-transform group-hover:translate-x-0.5" />
@@ -273,7 +273,7 @@ export function HomePage() {
       <section className="px-5 mt-7">
         <div className="card p-5">
           <div className="flex justify-between items-center mb-3">
-            <span className="eyebrow text-pv-terracotta">Message du jour</span>
+            <span className="eyebrow text-flame-text">Message du jour</span>
             <div className="w-7 h-px bg-pv-ochre opacity-70" />
           </div>
           <p
@@ -282,7 +282,7 @@ export function HomePage() {
           >
             « {dailyMessage} »
           </p>
-          <div className="mt-3 text-[11px] text-ink-3" style={{ letterSpacing: '0.06em' }}>
+          <div className="mt-3 text-[12px] text-ink-3" style={{ letterSpacing: '0.06em' }}>
             L'équipe Pro'Vap · jour {daysSmokeFree}
           </div>
         </div>
@@ -299,7 +299,7 @@ export function HomePage() {
         <div className="card p-5">
           <div className="flex justify-between items-baseline">
             <span className="eyebrow">Vie regagnée</span>
-            <span className="font-display text-pv-ochre" style={{ fontSize: 24 }}>
+            <span className="font-display text-gold-text" style={{ fontSize: 24 }}>
               {lifeGainedHours}
               <span className="display-italic text-sm text-ink-2 ml-0.5">h</span>
             </span>
@@ -315,13 +315,13 @@ export function HomePage() {
         <section className="px-5 mt-3">
           <div className="card p-5">
             <div className="flex justify-between items-center mb-3">
-              <span className="eyebrow text-pv-terracotta">Prochain jalon santé</span>
+              <span className="eyebrow text-flame-text">Prochain jalon santé</span>
               <div className="w-7 h-px bg-pv-ochre opacity-70" />
             </div>
             <p className="font-display text-ink leading-snug" style={{ fontSize: 18, fontWeight: 500 }}>
               {nextMilestone.description}
             </p>
-            <p className="text-[11px] text-pv-ochre mt-2" style={{ letterSpacing: '0.06em' }}>
+            <p className="text-[12px] text-gold-text mt-2" style={{ letterSpacing: '0.06em' }}>
               Dans {nextMilestone.daysLeft > 0
                 ? `${nextMilestone.daysLeft} jour${nextMilestone.daysLeft > 1 ? 's' : ''}${nextMilestone.hrsLeft > 0 ? ` et ${nextMilestone.hrsLeft}h` : ''}`
                 : `${nextMilestone.hrsLeft} heure${nextMilestone.hrsLeft > 1 ? 's' : ''}`}
@@ -340,7 +340,7 @@ export function HomePage() {
                 <div className="flex justify-between items-baseline mt-3">
                   <span className="text-sm text-ink">
                     Kit amorti dans{' '}
-                    <span className="font-display text-pv-terracotta" style={{ fontSize: 17 }}>
+                    <span className="font-display text-flame-text" style={{ fontSize: 17 }}>
                       {Math.ceil(Math.abs(netSavings) / ((profile.pack_price || 10) / 20 * (profile.cigarettes_per_day || 10)))} jours
                     </span>
                   </span>
@@ -383,7 +383,7 @@ export function HomePage() {
                 </span>
               </div>
               <div className="text-right">
-                <span className="font-display text-pv-ochre" style={{ fontSize: 20 }}>
+                <span className="font-display text-gold-text" style={{ fontSize: 20 }}>
                   {Math.max(0, Math.floor(netSavings))}
                 </span>
                 <span className="display-italic text-ink-3 text-sm"> / {profile.reward_amount}€</span>
@@ -393,7 +393,7 @@ export function HomePage() {
               <div className="progress-fill-gold" style={{ width: `${rewardProgress}%` }} />
             </div>
             {rewardProgress < 100 && profile.cigarettes_per_day > 0 && (
-              <p className="text-[11px] text-ink-3 mt-2" style={{ letterSpacing: '0.05em' }}>
+              <p className="text-[12px] text-ink-3 mt-2" style={{ letterSpacing: '0.05em' }}>
                 Dans {Math.ceil((profile.reward_amount - Math.max(0, netSavings)) / ((profile.pack_price || 10) / 20 * profile.cigarettes_per_day))} jours, c'est à vous.
               </p>
             )}
@@ -436,7 +436,7 @@ export function HomePage() {
                   >
                     Guides &amp; <span className="display-italic">conseils.</span>
                   </p>
-                  <p className="text-[11px] text-ink-3 mt-1 leading-relaxed">
+                  <p className="text-[12px] text-ink-3 mt-1 leading-relaxed">
                     Articles, FAQ, vidéos pour vous accompagner.
                   </p>
                 </div>
@@ -448,10 +448,10 @@ export function HomePage() {
       </section>
 
       {/* Disclaimer médical */}
-      <p className="text-[10px] text-ink-3 text-center leading-relaxed px-5 pt-5">
+      <p className="text-[11px] text-ink-3 text-center leading-relaxed px-5 pt-5">
         Informations indicatives, ne remplacent pas l'avis d'un professionnel de santé.
         <br />
-        <span className="text-pv-ochre font-medium">Tabac Info Service 3989</span> · gratuit, lun-sam 8h-20h.
+        <span className="text-gold-text font-medium">Tabac Info Service 3989</span> · gratuit, lun-sam 8h-20h.
       </p>
 
       {/* Modale écart / rechute — recadrage bienveillant, jamais de reset silencieux */}
@@ -514,7 +514,7 @@ export function HomePage() {
 function StatTile({ eyebrow, value, unit, accent }: { eyebrow: string; value: string; unit: string; accent?: boolean }) {
   return (
     <div className="card p-4">
-      <span className="eyebrow" style={{ fontSize: 9 }}>{eyebrow}</span>
+      <span className="eyebrow" style={{ fontSize: 10 }}>{eyebrow}</span>
       <div className="flex items-baseline gap-1 mt-2">
         <span
           className="font-display tabular"
