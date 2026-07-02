@@ -1,4 +1,4 @@
-const CACHE_NAME = 'provap-cache-v7';
+const CACHE_NAME = 'provap-cache-v8';
 const urlsToCache = [
   '/',
   '/index.html',
