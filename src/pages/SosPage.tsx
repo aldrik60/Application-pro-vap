@@ -282,7 +282,10 @@ export function SosPage() {
       </main>
 
       {/* Indicateur de cycles en bas */}
-      <footer className="relative z-10 pb-8 flex justify-center gap-2">
+      <footer
+        className="relative z-10 flex justify-center gap-2"
+        style={{ paddingBottom: 'calc(32px + env(safe-area-inset-bottom))' }}
+      >
         {Array.from({ length: CYCLES_TOTAL }).map((_, i) => (
           <span
             key={i}

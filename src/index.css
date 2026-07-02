@@ -226,7 +226,7 @@ textarea:focus-visible {
 
 .page {
   min-height: 100vh;
-  padding-bottom: 96px;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
   background-color: var(--color-bg);
 }
 

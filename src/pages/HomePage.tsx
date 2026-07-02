@@ -5,8 +5,10 @@ import toast from 'react-hot-toast'
 import { Badge } from '../types'
 import { Vap, vapStageFromDays, VAP_STAGES } from '../components/Vap'
 import { ProVapLogo } from '../components/ProVapLogo'
+import { Modal } from '../components/Modal'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
+import { todayLocalDateStr } from '../lib/dates'
 import { differenceInHours } from 'date-fns'
 import { IS_FULL } from '../lib/appMode'
 import { useUnreadMessages } from '../hooks/useUnreadMessages'
@@ -65,11 +67,16 @@ function stageProgress(stage: 1 | 2 | 3 | 4 | 5 | 6, days: number): number {
 }
 
 export function HomePage() {
-  const { user, profile } = useAuth()
+  const { user, profile, refreshProfile } = useAuth()
   const unreadCount = useUnreadMessages(user?.id)
   const navigate = useNavigate()
   const [dailyMessage, setDailyMessage] = useState("Aujourd'hui compte. Demain aussi.")
   const [, setBadges] = useState<Badge[]>([])
+
+  // Flux « écart / rechute » — recadrer sans culpabiliser (jamais de reset silencieux)
+  const [lapseOpen, setLapseOpen] = useState(false)
+  const [lapseView, setLapseView] = useState<'reassure' | 'restart'>('reassure')
+  const [restarting, setRestarting] = useState(false)
 
   const quitDate = profile?.quit_date ? new Date(profile.quit_date) : null
   const now = new Date()
@@ -112,6 +119,30 @@ export function HomePage() {
         if (data) setBadges(data as Badge[])
       })
   }, [])
+
+  const closeLapse = () => {
+    setLapseOpen(false)
+    setLapseView('reassure')
+  }
+
+  const handleRestart = async () => {
+    if (!user) return
+    try {
+      setRestarting(true)
+      const { error } = await supabase
+        .from('profiles')
+        .update({ quit_date: todayLocalDateStr() })
+        .eq('id', user.id)
+      if (error) throw error
+      await refreshProfile()
+      closeLapse()
+      toast.success('Nouveau départ. Vous savez déjà comment faire.')
+    } catch {
+      toast.error('Erreur lors de la mise à jour. Réessayez.')
+    } finally {
+      setRestarting(false)
+    }
+  }
 
   const handleShare = async () => {
     const cigsRound = Math.round(cigsAvoided)
@@ -370,14 +401,19 @@ export function HomePage() {
         </section>
       )}
 
-      {/* Bouton SOS */}
+      {/* Bouton SOS + écart */}
       <section className="px-5 mt-5">
-        <Link to="/sos">
-          <button className="btn-primary w-full" style={{ minHeight: 60 }}>
-            <AlertTriangle size={18} strokeWidth={1.6} />
-            <span>SOS — j'ai une envie</span>
-          </button>
-        </Link>
+        <button onClick={() => navigate('/sos')} className="btn-primary w-full" style={{ minHeight: 60 }}>
+          <AlertTriangle size={18} strokeWidth={1.6} />
+          <span>SOS — j'ai une envie</span>
+        </button>
+        <button
+          onClick={() => { setLapseView('reassure'); setLapseOpen(true) }}
+          className="w-full text-center text-xs text-ink-3 hover:text-ink-2 transition-colors mt-1"
+          style={{ minHeight: 44 }}
+        >
+          Vous avez craqué ? <span className="display-italic text-ink-2">Ce n'est pas grave.</span>
+        </button>
       </section>
 
       {/* Guides & conseils — accès aux ressources */}
@@ -417,6 +453,60 @@ export function HomePage() {
         <br />
         <span className="text-pv-ochre font-medium">Tabac Info Service 3989</span> · gratuit, lun-sam 8h-20h.
       </p>
+
+      {/* Modale écart / rechute — recadrage bienveillant, jamais de reset silencieux */}
+      <Modal isOpen={lapseOpen} onClose={closeLapse} title={lapseView === 'reassure' ? 'Un écart ?' : 'Nouveau départ'}>
+        {lapseView === 'reassure' ? (
+          <div className="flex flex-col gap-4">
+            <p className="display-italic text-ink" style={{ fontSize: 22, lineHeight: 1.3 }}>
+              Un écart n'efface pas votre parcours.
+            </p>
+            <p className="text-sm text-ink-2 leading-relaxed">
+              Vos <strong>{daysSmokeFree} jour{daysSmokeFree > 1 ? 's' : ''}</strong>, vos{' '}
+              <strong>{Math.round(cigsAvoided)} cigarettes évitées</strong> et vos{' '}
+              <strong>{moneySaved.toFixed(0)} €</strong> restent acquis. Une cigarette ne remet pas
+              ce compteur à zéro — ce qui compte, c'est la prochaine envie.
+            </p>
+            <p className="text-sm text-ink-2 leading-relaxed">
+              Le réflexe qui marche : trois minutes de respiration, et l'envie passe.
+            </p>
+            <button onClick={() => { closeLapse(); navigate('/sos') }} className="btn-primary mt-1">
+              Respirer 3 minutes
+            </button>
+            <button onClick={closeLapse} className="btn-ghost">
+              Reprendre mon parcours
+            </button>
+            <button
+              onClick={() => setLapseView('restart')}
+              className="text-xs text-ink-3 hover:text-ink-2 transition-colors text-center"
+              style={{ minHeight: 44 }}
+            >
+              J'ai refumé plusieurs jours →
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            <p className="display-italic text-ink" style={{ fontSize: 22, lineHeight: 1.3 }}>
+              On repart de maintenant.
+            </p>
+            <p className="text-sm text-ink-2 leading-relaxed">
+              Repartir ne supprime rien de ce que vous avez appris : vous avez déjà tenu{' '}
+              <strong>{daysSmokeFree} jour{daysSmokeFree > 1 ? 's' : ''}</strong>, vous connaissez
+              vos déclencheurs. Votre compteur redémarre, votre expérience reste.
+            </p>
+            <p className="text-sm text-ink-2 leading-relaxed">
+              Pensez aussi à passer dans votre boutique Pro'Vap : un réglage de matériel ou de taux
+              suffit souvent à relancer la machine.
+            </p>
+            <button onClick={handleRestart} className="btn-primary mt-1" disabled={restarting}>
+              {restarting ? 'Un instant…' : "Redémarrer mon compteur aujourd'hui"}
+            </button>
+            <button onClick={closeLapse} className="btn-ghost" disabled={restarting}>
+              Non, je continue mon parcours
+            </button>
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }

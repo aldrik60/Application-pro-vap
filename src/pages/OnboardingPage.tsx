@@ -6,6 +6,7 @@ import toast from 'react-hot-toast'
 import { Vap } from '../components/Vap'
 import { ProVapLogo } from '../components/ProVapLogo'
 import { Shop, ShopData } from '../types'
+import { MONTHS_FR, toLocalDateStr, todayLocalDateStr, buildLocalDateStr } from '../lib/dates'
 
 interface BoutiqueItem {
   id: Shop
@@ -30,11 +31,17 @@ const INTERNET_BOUTIQUE: BoutiqueItem = {
  * Onboarding 3 écrans après création de compte.
  *
  *   01 · Bienvenue + présentation de Vap
- *   02 · Profil fumeur (cigs/jour, années, prix paquet)
+ *   02 · Profil fumeur (date d'arrêt, cigs/jour, prix paquet)
  *   03 · Boutique de référence (8 boutiques Picardie)
+ *
+ * La date d'arrêt est demandée ici pour que le compteur démarre dès
+ * l'arrivée sur l'accueil (first win immédiat). « Passer » n'impose
+ * pas de date : l'accueil guidera alors vers le profil.
  *
  * Direction : Apple × Hermès, serif italique, ample, sans pression.
  */
+
+type QuitChoice = 'today' | 'yesterday' | 'custom'
 
 export function OnboardingPage() {
   const { user, profile, refreshProfile } = useAuth()
@@ -64,22 +71,44 @@ export function OnboardingPage() {
   const [cigsPerDay, setCigsPerDay] = useState<number>(profile?.cigarettes_per_day || 18)
   const [packPrice, setPackPrice] = useState<number>(profile?.pack_price || 11.20)
 
+  // Étape 2 — date d'arrêt (le compteur démarre dès la fin de l'onboarding)
+  const [quitChoice, setQuitChoice] = useState<QuitChoice>('today')
+  const [quitDay, setQuitDay] = useState('')
+  const [quitMonth, setQuitMonth] = useState('')
+  const [quitYear, setQuitYear] = useState('')
+
   // Étape 3 — boutique
   const [selectedShop, setSelectedShop] = useState<Shop | ''>(profile?.preferred_shop || '')
 
-  const handleFinish = async () => {
+  const computeQuitDate = (): string => {
+    if (quitChoice === 'today') return todayLocalDateStr()
+    if (quitChoice === 'yesterday') {
+      const d = new Date()
+      d.setDate(d.getDate() - 1)
+      return toLocalDateStr(d)
+    }
+    return buildLocalDateStr(quitDay, quitMonth, quitYear)
+  }
+
+  const save = async (includeQuitDate: boolean) => {
     if (!user) {
       navigate('/profil')
       return
     }
     try {
       setSaving(true)
-      const { error } = await supabase.from('profiles').update({
+      const updates: Record<string, unknown> = {
         cigarettes_per_day: cigsPerDay,
         pack_price: packPrice,
         preferred_shop: selectedShop || null,
         onboarding_completed: true,
-      }).eq('id', user.id)
+      }
+      if (includeQuitDate) {
+        const qd = computeQuitDate()
+        // Ne jamais écraser une date existante par du vide (custom incomplet)
+        if (qd) updates.quit_date = qd
+      }
+      const { error } = await supabase.from('profiles').update(updates).eq('id', user.id)
       if (error) throw error
       await refreshProfile()
       navigate('/', { replace: true })
@@ -91,18 +120,24 @@ export function OnboardingPage() {
     }
   }
 
-  const handleSkip = handleFinish
+  const handleFinish = () => save(true)
+  // « Passer » n'impose pas de date d'arrêt : l'accueil guidera vers le profil.
+  const handleSkip = () => save(false)
 
   return (
-    <div className="min-h-screen flex flex-col bg-bg" style={{ padding: '24px 28px 32px' }}>
+    <div
+      className="min-h-screen flex flex-col bg-bg"
+      style={{
+        padding: '24px 28px',
+        paddingTop: 'max(env(safe-area-inset-top), 24px)',
+        paddingBottom: 'calc(32px + env(safe-area-inset-bottom))',
+      }}
+    >
       <OnbHeader step={step} onSkip={handleSkip} />
 
       <div className="flex-1 flex flex-col">
         {step === 1 && (
-          <StepWelcome
-            onContinue={() => setStep(2)}
-            hasAccount={!!profile?.email}
-          />
+          <StepWelcome onContinue={() => setStep(2)} />
         )}
         {step === 2 && (
           <StepSmoker
@@ -110,6 +145,10 @@ export function OnboardingPage() {
             packPrice={packPrice}
             onCigsPerDay={setCigsPerDay}
             onPackPrice={setPackPrice}
+            quitChoice={quitChoice}
+            onQuitChoice={setQuitChoice}
+            quitDay={quitDay} quitMonth={quitMonth} quitYear={quitYear}
+            onQuitDay={setQuitDay} onQuitMonth={setQuitMonth} onQuitYear={setQuitYear}
             onBack={() => setStep(1)}
             onContinue={() => setStep(3)}
           />
@@ -161,7 +200,7 @@ function OnbHeader({ step, onSkip }: { step: number; onSkip: () => void }) {
 
 /* ─── Étape 1 — Bienvenue ─────────────────────────────────────────────── */
 
-function StepWelcome({ onContinue, hasAccount }: { onContinue: () => void; hasAccount: boolean }) {
+function StepWelcome({ onContinue }: { onContinue: () => void }) {
   return (
     <>
       <div className="flex-1 flex flex-col items-center justify-center text-center">
@@ -181,7 +220,6 @@ function StepWelcome({ onContinue, hasAccount }: { onContinue: () => void; hasAc
       </div>
       <div className="flex flex-col gap-3">
         <button className="btn-primary" onClick={onContinue}>Commencer mon parcours</button>
-        {!hasAccount && <button className="btn-ghost">J'ai déjà un compte</button>}
       </div>
     </>
   )
@@ -192,12 +230,28 @@ function StepWelcome({ onContinue, hasAccount }: { onContinue: () => void; hasAc
 function StepSmoker({
   cigsPerDay, packPrice,
   onCigsPerDay, onPackPrice,
+  quitChoice, onQuitChoice,
+  quitDay, quitMonth, quitYear,
+  onQuitDay, onQuitMonth, onQuitYear,
   onBack, onContinue,
 }: {
   cigsPerDay: number; packPrice: number
   onCigsPerDay: (v: number) => void; onPackPrice: (v: number) => void
+  quitChoice: QuitChoice; onQuitChoice: (c: QuitChoice) => void
+  quitDay: string; quitMonth: string; quitYear: string
+  onQuitDay: (v: string) => void; onQuitMonth: (v: string) => void; onQuitYear: (v: string) => void
   onBack: () => void; onContinue: () => void
 }) {
+  const currentYear = new Date().getFullYear()
+  const years = Array.from({ length: 6 }, (_, i) => String(currentYear - i))
+  const days = Array.from({ length: 31 }, (_, i) => String(i + 1))
+
+  const choices: { id: QuitChoice; label: string }[] = [
+    { id: 'today',     label: "Aujourd'hui" },
+    { id: 'yesterday', label: 'Hier' },
+    { id: 'custom',    label: 'Une autre date' },
+  ]
+
   return (
     <>
       <div className="flex-1 pt-8">
@@ -213,6 +267,55 @@ function StepSmoker({
         </p>
 
         <div className="mt-8 flex flex-col gap-6">
+          <div>
+            <span className="eyebrow">Votre dernière cigarette</span>
+            <div className="mt-3 grid grid-cols-3 gap-2" role="radiogroup" aria-label="Date de votre dernière cigarette">
+              {choices.map(c => {
+                const active = quitChoice === c.id
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={active}
+                    onClick={() => onQuitChoice(c.id)}
+                    className="rounded-md border text-xs font-medium transition-colors"
+                    style={{
+                      minHeight: 48,
+                      padding: '10px 6px',
+                      letterSpacing: '0.04em',
+                      background: active ? 'var(--color-pv-terracotta)' : 'transparent',
+                      color: active ? 'var(--color-pv-ivory)' : 'var(--color-ink-2)',
+                      borderColor: active ? 'var(--color-pv-terracotta)' : 'var(--color-line-strong)',
+                    }}
+                  >
+                    {c.label}
+                  </button>
+                )
+              })}
+            </div>
+            {quitChoice === 'custom' && (
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                <select className="input text-sm" value={quitDay} onChange={e => onQuitDay(e.target.value)} aria-label="Jour">
+                  <option value="">Jour</option>
+                  {days.map(d => <option key={d} value={d}>{d}</option>)}
+                </select>
+                <select className="input text-sm" value={quitMonth} onChange={e => onQuitMonth(e.target.value)} aria-label="Mois">
+                  <option value="">Mois</option>
+                  {MONTHS_FR.map((m, i) => <option key={i} value={String(i + 1)}>{m}</option>)}
+                </select>
+                <select className="input text-sm" value={quitYear} onChange={e => onQuitYear(e.target.value)} aria-label="Année">
+                  <option value="">Année</option>
+                  {years.map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
+            )}
+            <p className="mt-2 text-[11px] text-ink-3 leading-relaxed">
+              Pas encore arrêté ? Laissez « Aujourd'hui » — votre compteur démarre maintenant.
+            </p>
+            <div className="mt-2 hairline" />
+          </div>
+
           <NumberStepper
             label="Cigarettes par jour"
             value={cigsPerDay}

@@ -12,6 +12,7 @@ import { useShop } from '../hooks/useShop'
 import { IS_FULL } from '../lib/appMode'
 import { Vap, vapStageFromDays } from '../components/Vap'
 import { NotificationToggle } from '../components/NotificationToggle'
+import { buildLocalDateStr } from '../lib/dates'
 import type { TobaccoType } from '../types'
 
 const SHOPS = [
@@ -40,16 +41,6 @@ function parseDateParts(dateStr: string | null) {
   const d = new Date(dateStr)
   if (isNaN(d.getTime())) return { day: '', month: '', year: '' }
   return { day: String(d.getDate()), month: String(d.getMonth() + 1), year: String(d.getFullYear()) }
-}
-
-function buildDateStr(day: string, month: string, year: string): string {
-  if (!day || !month || !year) return ''
-  const d = parseInt(day)
-  const m = parseInt(month) - 1
-  const y = parseInt(year)
-  const date = new Date(y, m, d)
-  if (isNaN(date.getTime())) return ''
-  return date.toISOString().split('T')[0]
 }
 
 export function ProfilePage() {
@@ -93,7 +84,7 @@ export function ProfilePage() {
     }
   }, [profile])
 
-  const quitDateStr = buildDateStr(quitDay, quitMonth, quitYear)
+  const quitDateStr = buildLocalDateStr(quitDay, quitMonth, quitYear)
   const daysSmokeFree = quitDateStr
     ? Math.max(0, Math.floor((Date.now() - new Date(quitDateStr).getTime()) / 86400000))
     : 0
@@ -105,7 +96,7 @@ export function ProfilePage() {
     if (!user) return
     try {
       setLoading(true)
-      const qd = buildDateStr(quitDay, quitMonth, quitYear)
+      const qd = buildLocalDateStr(quitDay, quitMonth, quitYear)
       const { error } = await supabase.from('profiles').update({
         quit_date: qd || null,
         cigarettes_per_day: parseInt(cigsPerDay.toString()) || 0,
