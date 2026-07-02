@@ -48,8 +48,8 @@ interface VapProps {
   className?: string
 }
 
-const TER  = '#b8482a'  // terracotta — corps
-const OCH  = '#cb8002'  // ocre — chapeau, accents
+const TER  = '#a2371a'  // terracotta brique (charte site) — corps
+const OCH  = '#d4623f'  // terracotta clair — chapeau, accents
 const CHAR = '#28282d'  // outline / shadow
 
 export function Vap({ stage = 3, size = 200, withScene = false, className = '' }: VapProps) {

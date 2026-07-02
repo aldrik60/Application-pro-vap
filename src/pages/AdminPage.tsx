@@ -51,7 +51,7 @@ function DashboardTab() {
     load()
   }, [])
 
-  if (loading) return <div className="flex justify-center py-12"><div className="w-8 h-8 border-2 border-pv-ochre border-t-transparent rounded-full animate-spin" /></div>
+  if (loading) return <div className="flex justify-center py-12"><div className="w-8 h-8 border-2 border-pv-terracotta border-t-transparent rounded-full animate-spin" /></div>
 
   const items = [
     { label: 'Utilisateurs total', value: stats.totalUsers, color: 'text-gold-text' },
@@ -115,11 +115,11 @@ function UsersTab() {
           return (
             <div
               key={u.id}
-              className="card p-4 flex justify-between items-center cursor-pointer hover:border-pv-ochre/50 active:scale-[0.98] transition-all"
+              className="card p-4 flex justify-between items-center cursor-pointer hover:border-pv-terracotta/50 active:scale-[0.98] transition-all"
               onClick={() => setSelectedUser(u)}
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-pv-ochre/20 flex items-center justify-center font-display text-lg text-gold-text">
+                <div className="w-9 h-9 rounded-full bg-pv-terracotta/20 flex items-center justify-center font-display text-lg text-gold-text">
                   {u.name.charAt(0).toUpperCase()}
                 </div>
                 <div>
@@ -140,7 +140,7 @@ function UsersTab() {
         {selectedUser && (
           <div className="p-4 pt-0 space-y-5">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-pv-ochre rounded-full flex items-center justify-center text-surface font-display text-3xl">
+              <div className="w-14 h-14 bg-pv-terracotta rounded-full flex items-center justify-center text-pv-ivory font-display text-3xl">
                 {selectedUser.name.charAt(0).toUpperCase()}
               </div>
               <div>
@@ -171,7 +171,7 @@ function UsersTab() {
             </div>
 
             {selectedUser.reward_name && (
-              <div className="card p-4 border-pv-ochre/30">
+              <div className="card p-4 border-pv-terracotta/30">
                 <h3 className="text-xs font-bold text-gold-text uppercase mb-1">Objectif Plaisir</h3>
                 <p className="text-ink font-medium">{selectedUser.reward_name}</p>
                 <p className="text-sm text-ink-3">{selectedUser.reward_amount ? `${selectedUser.reward_amount}€` : '-'}</p>
@@ -298,7 +298,7 @@ function MessagesTab() {
     toast.success('Supprimé.')
   }
 
-  if (loading) return <div className="flex justify-center py-8"><div className="w-6 h-6 border-2 border-pv-ochre border-t-transparent rounded-full animate-spin" /></div>
+  if (loading) return <div className="flex justify-center py-8"><div className="w-6 h-6 border-2 border-pv-terracotta border-t-transparent rounded-full animate-spin" /></div>
 
   return (
     <div className="space-y-4">
@@ -515,7 +515,7 @@ export function AdminPage() {
           <button
             key={t.id}
             onClick={() => setActiveTab(t.id)}
-            className={`snap-start whitespace-nowrap px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${activeTab === t.id ? 'bg-pv-ochre text-surface' : 'bg-bg-elev text-ink-3 border border-line'}`}
+            className={`snap-start whitespace-nowrap px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${activeTab === t.id ? 'bg-pv-terracotta text-pv-ivory' : 'bg-bg-elev text-ink-3 border border-line'}`}
           >
             {t.label}
           </button>
@@ -755,7 +755,7 @@ function PushTab() {
                       onClick={() => toggleUser(id)}
                       className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px]"
                       style={{
-                        background: subscribed ? 'rgba(184,72,42,0.15)' : 'rgba(40,40,45,0.10)',
+                        background: subscribed ? 'rgba(162,55,26,0.15)' : 'rgba(40,40,45,0.10)',
                         color: subscribed ? 'var(--color-pv-terracotta)' : 'var(--color-ink-3)',
                         border: '1px solid currentColor',
                       }}
@@ -878,7 +878,7 @@ function PushTab() {
       </div>
 
       {lastResult && (
-        <div className="card p-4 border-pv-ochre/30">
+        <div className="card p-4 border-pv-terracotta/30">
           <p className="text-xs font-bold text-gold-text uppercase mb-1">Dernier envoi</p>
           <p className="text-sm text-ink">
             ✓ {lastResult.sent} reçue(s) sur {lastResult.total} abonné(s)

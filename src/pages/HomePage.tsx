@@ -233,7 +233,7 @@ export function HomePage() {
                   paddingLeft: 4,
                   paddingRight: 4,
                   borderRadius: 9,
-                  background: 'var(--color-pv-terracotta, #b8482a)',
+                  background: 'var(--color-pv-terracotta, #a2371a)',
                   color: '#ffffff',
                   border: '2px solid var(--color-bg, #f6f1e8)',
                 }}
@@ -260,8 +260,8 @@ export function HomePage() {
             <span
               className="font-display tabular text-ink"
               style={{
-                fontSize: 96,
-                fontWeight: 500,
+                fontSize: 88,
+                fontWeight: 700,
                 letterSpacing: '-0.04em',
                 lineHeight: 0.85,
                 textShadow: '0 2px 24px var(--color-bg)',
@@ -270,7 +270,7 @@ export function HomePage() {
               {daysSmokeFree}
             </span>
           </div>
-          <div className="display-italic mt-1 text-2xl text-ink-2">
+          <div className="script text-flame-text" style={{ fontSize: 28, marginTop: 2 }}>
             {daysSmokeFree <= 1 ? 'jour' : 'jours'} sans tabac
           </div>
           {hoursSmokeFree > 0 && (
@@ -294,8 +294,8 @@ export function HomePage() {
       <section className="px-5 mt-7">
         <div className="card p-5">
           <div className="flex justify-between items-center mb-3">
-            <span className="eyebrow text-flame-text">Message du jour</span>
-            <div className="w-7 h-px bg-pv-ochre opacity-70" />
+            <span className="script text-flame-text" style={{ fontSize: 21 }}>Message du jour</span>
+            <div className="w-7 h-px bg-flame-text opacity-70" />
           </div>
           <p
             className="display-italic text-ink leading-snug"
@@ -340,7 +340,7 @@ export function HomePage() {
           <div className="card p-5">
             <div className="flex justify-between items-center mb-3">
               <span className="eyebrow text-flame-text">Prochain jalon santé</span>
-              <div className="w-7 h-px bg-pv-ochre opacity-70" />
+              <div className="w-7 h-px bg-flame-text opacity-70" />
             </div>
             <p className="font-display text-ink leading-snug" style={{ fontSize: 18, fontWeight: 500 }}>
               {nextMilestone.description}
@@ -448,7 +448,7 @@ export function HomePage() {
               <div className="flex items-center gap-3 min-w-0">
                 <span
                   className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
-                  style={{ background: 'rgba(184,72,42,0.12)', color: 'var(--color-pv-terracotta)' }}
+                  style={{ background: 'rgba(162,55,26,0.12)', color: 'var(--color-pv-terracotta)' }}
                 >
                   <BookOpen size={17} strokeWidth={1.4} />
                 </span>
@@ -540,7 +540,7 @@ export function HomePage() {
               Nouveau jalon
             </span>
             <span style={{ fontSize: 56, lineHeight: 1 }} aria-hidden>{celebrateBadge.icon}</span>
-            <p className="display-italic text-ink" style={{ fontSize: 30, lineHeight: 1.15 }}>
+            <p className="script text-flame-text" style={{ fontSize: 32, lineHeight: 1.2 }}>
               {celebrateBadge.title}
             </p>
             <p className="text-sm text-ink-2 leading-relaxed max-w-[280px]">
@@ -577,7 +577,7 @@ function StatTile({ eyebrow, value, unit, accent }: { eyebrow: string; value: st
           className="font-display tabular"
           style={{
             fontSize: 32,
-            color: accent ? 'var(--color-pv-ochre)' : 'var(--color-ink)',
+            color: accent ? 'var(--color-flame-text)' : 'var(--color-ink)',
             fontWeight: 500,
             letterSpacing: '-0.02em',
             lineHeight: 1,
@@ -672,7 +672,7 @@ function MoodCheckin({ userId }: { userId: string }) {
                 style={{
                   minHeight: 56,
                   padding: '8px 2px',
-                  background: active ? 'rgba(184,72,42,0.10)' : 'transparent',
+                  background: active ? 'rgba(162,55,26,0.10)' : 'transparent',
                   borderColor: active ? 'var(--color-pv-terracotta)' : 'var(--color-line)',
                 }}
               >

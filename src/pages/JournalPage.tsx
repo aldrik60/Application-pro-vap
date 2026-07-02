@@ -195,7 +195,7 @@ export function JournalPage() {
                   className="card p-3 flex items-start gap-3"
                   style={{
                     borderColor: isToday ? 'var(--color-primary)' : undefined,
-                    background: isToday ? 'rgba(184,72,42,0.04)' : undefined,
+                    background: isToday ? 'rgba(162,55,26,0.04)' : undefined,
                   }}
                 >
                   <span className="text-3xl shrink-0 mt-0.5" aria-hidden>{m.emoji}</span>

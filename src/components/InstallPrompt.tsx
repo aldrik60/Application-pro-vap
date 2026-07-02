@@ -167,7 +167,7 @@ export function InstallPrompt() {
                 onClick={handleInstall}
                 className="mt-3 inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90"
                 style={{
-                  background: '#b8482a',
+                  background: '#a2371a',
                   color: '#ffffff',
                 }}
               >

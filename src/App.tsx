@@ -33,8 +33,8 @@ function PageLoader() {
       <div
         className="w-10 h-10 rounded-full border-2"
         style={{
-          borderColor: 'rgba(184, 72, 42, 0.18)',
-          borderTopColor: 'var(--color-pv-terracotta, #b8482a)',
+          borderColor: 'rgba(162, 55, 26, 0.18)',
+          borderTopColor: 'var(--color-pv-terracotta, #a2371a)',
           animation: 'spin 0.8s linear infinite',
         }}
       />

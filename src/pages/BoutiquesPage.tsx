@@ -111,7 +111,7 @@ export function BoutiquesPage() {
             <rect width="350" height="180" fill="url(#mapDots)" />
             <path
               d="M 40 130 Q 30 80, 90 50 Q 160 30, 240 60 Q 310 80, 300 140 Q 220 165, 140 155 Q 70 150, 40 130 Z"
-              fill="rgba(184, 72, 42, 0.05)"
+              fill="rgba(162, 55, 26, 0.05)"
               stroke="rgba(203, 128, 2, 0.4)"
               strokeWidth="1"
               strokeDasharray="3 4"
@@ -120,9 +120,9 @@ export function BoutiquesPage() {
               const isFav = i === favIndex
               return (
                 <g key={i}>
-                  <circle cx={x} cy={y} r="6" fill={isFav ? '#b8482a' : '#cb8002'} opacity={isFav ? 1 : 0.85} />
+                  <circle cx={x} cy={y} r="6" fill={isFav ? '#a2371a' : '#cb8002'} opacity={isFav ? 1 : 0.85} />
                   <circle cx={x} cy={y} r="2" fill="#f6f1e8" />
-                  {isFav && <circle cx={x} cy={y} r="12" fill="none" stroke="#b8482a" strokeWidth="1" opacity="0.5" />}
+                  {isFav && <circle cx={x} cy={y} r="12" fill="none" stroke="#a2371a" strokeWidth="1" opacity="0.5" />}
                 </g>
               )
             })}

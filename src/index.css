@@ -4,31 +4,33 @@
 
 /* ═════════════════════════════════════════════════════════════════════════
    PRO'VAP — Design tokens
-   Direction : Apple × Hermès (cuir, papier brûlé, typo éditoriale).
-   Dark par défaut (umber + cuir), light auto (ivoire papier).
+   Direction V2 (2026-07) : alignement charte pro-vap.com.
+   Charbon texturé + terracotta brique, Space Grotesk (titres caps) +
+   Outfit (corps) + Marck Script (signatures manuscrites), angles francs.
+   Dark par défaut, light ivoire conservé (décision Antony).
    ═════════════════════════════════════════════════════════════════════════ */
 
 @theme {
-  /* — Couleurs marque (charte officielle) — */
+  /* — Couleurs marque (charte pro-vap.com) — */
   --color-pv-black:      #020202;
   --color-pv-charcoal:   #28282d;
   --color-pv-gray-d:     #686868;
   --color-pv-gray-l:     #938e87;
   --color-pv-white:      #ffffff;
-  --color-pv-terracotta: #b8482a;   /* primary */
-  --color-pv-ochre:      #cb8002;   /* secondary / gold */
+  --color-pv-terracotta: #a2371a;   /* primary — le terracotta brique du site */
+  --color-pv-ochre:      #cb8002;   /* hérité — réservé à la scène SOS */
   --color-pv-ivory:      #f6f1e8;   /* paper warm */
 
   /* — Accents TEXTE (contraste WCAG garanti dans les deux modes) —
-     Les couleurs brutes pv-* restent pour les fonds (btn-gold, chips) et
-     les scènes sombres fixes (SOS). Pour du texte, utiliser ces rôles. */
-  --color-gold-text:  #cb8002;      /* 5,7:1 sur fond sombre ; assombri en clair */
-  --color-flame-text: #d4623f;      /* terracotta éclairci, 4,8:1 sur fond sombre */
+     gold-text est conservé comme nom historique mais rend désormais du
+     terracotta : la charte du site vit en blanc + terracotta, sans doré. */
+  --color-gold-text:  #d4623f;      /* terracotta éclairci, 4,8:1 sur fond sombre */
+  --color-flame-text: #d4623f;      /* idem — alias sémantique */
 
-  /* — Rôles (dark par défaut) — */
-  --color-bg:         #161618;
-  --color-bg-elev:    #1f1f22;
-  --color-bg-card:    #25252a;
+  /* — Rôles (dark par défaut — le charbon du site) — */
+  --color-bg:         #1a1a1a;
+  --color-bg-elev:    #202020;
+  --color-bg-card:    #232323;
   --color-bg-paper:   #f6f1e8;       /* ivoire papier pour cartes inversées */
   --color-bg-stroke:  rgba(255, 255, 255, 0.07);
 
@@ -40,37 +42,38 @@
   --color-line:        rgba(246, 241, 232, 0.10);
   --color-line-strong: rgba(246, 241, 232, 0.20);
 
-  --color-accent:    #b8482a;
-  --color-accent-2:  #cb8002;
+  --color-accent:    #a2371a;
+  --color-accent-2:  #d4623f;
   --color-success:   #7a8a5e;
   --color-danger:    #c84a2a;
 
   /* — Anciens alias compatibilité (pas casser le code existant pendant la migration) — */
-  --color-surface:    #1f1f22;
-  --color-surface-2:  #25252a;
+  --color-surface:    #202020;
+  --color-surface-2:  #232323;
   --color-border:     rgba(246, 241, 232, 0.10);
   --color-text:       #f6f1e8;
   --color-text-muted: rgba(246, 241, 232, 0.72);
   --color-text-dim:   rgba(246, 241, 232, 0.55);
-  --color-primary:    #b8482a;
-  --color-secondary:  #cb8002;
+  --color-primary:    #a2371a;
+  --color-secondary:  #d4623f;
   --color-warning:    #cb8002;
-  --color-focus-ring: rgba(184, 72, 42, 0.55);
+  --color-focus-ring: rgba(162, 55, 26, 0.60);
 
   /* — Typographie — */
-  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
-  --font-body:    'Manrope', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-display: 'Space Grotesk', -apple-system, system-ui, sans-serif;
+  --font-body:    'Outfit', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-script:  'Marck Script', 'Bradley Hand', cursive;
   --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
 
-  /* — Géométrie — */
-  --radius-xs:   6px;
-  --radius-sm:  10px;
-  --radius-md:  14px;
-  --radius-lg:  20px;
-  --radius-xl:  28px;
+  /* — Géométrie (angles francs, comme les boutons du site) — */
+  --radius-xs:   4px;
+  --radius-sm:   6px;
+  --radius-md:   8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
   --radius-pill: 999px;
-  --radius-card: 14px;     /* alias compatibilité */
-  --radius-input: 10px;    /* alias compatibilité */
+  --radius-card: 8px;      /* alias compatibilité */
+  --radius-input: 6px;     /* alias compatibilité */
 
   /* — Espacements — */
   --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px;
@@ -107,11 +110,11 @@
     --color-ink-3:      rgba(26, 26, 28, 0.64);
     --color-ink-4:      rgba(26, 26, 28, 0.28);
 
-    /* Accents texte assombris pour tenir 4,5:1 sur ivoire */
-    --color-gold-text:  #8a5902;
-    --color-flame-text: #a63e22;
-    --color-secondary:  #8a5902;
-    --color-accent-2:   #8a5902;
+    /* Accents texte : le terracotta du site tient 6:1 sur ivoire */
+    --color-gold-text:  #a2371a;
+    --color-flame-text: #a2371a;
+    --color-secondary:  #a2371a;
+    --color-accent-2:   #a2371a;
 
     --color-line:        rgba(40, 40, 45, 0.10);
     --color-line-strong: rgba(40, 40, 45, 0.22);
@@ -123,7 +126,7 @@
     --color-text-muted: rgba(26, 26, 28, 0.72);
     --color-text-dim:   rgba(26, 26, 28, 0.64);
 
-    --color-focus-ring: rgba(184, 72, 42, 0.40);
+    --color-focus-ring: rgba(162, 55, 26, 0.45);
 
     --shadow-soft: 0 1px 2px rgba(40, 40, 45, 0.05), 0 6px 18px rgba(40, 40, 45, 0.07);
     --shadow-lift: 0 1px 2px rgba(40, 40, 45, 0.06), 0 16px 32px -8px rgba(40, 40, 45, 0.18);
@@ -155,6 +158,19 @@ html, body, #root {
 
 body { overscroll-behavior: none; }
 
+/* Grain global très discret (texture charbon du site) — au-dessus de tout,
+   sans interaction, neutre en luminance pour tenir dans les deux thèmes. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+  opacity: 0.3;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
 /* Scrollbar discrète */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--color-bg-elev); }
@@ -172,14 +188,24 @@ body { overscroll-behavior: none; }
 
 .display {
   font-family: var(--font-display);
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  line-height: 1.05;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.08;
 }
+/* Ex-italique serif — désormais un accent léger en Outfit oblique. */
 .display-italic {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-style: italic;
   font-weight: 400;
+}
+/* Signature manuscrite (Marck Script) — décoratif uniquement, jamais
+   pour de l'information fonctionnelle. */
+.script {
+  font-family: var(--font-script);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.2;
 }
 
 .eyebrow {
@@ -206,11 +232,11 @@ body { overscroll-behavior: none; }
   opacity: 0.3;
 }
 
-/* Filet doré (séparateur premium) */
+/* Filet terracotta (séparateur premium — ex filet doré) */
 .gold-rule {
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-pv-ochre) 30%, var(--color-pv-ochre) 70%, transparent);
-  opacity: 0.5;
+  background: linear-gradient(90deg, transparent, var(--color-flame-text) 30%, var(--color-flame-text) 70%, transparent);
+  opacity: 0.6;
 }
 
 /* ═════════════════════════════════════════════════════════════════════════
@@ -278,7 +304,7 @@ textarea:focus-visible {
 }
 
 .accent-left {
-  border-left: 3px solid var(--color-pv-ochre) !important;
+  border-left: 3px solid var(--color-flame-text) !important;
   border-radius: 0 var(--radius-md) var(--radius-md) 0 !important;
   padding-left: 14px;
 }
@@ -326,12 +352,12 @@ textarea.input { resize: vertical; min-height: 80px; }
 .btn-danger,
 .btn-ghost,
 .btn-ivory {
-  font-family: var(--font-body);
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: 13px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  border-radius: var(--radius-pill);
+  border-radius: 5px;
   padding: 16px 22px;
   width: 100%;
   cursor: pointer;
@@ -356,11 +382,11 @@ textarea.input { resize: vertical; min-height: 80px; }
 }
 .btn-secondary:hover:not(:disabled),
 .btn-ghost:hover:not(:disabled) {
-  background-color: rgba(184, 72, 42, 0.06);
+  background-color: rgba(162, 55, 26, 0.08);
   color: var(--color-ink);
 }
 
-.btn-gold { background-color: var(--color-pv-ochre); color: var(--color-pv-charcoal); }
+.btn-gold { background-color: var(--color-pv-terracotta); color: var(--color-pv-ivory); }
 .btn-gold:hover:not(:disabled) { opacity: 0.92; }
 
 .btn-danger { background-color: var(--color-danger); color: var(--color-pv-ivory); }
@@ -428,13 +454,13 @@ textarea.input { resize: vertical; min-height: 80px; }
 .progress-fill {
   height: 100%;
   border-radius: var(--radius-pill);
-  background: linear-gradient(90deg, var(--color-pv-terracotta), var(--color-pv-ochre));
+  background: linear-gradient(90deg, var(--color-pv-terracotta), var(--color-flame-text));
   transition: width var(--duration-slow) ease;
 }
 .progress-fill-gold {
   height: 100%;
   border-radius: var(--radius-pill);
-  background-color: var(--color-pv-ochre);
+  background-color: var(--color-flame-text);
   transition: width var(--duration-slow) ease;
 }
 

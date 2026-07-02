@@ -70,7 +70,7 @@ export function RegisterPage() {
           <span className="eyebrow text-gold-text">Bienvenue</span>
           <h1
             className="display mt-3 text-ink"
-            style={{ fontSize: 36, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
+            style={{ fontSize: 28 }}
           >
             Votre aventure <span className="display-italic">commence ici.</span>
           </h1>

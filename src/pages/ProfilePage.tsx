@@ -210,7 +210,7 @@ export function ProfilePage() {
               className="rounded-full flex items-center justify-center font-display"
               style={{
                 width: 64, height: 64,
-                background: 'linear-gradient(150deg, var(--color-pv-ochre), #8a5a02)',
+                background: 'linear-gradient(150deg, var(--color-pv-terracotta), #6f2410)',
                 color: 'var(--color-pv-ivory)',
                 fontSize: 28, fontWeight: 500,
                 boxShadow: 'inset 0 0 0 2px rgba(0,0,0,0.15), inset 0 0 12px rgba(0,0,0,0.25)',
@@ -255,8 +255,8 @@ export function ProfilePage() {
                 Signé
               </span>
               <p
-                className="display-italic mt-1"
-                style={{ fontSize: 22, color: 'rgba(40,40,45,0.9)' }}
+                className="script mt-1"
+                style={{ fontSize: 26, color: 'rgba(40,40,45,0.9)' }}
               >
                 {profile?.name?.split(' ')[0] || '—'}
               </p>

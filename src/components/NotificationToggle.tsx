@@ -82,8 +82,8 @@ export function NotificationToggle() {
         <div
           className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
           style={{
-            background: status === 'permission-granted' ? '#cb8002' : 'rgba(184,72,42,0.1)',
-            color: status === 'permission-granted' ? '#fff' : '#b8482a',
+            background: status === 'permission-granted' ? '#cb8002' : 'rgba(162,55,26,0.1)',
+            color: status === 'permission-granted' ? '#fff' : '#a2371a',
           }}
         >
           {status === 'permission-granted' ? <Bell size={18} /> : <BellOff size={18} />}
@@ -119,8 +119,8 @@ export function NotificationToggle() {
                   className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
                   style={{
                     background: 'transparent',
-                    color: 'var(--color-pv-terracotta, #b8482a)',
-                    border: '1px solid var(--color-pv-terracotta, #b8482a)',
+                    color: 'var(--color-pv-terracotta, #a2371a)',
+                    border: '1px solid var(--color-pv-terracotta, #a2371a)',
                   }}
                 >
                   Comment réactiver ?
@@ -130,7 +130,7 @@ export function NotificationToggle() {
                   onClick={() => { refresh(); handleEnable() }}
                   disabled={loading}
                   className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-                  style={{ background: '#b8482a', color: '#ffffff' }}
+                  style={{ background: '#a2371a', color: '#ffffff' }}
                 >
                   {loading ? '…' : "J'ai réactivé, réessayer"}
                 </button>
@@ -147,7 +147,7 @@ export function NotificationToggle() {
                 onClick={requestActivation}
                 disabled={loading}
                 className="mt-3 px-4 py-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-                style={{ background: '#b8482a', color: '#ffffff' }}
+                style={{ background: '#a2371a', color: '#ffffff' }}
               >
                 {loading ? 'Activation…' : 'Activer les notifications'}
               </button>
@@ -332,7 +332,7 @@ export function NotificationToggle() {
                 onClick={handleEnable}
                 disabled={loading}
                 className="flex-1 px-4 py-3 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-                style={{ background: '#b8482a', color: '#ffffff' }}
+                style={{ background: '#a2371a', color: '#ffffff' }}
               >
                 {loading ? '…' : 'Activer'}
               </button>

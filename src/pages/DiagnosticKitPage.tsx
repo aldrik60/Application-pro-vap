@@ -231,7 +231,7 @@ export function DiagnosticKitPage() {
           <span className="eyebrow text-gold-text">Votre recommandation</span>
           <h1
             className="display mt-3 text-ink"
-            style={{ fontSize: 36, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
+            style={{ fontSize: 28 }}
           >
             Votre kit <span className="display-italic">idéal.</span>
           </h1>
@@ -257,8 +257,8 @@ export function DiagnosticKitPage() {
             <div
               className="w-11 h-11 rounded-full flex items-center justify-center"
               style={{
-                background: 'rgba(184, 72, 42, 0.15)',
-                border: '1px solid rgba(184, 72, 42, 0.30)',
+                background: 'rgba(162, 55, 26, 0.15)',
+                border: '1px solid rgba(162, 55, 26, 0.30)',
               }}
             >
               <span className="font-display text-flame-text" style={{ fontSize: 17, fontWeight: 500 }}>

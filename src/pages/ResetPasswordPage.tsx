@@ -64,7 +64,7 @@ export function ResetPasswordPage() {
           <span className="eyebrow text-gold-text">Sécurisé</span>
           <h1
             className="display mt-3 text-ink"
-            style={{ fontSize: 36, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
+            style={{ fontSize: 28 }}
           >
             Nouveau <span className="display-italic">mot de passe.</span>
           </h1>

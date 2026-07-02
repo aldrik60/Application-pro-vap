@@ -44,11 +44,11 @@ export function LoginPage() {
           <span className="eyebrow text-gold-text">Bon retour</span>
           <h1
             className="display mt-3 text-ink"
-            style={{ fontSize: 40, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
+            style={{ fontSize: 30 }}
           >
             Pro'Vap <span className="display-italic">Sevrage</span>
           </h1>
-          <p className="display-italic text-ink-2 mt-3" style={{ fontSize: 16 }}>
+          <p className="script text-flame-text mt-3" style={{ fontSize: 22 }}>
             Votre compagnon vers la liberté
           </p>
         </div>

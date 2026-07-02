@@ -306,9 +306,9 @@ export function ContentPage() {
               onClick={() => setShopFilter('all')}
               className="whitespace-nowrap px-3 py-1.5 rounded-full text-[12px] transition-colors"
               style={{
-                background: shopFilter === 'all' ? 'var(--color-pv-ochre)' : 'transparent',
-                color: shopFilter === 'all' ? 'var(--color-pv-charcoal)' : 'var(--color-ink-3)',
-                border: '1px solid ' + (shopFilter === 'all' ? 'var(--color-pv-ochre)' : 'var(--color-line)'),
+                background: shopFilter === 'all' ? 'var(--color-pv-terracotta)' : 'transparent',
+                color: shopFilter === 'all' ? 'var(--color-pv-ivory)' : 'var(--color-ink-3)',
+                border: '1px solid ' + (shopFilter === 'all' ? 'var(--color-pv-terracotta)' : 'var(--color-line)'),
                 letterSpacing: '0.06em',
                 fontWeight: 600,
               }}
@@ -321,9 +321,9 @@ export function ContentPage() {
                 onClick={() => setShopFilter(s)}
                 className="whitespace-nowrap px-3 py-1.5 rounded-full text-[12px] transition-colors"
                 style={{
-                  background: shopFilter === s ? 'var(--color-pv-ochre)' : 'transparent',
-                  color: shopFilter === s ? 'var(--color-pv-charcoal)' : 'var(--color-ink-3)',
-                  border: '1px solid ' + (shopFilter === s ? 'var(--color-pv-ochre)' : 'var(--color-line)'),
+                  background: shopFilter === s ? 'var(--color-pv-terracotta)' : 'transparent',
+                  color: shopFilter === s ? 'var(--color-pv-ivory)' : 'var(--color-ink-3)',
+                  border: '1px solid ' + (shopFilter === s ? 'var(--color-pv-terracotta)' : 'var(--color-line)'),
                   letterSpacing: '0.06em',
                   fontWeight: 600,
                 }}

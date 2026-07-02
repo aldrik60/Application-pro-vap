@@ -74,8 +74,8 @@ export function BadgesPage() {
         }}
       >
         <Vap stage={currentStage} size={180} withScene />
-        <p className="display-italic text-gold-text mt-2" style={{ fontSize: 22 }}>
-          « {VAP_STAGES[currentStage - 1].title} »
+        <p className="script text-flame-text mt-2" style={{ fontSize: 26 }}>
+          {VAP_STAGES[currentStage - 1].title}
         </p>
         <p className="text-[12px] text-ink-3 mt-1" style={{ letterSpacing: '0.12em' }}>
           STADE {currentStage} SUR 6 · JOUR {daysSmokeFree}
@@ -168,8 +168,8 @@ export function BadgesPage() {
                         className="inline-flex items-center gap-1 px-2.5 py-2 rounded-full text-[11px] transition-transform active:scale-95"
                         style={{
                           letterSpacing: '0.06em',
-                          background: isUnlocked ? 'rgba(184,72,42,0.10)' : 'transparent',
-                          border: '1px solid ' + (isUnlocked ? 'rgba(184,72,42,0.40)' : 'var(--color-line)'),
+                          background: isUnlocked ? 'rgba(162,55,26,0.10)' : 'transparent',
+                          border: '1px solid ' + (isUnlocked ? 'rgba(162,55,26,0.40)' : 'var(--color-line)'),
                           color: isUnlocked ? 'var(--color-gold-text)' : 'var(--color-ink-3)',
                         }}
                       >

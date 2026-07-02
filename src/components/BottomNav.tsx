@@ -76,7 +76,7 @@ export function BottomNav() {
           style={{
             background: 'var(--color-pv-terracotta)',
             border: '1.5px solid rgba(246,241,232,0.18)',
-            boxShadow: '0 8px 24px rgba(184,72,42,0.45), inset 0 1px 0 rgba(255,255,255,0.18)',
+            boxShadow: '0 8px 24px rgba(162,55,26,0.45), inset 0 1px 0 rgba(255,255,255,0.18)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

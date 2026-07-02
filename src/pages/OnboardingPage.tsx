@@ -38,7 +38,7 @@ const INTERNET_BOUTIQUE: BoutiqueItem = {
  * l'arrivée sur l'accueil (first win immédiat). « Passer » n'impose
  * pas de date : l'accueil guidera alors vers le profil.
  *
- * Direction : Apple × Hermès, serif italique, ample, sans pression.
+ * Direction V2 : charte pro-vap.com — Space Grotesk, Outfit, Marck Script.
  */
 
 type QuitChoice = 'today' | 'yesterday' | 'custom'
@@ -206,10 +206,10 @@ function StepWelcome({ onContinue }: { onContinue: () => void }) {
       <div className="flex-1 flex flex-col items-center justify-center text-center">
         <Vap stage={1} size={180} withScene />
         <div className="mt-4">
-          <p className="display-italic text-gold-text" style={{ fontSize: 16 }}>Bienvenue.</p>
+          <p className="script text-flame-text" style={{ fontSize: 24 }}>Bienvenue.</p>
           <h1
             className="display mt-3 text-ink"
-            style={{ fontSize: 38, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
+            style={{ fontSize: 30 }}
           >
             Voici <span className="display-italic">Vap.</span><br />Il vous accompagne.
           </h1>
@@ -258,7 +258,7 @@ function StepSmoker({
         <span className="eyebrow text-flame-text">Étape 02</span>
         <h1
           className="display mt-3 text-ink"
-          style={{ fontSize: 34, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
+          style={{ fontSize: 26 }}
         >
           Votre rapport<br />au <span className="display-italic">tabac.</span>
         </h1>
@@ -404,7 +404,7 @@ function StepBoutique({
         <span className="eyebrow text-flame-text">Étape 03</span>
         <h1
           className="display mt-3 text-ink"
-          style={{ fontSize: 34, fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05 }}
+          style={{ fontSize: 26 }}
         >
           Votre <span className="display-italic">point d'ancrage.</span>
         </h1>

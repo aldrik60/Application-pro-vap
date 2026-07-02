@@ -72,8 +72,8 @@ export function MessagesPage() {
             <div
               className="w-8 h-8 rounded-full border-2"
               style={{
-                borderColor: 'rgba(184,72,42,0.18)',
-                borderTopColor: 'var(--color-pv-terracotta, #b8482a)',
+                borderColor: 'rgba(162,55,26,0.18)',
+                borderTopColor: 'var(--color-pv-terracotta, #a2371a)',
                 animation: 'spin 0.8s linear infinite',
               }}
             />
@@ -91,7 +91,7 @@ export function MessagesPage() {
           >
             <div
               className="mx-auto w-14 h-14 rounded-2xl flex items-center justify-center mb-3"
-              style={{ background: 'rgba(184,72,42,0.08)', color: '#b8482a' }}
+              style={{ background: 'rgba(162,55,26,0.08)', color: '#a2371a' }}
             >
               <BellOff size={24} strokeWidth={1.4} />
             </div>
@@ -105,7 +105,7 @@ export function MessagesPage() {
             <button
               onClick={() => navigate('/profil')}
               className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90"
-              style={{ background: '#b8482a', color: '#ffffff' }}
+              style={{ background: '#a2371a', color: '#ffffff' }}
             >
               <Bell size={14} strokeWidth={1.8} /> Activer les notifications
             </button>
@@ -121,7 +121,7 @@ export function MessagesPage() {
                 key={msg.id}
                 onClick={() => hasLink && navigate(msg.url!)}
                 disabled={!hasLink}
-                className="card p-4 text-left transition-all active:scale-[0.99] hover:border-pv-ochre/30 disabled:cursor-default"
+                className="card p-4 text-left transition-all active:scale-[0.99] hover:border-pv-terracotta/30 disabled:cursor-default"
                 style={{
                   position: 'relative',
                   cursor: hasLink ? 'pointer' : 'default',
@@ -135,7 +135,7 @@ export function MessagesPage() {
                       right: 16,
                       width: 8,
                       height: 8,
-                      background: 'var(--color-pv-terracotta, #b8482a)',
+                      background: 'var(--color-pv-terracotta, #a2371a)',
                     }}
                     aria-label="Non lu"
                   />
@@ -158,7 +158,7 @@ export function MessagesPage() {
                 {hasLink && (
                   <span
                     className="inline-block mt-3 text-[12px] font-semibold"
-                    style={{ color: 'var(--color-pv-terracotta, #b8482a)' }}
+                    style={{ color: 'var(--color-pv-terracotta, #a2371a)' }}
                   >
                     Ouvrir →
                   </span>

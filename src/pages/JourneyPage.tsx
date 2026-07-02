@@ -176,8 +176,8 @@ export function JourneyPage() {
             <div
               className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
               style={{
-                background: 'rgba(184, 72, 42, 0.10)',
-                border: '1px solid rgba(184, 72, 42, 0.30)',
+                background: 'rgba(162, 55, 26, 0.10)',
+                border: '1px solid rgba(162, 55, 26, 0.30)',
                 color: 'var(--color-pv-terracotta)',
               }}
             >
