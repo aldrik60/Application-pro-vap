@@ -75,8 +75,9 @@ export function ResetPasswordPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div>
-            <label className="eyebrow block mb-2">Nouveau mot de passe</label>
+            <label htmlFor="reset-password" className="eyebrow block mb-2">Nouveau mot de passe</label>
             <input
+              id="reset-password"
               type="password"
               className="input text-base tracking-widest"
               placeholder="••••••••"
@@ -89,8 +90,9 @@ export function ResetPasswordPage() {
             />
           </div>
           <div>
-            <label className="eyebrow block mb-2">Confirmer</label>
+            <label htmlFor="reset-confirm" className="eyebrow block mb-2">Confirmer</label>
             <input
+              id="reset-confirm"
               type="password"
               className="input text-base tracking-widest"
               placeholder="••••••••"

@@ -38,6 +38,14 @@ export function SosPage() {
   const currentPhase = PHASE_ORDER[phaseIdx]
   const meta = PHASE_META[currentPhase]
 
+  // Retour sûr : en accès direct (deep link, notification), il n'y a pas
+  // d'historique dans l'app — on retombe sur l'accueil au lieu d'en sortir.
+  const goBack = () => {
+    const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0
+    if (idx > 0) navigate(-1)
+    else navigate('/', { replace: true })
+  }
+
   useEffect(() => {
     if (done || paused) return
     const tick = setInterval(() => {
@@ -84,9 +92,9 @@ export function SosPage() {
             .eq('id', user.id)
         }
       }
-      navigate(-1)
+      goBack()
     } catch {
-      navigate(-1)
+      goBack()
     }
   }
 
@@ -116,8 +124,8 @@ export function SosPage() {
             J'ai tenu
           </button>
           <button
-            onClick={() => navigate(-1)}
-            className="text-pv-ivory/50 text-sm mt-4 p-2"
+            onClick={goBack}
+            className="text-pv-ivory/50 text-sm mt-4 p-3"
           >
             Retour
           </button>
@@ -142,7 +150,7 @@ export function SosPage() {
         style={{ paddingTop: 'max(env(safe-area-inset-top), 24px)', paddingBottom: 16 }}
       >
         <button
-          onClick={() => navigate(-1)}
+          onClick={goBack}
           aria-label="Quitter"
           className="w-11 h-11 rounded-full flex items-center justify-center transition-opacity hover:opacity-100"
           style={{ border: '1px solid rgba(246,241,232,0.25)', color: 'rgba(246,241,232,0.7)' }}

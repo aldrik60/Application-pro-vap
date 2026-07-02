@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Bell, AlertTriangle, Share2, ChevronRight, BookOpen } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { Badge } from '../types'
+import { Badge, MoodLevel } from '../types'
 import { Vap, vapStageFromDays, VAP_STAGES } from '../components/Vap'
 import { ProVapLogo } from '../components/ProVapLogo'
 import { Modal } from '../components/Modal'
@@ -71,7 +71,10 @@ export function HomePage() {
   const unreadCount = useUnreadMessages(user?.id)
   const navigate = useNavigate()
   const [dailyMessage, setDailyMessage] = useState("Aujourd'hui compte. Demain aussi.")
-  const [, setBadges] = useState<Badge[]>([])
+  const [badges, setBadges] = useState<Badge[]>([])
+
+  // Célébration au déblocage d'un badge (le « Shine » : fêter chaque petit pas)
+  const [celebrateBadge, setCelebrateBadge] = useState<Badge | null>(null)
 
   // Flux « écart / rechute » — recadrer sans culpabiliser (jamais de reset silencieux)
   const [lapseOpen, setLapseOpen] = useState(false)
@@ -120,6 +123,23 @@ export function HomePage() {
       })
   }, [])
 
+  // Célèbre le dernier badge atteint, une seule fois (marqueur localStorage par compte)
+  useEffect(() => {
+    if (!user || badges.length === 0 || daysSmokeFree <= 0) return
+    const unlocked = badges.filter(b => daysSmokeFree >= b.day_threshold)
+    const latest = unlocked[unlocked.length - 1]
+    if (!latest) return
+    const seen = parseInt(localStorage.getItem(`provap_badge_celebrated_${user.id}`) || '0', 10)
+    if (latest.day_threshold > seen) setCelebrateBadge(latest)
+  }, [user, badges, daysSmokeFree])
+
+  const closeCelebration = () => {
+    if (user && celebrateBadge) {
+      localStorage.setItem(`provap_badge_celebrated_${user.id}`, String(celebrateBadge.day_threshold))
+    }
+    setCelebrateBadge(null)
+  }
+
   const closeLapse = () => {
     setLapseOpen(false)
     setLapseView('reassure')
@@ -134,6 +154,7 @@ export function HomePage() {
         .update({ quit_date: todayLocalDateStr() })
         .eq('id', user.id)
       if (error) throw error
+      localStorage.setItem(`provap_badge_celebrated_${user.id}`, '0')
       await refreshProfile()
       closeLapse()
       toast.success('Nouveau départ. Vous savez déjà comment faire.')
@@ -287,6 +308,9 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Check-in humeur — l'action quotidienne clé, en un tap */}
+      {user && <MoodCheckin userId={user.id} />}
 
       {/* Stats en duo */}
       <section className="grid grid-cols-2 gap-2.5 px-5 mt-4">
@@ -507,6 +531,39 @@ export function HomePage() {
           </div>
         )}
       </Modal>
+
+      {/* Célébration badge — sobre, un jalon à la fois */}
+      <Modal isOpen={!!celebrateBadge} onClose={closeCelebration}>
+        {celebrateBadge && (
+          <div className="flex flex-col items-center text-center gap-4 py-6">
+            <span className="eyebrow text-gold-text" style={{ letterSpacing: '0.24em' }}>
+              Nouveau jalon
+            </span>
+            <span style={{ fontSize: 56, lineHeight: 1 }} aria-hidden>{celebrateBadge.icon}</span>
+            <p className="display-italic text-ink" style={{ fontSize: 30, lineHeight: 1.15 }}>
+              {celebrateBadge.title}
+            </p>
+            <p className="text-sm text-ink-2 leading-relaxed max-w-[280px]">
+              {celebrateBadge.description}
+            </p>
+            <div className="gold-rule w-24" />
+            <p className="text-xs text-ink-3">
+              Jour {celebrateBadge.day_threshold} · vous l'avez gagné.
+            </p>
+            <button onClick={closeCelebration} className="btn-primary mt-2">
+              Continuer
+            </button>
+            <Link
+              to="/badges"
+              onClick={closeCelebration}
+              className="text-xs text-ink-3 hover:text-ink-2 transition-colors"
+              style={{ padding: 12, margin: -8 }}
+            >
+              Voir toutes mes étapes →
+            </Link>
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }
@@ -531,5 +588,115 @@ function StatTile({ eyebrow, value, unit, accent }: { eyebrow: string; value: st
         <span className="display-italic text-ink-3 text-sm">{unit}</span>
       </div>
     </div>
+  )
+}
+
+/* ─── Check-in humeur 1-tap ─────────────────────────────────────────────
+   Fogg : rendre l'action quotidienne minuscule. Un tap = enregistré dans
+   mood_entries (la note et le flag « craquage » du journal sont préservés
+   par l'upsert partiel). */
+
+const MOODS: { level: MoodLevel; emoji: string; label: string }[] = [
+  { level: 'tres_difficile', emoji: '😞', label: 'Très dur' },
+  { level: 'difficile',      emoji: '😕', label: 'Difficile' },
+  { level: 'neutre',         emoji: '😐', label: 'Neutre' },
+  { level: 'bien',           emoji: '🙂', label: 'Bien' },
+  { level: 'excellent',      emoji: '😄', label: 'Excellent' },
+]
+
+function MoodCheckin({ userId }: { userId: string }) {
+  const today = todayLocalDateStr()
+  const [mood, setMood] = useState<MoodLevel | null>(null)
+  const [loaded, setLoaded] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [justSaved, setJustSaved] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    supabase.from('mood_entries')
+      .select('mood')
+      .eq('user_id', userId)
+      .eq('date', today)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (cancelled) return
+        if (data) setMood((data as { mood: MoodLevel }).mood)
+        setLoaded(true)
+      })
+    return () => { cancelled = true }
+  }, [userId, today])
+
+  const handleTap = async (level: MoodLevel) => {
+    if (saving) return
+    const previous = mood
+    setMood(level)
+    setSaving(true)
+    const { error } = await supabase.from('mood_entries').upsert(
+      { user_id: userId, date: today, mood: level, updated_at: new Date().toISOString() },
+      { onConflict: 'user_id,date' },
+    )
+    setSaving(false)
+    if (error) {
+      setMood(previous)
+      toast.error("Erreur lors de l'enregistrement.")
+    } else {
+      setJustSaved(true)
+    }
+  }
+
+  return (
+    <section className="px-5 mt-3">
+      <div className="card p-5">
+        <div className="flex justify-between items-center mb-3">
+          <span className="eyebrow" id="mood-checkin-label">Votre journée</span>
+          <Link
+            to="/journal"
+            className="text-[11px] text-gold-text"
+            style={{ letterSpacing: '0.06em', padding: 10, margin: -10 }}
+          >
+            Journal →
+          </Link>
+        </div>
+        <div className="grid grid-cols-5 gap-1.5" role="radiogroup" aria-labelledby="mood-checkin-label">
+          {MOODS.map(m => {
+            const active = mood === m.level
+            return (
+              <button
+                key={m.level}
+                type="button"
+                role="radio"
+                aria-checked={active}
+                aria-label={m.label}
+                onClick={() => handleTap(m.level)}
+                className="flex flex-col items-center justify-center gap-1 rounded-md border transition-all active:scale-95"
+                style={{
+                  minHeight: 56,
+                  padding: '8px 2px',
+                  background: active ? 'rgba(184,72,42,0.10)' : 'transparent',
+                  borderColor: active ? 'var(--color-pv-terracotta)' : 'var(--color-line)',
+                }}
+              >
+                <span style={{ fontSize: 22 }} aria-hidden>{m.emoji}</span>
+                <span
+                  className={active ? 'text-flame-text' : 'text-ink-3'}
+                  style={{ fontSize: 10, letterSpacing: '0.04em', fontWeight: 600 }}
+                >
+                  {m.label}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+        <p className="text-[11px] text-ink-3 mt-3" style={{ letterSpacing: '0.04em' }}>
+          {justSaved
+            ? 'Noté. Un jour à la fois.'
+            : mood
+              ? "Enregistré aujourd'hui — modifiable d'un tap."
+              : loaded
+                ? 'Un tap suffit, retrouvez tout dans votre journal.'
+                : '\u00a0'}
+        </p>
+      </div>
+    </section>
   )
 }

@@ -4,6 +4,7 @@ import { Badge } from '../types'
 import { useAuth } from '../contexts/AuthContext'
 import { differenceInDays } from 'date-fns'
 import { Vap, vapStageFromDays, VAP_STAGES, VapStage } from '../components/Vap'
+import { Modal } from '../components/Modal'
 import { Check, Lock } from 'lucide-react'
 
 /**
@@ -23,6 +24,7 @@ export function BadgesPage() {
   const { profile } = useAuth()
   const [badges, setBadges] = useState<Badge[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null)
 
   const daysSmokeFree = profile?.quit_date
     ? Math.max(0, differenceInDays(new Date(), new Date(profile.quit_date)))
@@ -159,20 +161,21 @@ export function BadgesPage() {
                   {stageBadges.map(b => {
                     const isUnlocked = daysSmokeFree >= b.day_threshold
                     return (
-                      <span
+                      <button
                         key={b.id}
                         title={b.description}
-                        className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px]"
+                        onClick={() => setSelectedBadge(b)}
+                        className="inline-flex items-center gap-1 px-2.5 py-2 rounded-full text-[11px] transition-transform active:scale-95"
                         style={{
                           letterSpacing: '0.06em',
                           background: isUnlocked ? 'rgba(184,72,42,0.10)' : 'transparent',
                           border: '1px solid ' + (isUnlocked ? 'rgba(184,72,42,0.40)' : 'var(--color-line)'),
-                          color: isUnlocked ? 'var(--color-gold-text)' : 'var(--color-ink-4)',
+                          color: isUnlocked ? 'var(--color-gold-text)' : 'var(--color-ink-3)',
                         }}
                       >
-                        <span style={{ fontSize: 11 }}>{b.icon}</span>
+                        <span style={{ fontSize: 11 }} aria-hidden>{b.icon}</span>
                         <span>{b.title}</span>
-                      </span>
+                      </button>
                     )
                   })}
                 </div>
@@ -186,6 +189,32 @@ export function BadgesPage() {
           )
         })}
       </section>
+
+      {/* Détail badge — accessible au tap (le title= ne sert qu'au survol desktop) */}
+      <Modal isOpen={!!selectedBadge} onClose={() => setSelectedBadge(null)} title={selectedBadge?.title}>
+        {selectedBadge && (
+          <div className="flex flex-col items-center text-center gap-4 py-4">
+            <span style={{ fontSize: 48 }} aria-hidden>{selectedBadge.icon}</span>
+            <p className="display-italic text-ink" style={{ fontSize: 19, lineHeight: 1.4 }}>
+              {selectedBadge.description}
+            </p>
+            <div className="gold-rule w-24" />
+            {daysSmokeFree >= selectedBadge.day_threshold ? (
+              <p className="eyebrow text-gold-text">
+                Débloqué · jour {selectedBadge.day_threshold}
+              </p>
+            ) : (
+              <p className="eyebrow">
+                Se débloque au jour {selectedBadge.day_threshold} · dans{' '}
+                {selectedBadge.day_threshold - daysSmokeFree} jour{selectedBadge.day_threshold - daysSmokeFree > 1 ? 's' : ''}
+              </p>
+            )}
+            <button onClick={() => setSelectedBadge(null)} className="btn-ghost mt-2">
+              Fermer
+            </button>
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }

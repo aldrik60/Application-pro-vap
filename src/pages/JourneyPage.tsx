@@ -381,22 +381,24 @@ export function JourneyPage() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-2">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="eyebrow block mb-2">Taux (mg/ml)</label>
-              <input type="number" step="0.1" className="input" value={mg} onChange={e => setMg(e.target.value)} required />
+              <label htmlFor="checkin-mg" className="eyebrow block mb-2">Taux (mg/ml)</label>
+              <input id="checkin-mg" type="number" step="0.1" className="input" value={mg} onChange={e => setMg(e.target.value)} required />
             </div>
             <div>
-              <label className="eyebrow block mb-2">E-liquide</label>
-              <input type="text" className="input" value={eliquid} onChange={e => setEliquid(e.target.value)} placeholder="Ex: FR/M" />
+              <label htmlFor="checkin-eliquid" className="eyebrow block mb-2">E-liquide</label>
+              <input id="checkin-eliquid" type="text" className="input" value={eliquid} onChange={e => setEliquid(e.target.value)} placeholder="Ex: FR/M" />
             </div>
           </div>
 
           <div>
-            <label className="eyebrow block mb-2">Comment vous sentez-vous ?</label>
-            <div className="grid grid-cols-2 gap-2">
+            <span className="eyebrow block mb-2" id="checkin-feeling-label">Comment vous sentez-vous ?</span>
+            <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-labelledby="checkin-feeling-label">
               {(['difficile', 'neutre', 'bien', 'excellent'] as const).map(f => (
                 <button
                   key={f}
                   type="button"
+                  role="radio"
+                  aria-checked={feeling === f}
                   onClick={() => setFeeling(f)}
                   className="py-3 px-2 text-xs font-medium rounded-md border capitalize transition-colors"
                   style={{
@@ -413,8 +415,9 @@ export function JourneyPage() {
           </div>
 
           <div>
-            <label className="eyebrow block mb-2">Notes (optionnel)</label>
+            <label htmlFor="checkin-notes" className="eyebrow block mb-2">Notes (optionnel)</label>
             <textarea
+              id="checkin-notes"
               className="input text-sm"
               placeholder="Une victoire ? Une difficulté ?"
               value={notes}

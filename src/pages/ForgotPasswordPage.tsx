@@ -68,8 +68,9 @@ export function ForgotPasswordPage() {
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div>
-              <label className="eyebrow block mb-2">Adresse email</label>
+              <label htmlFor="forgot-email" className="eyebrow block mb-2">Adresse email</label>
               <input
+                id="forgot-email"
                 type="email"
                 className="input text-base"
                 placeholder="vous@email.com"

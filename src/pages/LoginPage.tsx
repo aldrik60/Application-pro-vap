@@ -55,8 +55,9 @@ export function LoginPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div>
-            <label className="eyebrow block mb-2">Adresse email</label>
+            <label htmlFor="login-email" className="eyebrow block mb-2">Adresse email</label>
             <input
+              id="login-email"
               type="email"
               className="input text-base"
               placeholder="vous@email.com"
@@ -69,8 +70,9 @@ export function LoginPage() {
           </div>
 
           <div>
-            <label className="eyebrow block mb-2">Mot de passe</label>
+            <label htmlFor="login-password" className="eyebrow block mb-2">Mot de passe</label>
             <input
+              id="login-password"
               type="password"
               className="input text-base tracking-widest"
               placeholder="••••••••"

@@ -5,14 +5,14 @@ import { supabase } from '../lib/supabase'
 import toast from 'react-hot-toast'
 import {
   Phone, Calendar, ChevronRight, LogOut, MapPin, Clock,
-  Trash2, Download, BookHeart, FlaskConical,
+  Trash2, Download, BookHeart, FlaskConical, Settings,
 } from 'lucide-react'
 import { Modal } from '../components/Modal'
 import { useShop } from '../hooks/useShop'
 import { IS_FULL } from '../lib/appMode'
 import { Vap, vapStageFromDays } from '../components/Vap'
 import { NotificationToggle } from '../components/NotificationToggle'
-import { buildLocalDateStr } from '../lib/dates'
+import { buildLocalDateStr, MONTHS_FR } from '../lib/dates'
 import type { TobaccoType } from '../types'
 
 const SHOPS = [
@@ -30,11 +30,6 @@ const TOBACCO_TYPES = [
 ]
 
 const AGE_RANGES = ['Moins de 25 ans', '25-40 ans', '40-55 ans', 'Plus de 55 ans']
-
-const MONTHS = [
-  'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-  'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',
-]
 
 function parseDateParts(dateStr: string | null) {
   if (!dateStr) return { day: '', month: '', year: '' }
@@ -284,17 +279,17 @@ export function ProfilePage() {
         <div className="card p-5 space-y-5">
           {/* Date d'arrêt */}
           <div>
-            <label className="eyebrow block mb-2">Date d'arrêt du tabac</label>
+            <span className="eyebrow block mb-2">Date d'arrêt du tabac</span>
             <div className="grid grid-cols-3 gap-2">
-              <select className="input text-sm" value={quitDay} onChange={e => setQuitDay(e.target.value)}>
+              <select className="input text-sm" value={quitDay} onChange={e => setQuitDay(e.target.value)} aria-label="Jour d'arrêt">
                 <option value="">Jour</option>
                 {days.map(d => <option key={d} value={d}>{d}</option>)}
               </select>
-              <select className="input text-sm" value={quitMonth} onChange={e => setQuitMonth(e.target.value)}>
+              <select className="input text-sm" value={quitMonth} onChange={e => setQuitMonth(e.target.value)} aria-label="Mois d'arrêt">
                 <option value="">Mois</option>
-                {MONTHS.map((m, i) => <option key={i} value={String(i + 1)}>{m}</option>)}
+                {MONTHS_FR.map((m, i) => <option key={i} value={String(i + 1)}>{m}</option>)}
               </select>
-              <select className="input text-sm" value={quitYear} onChange={e => setQuitYear(e.target.value)}>
+              <select className="input text-sm" value={quitYear} onChange={e => setQuitYear(e.target.value)} aria-label="Année d'arrêt">
                 <option value="">Année</option>
                 {years.map(y => <option key={y} value={y}>{y}</option>)}
               </select>
@@ -303,8 +298,8 @@ export function ProfilePage() {
 
           {/* Type tabac */}
           <div>
-            <label className="eyebrow block mb-2">Type de tabac</label>
-            <select className="input" value={tobaccoType} onChange={e => setTobaccoType(e.target.value)}>
+            <label htmlFor="profile-tobacco" className="eyebrow block mb-2">Type de tabac</label>
+            <select id="profile-tobacco" className="input" value={tobaccoType} onChange={e => setTobaccoType(e.target.value)}>
               <option value="">Sélectionner…</option>
               {TOBACCO_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
@@ -313,18 +308,18 @@ export function ProfilePage() {
           {/* Cigs + prix */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="eyebrow block mb-2">Cig. par jour</label>
+              <span className="eyebrow block mb-2" id="profile-cigs-label">Cig. par jour</span>
               <div className="flex items-center border border-line bg-bg-elev rounded-md overflow-hidden">
-                <button type="button" onClick={() => setCigsPerDay(v => Math.max(0, v - 1))}
+                <button type="button" aria-label="Diminuer" onClick={() => setCigsPerDay(v => Math.max(0, v - 1))}
                   className="w-11 h-11 flex items-center justify-center text-ink-3 hover:text-ink hover:bg-bg-card transition-colors text-xl font-light">−</button>
                 <span className="flex-1 text-center text-ink font-display" style={{ fontSize: 20, fontWeight: 500 }}>{cigsPerDay}</span>
-                <button type="button" onClick={() => setCigsPerDay(v => v + 1)}
+                <button type="button" aria-label="Augmenter" onClick={() => setCigsPerDay(v => v + 1)}
                   className="w-11 h-11 flex items-center justify-center text-ink-3 hover:text-ink hover:bg-bg-card transition-colors text-xl font-light">+</button>
               </div>
             </div>
             <div>
-              <label className="eyebrow block mb-2">Prix paquet (€)</label>
-              <input type="number" step="0.1" className="input"
+              <label htmlFor="profile-pack-price" className="eyebrow block mb-2">Prix paquet (€)</label>
+              <input id="profile-pack-price" type="number" step="0.1" className="input"
                 value={packPrice} onChange={e => setPackPrice(parseFloat(e.target.value) || 0)} />
             </div>
           </div>
@@ -332,8 +327,8 @@ export function ProfilePage() {
           {/* Boutique — full only */}
           {IS_FULL && (
             <div>
-              <label className="eyebrow block mb-2">Boutique Pro'Vap</label>
-              <select className="input" value={preferredShop} onChange={e => setPreferredShop(e.target.value)}>
+              <label htmlFor="profile-shop" className="eyebrow block mb-2">Boutique Pro'Vap</label>
+              <select id="profile-shop" className="input" value={preferredShop} onChange={e => setPreferredShop(e.target.value)}>
                 <option value="">Choisir une boutique</option>
                 {SHOPS.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
@@ -342,8 +337,8 @@ export function ProfilePage() {
 
           {/* Âge */}
           <div>
-            <label className="eyebrow block mb-2">Tranche d'âge</label>
-            <select className="input" value={ageRange} onChange={e => setAgeRange(e.target.value)}>
+            <label htmlFor="profile-age" className="eyebrow block mb-2">Tranche d'âge</label>
+            <select id="profile-age" className="input" value={ageRange} onChange={e => setAgeRange(e.target.value)}>
               <option value="">Sélectionner…</option>
               {AGE_RANGES.map(a => <option key={a} value={a}>{a}</option>)}
             </select>
@@ -362,14 +357,14 @@ export function ProfilePage() {
       <section className="px-5 mt-3">
         <div className="card p-5 space-y-4">
           <div>
-            <label className="eyebrow block mb-2">Quel cadeau vous offrirez-vous ?</label>
-            <input type="text" placeholder="Voyage, console, soin…"
+            <label htmlFor="profile-reward-name" className="eyebrow block mb-2">Quel cadeau vous offrirez-vous ?</label>
+            <input id="profile-reward-name" type="text" placeholder="Voyage, console, soin…"
               className="input"
               value={rewardName} onChange={e => setRewardName(e.target.value)} />
           </div>
           <div>
-            <label className="eyebrow block mb-2">Montant cible (€)</label>
-            <input type="number" className="input" placeholder="500"
+            <label htmlFor="profile-reward-amount" className="eyebrow block mb-2">Montant cible (€)</label>
+            <input id="profile-reward-amount" type="number" className="input" placeholder="500"
               value={rewardAmount} onChange={e => setRewardAmount(e.target.value)} />
           </div>
         </div>
@@ -454,6 +449,13 @@ export function ProfilePage() {
             onClick={handleExportData}
             disabled={exporting}
           />
+          {profile?.role === 'admin' && (
+            <SettingsRow
+              label="Administration"
+              icon={<Settings size={16} strokeWidth={1.3} />}
+              onClick={() => navigate('/admin')}
+            />
+          )}
         </div>
       </section>
 
@@ -491,21 +493,21 @@ export function ProfilePage() {
             Boutique : <span className="text-gold-text font-semibold">{preferredShop}</span>
           </p>
           <div>
-            <label className="eyebrow block mb-2">Votre nom</label>
-            <input className="input" value={apptName} onChange={e => setApptName(e.target.value)} required />
+            <label htmlFor="appt-name" className="eyebrow block mb-2">Votre nom</label>
+            <input id="appt-name" className="input" value={apptName} onChange={e => setApptName(e.target.value)} required />
           </div>
           <div>
-            <label className="eyebrow block mb-2">Votre email</label>
-            <input type="email" className="input" value={apptEmail} onChange={e => setApptEmail(e.target.value)} required />
+            <label htmlFor="appt-email" className="eyebrow block mb-2">Votre email</label>
+            <input id="appt-email" type="email" className="input" value={apptEmail} onChange={e => setApptEmail(e.target.value)} required />
           </div>
           <div>
-            <label className="eyebrow block mb-2">Créneau souhaité</label>
-            <input className="input" placeholder="Mardi matin, vendredi après-midi…"
+            <label htmlFor="appt-slot" className="eyebrow block mb-2">Créneau souhaité</label>
+            <input id="appt-slot" className="input" placeholder="Mardi matin, vendredi après-midi…"
               value={apptSlot} onChange={e => setApptSlot(e.target.value)} />
           </div>
           <div>
-            <label className="eyebrow block mb-2">Message (optionnel)</label>
-            <textarea className="input h-24 text-sm" placeholder="Décrivez brièvement votre situation…"
+            <label htmlFor="appt-message" className="eyebrow block mb-2">Message (optionnel)</label>
+            <textarea id="appt-message" className="input h-24 text-sm" placeholder="Décrivez brièvement votre situation…"
               value={apptMessage} onChange={e => setApptMessage(e.target.value)} />
           </div>
           <button type="submit" className="btn-primary mt-2">Envoyer la demande</button>
@@ -530,10 +532,10 @@ export function ProfilePage() {
             Avant de supprimer, vous pouvez exporter vos données depuis le profil.
           </p>
           <div>
-            <label className="eyebrow block mb-2">
+            <label htmlFor="delete-confirm" className="eyebrow block mb-2">
               Pour confirmer, tapez <span className="text-danger font-bold">SUPPRIMER</span>
             </label>
-            <input className="input" placeholder="SUPPRIMER"
+            <input id="delete-confirm" className="input" placeholder="SUPPRIMER"
               value={deleteConfirmText} onChange={e => setDeleteConfirmText(e.target.value)}
               autoCapitalize="characters" />
           </div>

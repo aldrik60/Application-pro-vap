@@ -1,7 +1,6 @@
 import React from 'react'
 import { NavLink, useNavigate, useLocation } from 'react-router-dom'
-import { Home, Award, User, Settings } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
+import { Home, Award, User } from 'lucide-react'
 
 /* Icônes custom du design — line icons sobres */
 
@@ -32,7 +31,6 @@ const ActiveDot = () => (
 )
 
 export function BottomNav() {
-  const { profile } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const sosActive = location.pathname === '/sos'
@@ -73,7 +71,7 @@ export function BottomNav() {
         <button
           onClick={() => navigate('/sos')}
           aria-label="SOS — j'ai une envie"
-          aria-pressed={sosActive}
+          aria-current={sosActive ? 'page' : undefined}
           className="absolute top-[-18px] w-14 h-14 rounded-full transition-transform active:scale-95"
           style={{
             background: 'var(--color-pv-terracotta)',
@@ -112,17 +110,7 @@ export function BottomNav() {
         )}
       </NavLink>
 
-      {profile?.role === 'admin' && (
-        <NavLink to="/admin" className={({ isActive }) => tabClass(isActive)} aria-label="Administration">
-          {({ isActive }) => (
-            <>
-              <Settings size={20} strokeWidth={1.4} />
-              <span className="text-[11px]" style={{ letterSpacing: '0.08em', fontWeight: 500 }}>Admin</span>
-              {isActive && <ActiveDot />}
-            </>
-          )}
-        </NavLink>
-      )}
+      {/* L'accès admin vit dans Profil → Réglages (la nav primaire reste à 5 items). */}
     </nav>
   )
 }

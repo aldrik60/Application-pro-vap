@@ -78,8 +78,9 @@ export function RegisterPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div>
-            <label className="eyebrow block mb-2">Prénom ou pseudo</label>
+            <label htmlFor="register-name" className="eyebrow block mb-2">Prénom ou pseudo</label>
             <input
+              id="register-name"
               type="text"
               className="input text-base"
               placeholder="Alex"
@@ -92,8 +93,9 @@ export function RegisterPage() {
           </div>
 
           <div>
-            <label className="eyebrow block mb-2">Adresse email</label>
+            <label htmlFor="register-email" className="eyebrow block mb-2">Adresse email</label>
             <input
+              id="register-email"
               type="email"
               className="input text-base"
               placeholder="vous@email.com"
@@ -106,8 +108,9 @@ export function RegisterPage() {
           </div>
 
           <div>
-            <label className="eyebrow block mb-2">Mot de passe</label>
+            <label htmlFor="register-password" className="eyebrow block mb-2">Mot de passe</label>
             <input
+              id="register-password"
               type="password"
               className="input text-base tracking-widest"
               placeholder="••••••••"
