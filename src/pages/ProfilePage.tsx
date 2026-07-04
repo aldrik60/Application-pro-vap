@@ -62,8 +62,10 @@ export function ProfilePage() {
 
   const [apptName, setApptName] = useState(profile?.name || '')
   const [apptEmail, setApptEmail] = useState(profile?.email || '')
+  const [apptPhone, setApptPhone] = useState('')
   const [apptMessage, setApptMessage] = useState('')
   const [apptSlot, setApptSlot] = useState('')
+  const [submittingAppt, setSubmittingAppt] = useState(false)
 
   useEffect(() => {
     if (profile) {
@@ -164,15 +166,31 @@ export function ProfilePage() {
     }
   }
 
-  const handleAppointmentSubmit = (e: React.SyntheticEvent) => {
+  const handleAppointmentSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
-    const subject = encodeURIComponent(`Demande de rendez-vous · Pro'Vap ${preferredShop}`)
-    const body = encodeURIComponent(
-      `Nom : ${apptName}\nEmail : ${apptEmail}\nCréneau souhaité : ${apptSlot}\n\nMessage :\n${apptMessage}`
-    )
-    window.location.href = `mailto:contact@provap.fr?subject=${subject}&body=${body}`
-    setAppointmentModalOpen(false)
-    toast.success('Votre demande a été préparée')
+    if (submittingAppt) return
+    try {
+      setSubmittingAppt(true)
+      const { error } = await supabase.from('appointment_requests').insert({
+        user_id: user?.id ?? null,
+        name: apptName.trim(),
+        email: apptEmail.trim(),
+        phone: apptPhone.trim() || null,
+        shop: preferredShop,
+        preferred_slot: apptSlot.trim() || null,
+        message: apptMessage.trim() || null,
+      })
+      if (error) throw error
+      toast.success('Demande envoyée. Votre conseiller vous recontactera.')
+      setAppointmentModalOpen(false)
+      setApptPhone('')
+      setApptSlot('')
+      setApptMessage('')
+    } catch {
+      toast.error("Impossible d'envoyer la demande. Réessayez.")
+    } finally {
+      setSubmittingAppt(false)
+    }
   }
 
   const currentYear = new Date().getFullYear()
@@ -501,6 +519,11 @@ export function ProfilePage() {
             <input id="appt-email" type="email" className="input" value={apptEmail} onChange={e => setApptEmail(e.target.value)} required />
           </div>
           <div>
+            <label htmlFor="appt-phone" className="eyebrow block mb-2">Votre téléphone (optionnel)</label>
+            <input id="appt-phone" type="tel" className="input" placeholder="Pour être rappelé plus vite"
+              value={apptPhone} onChange={e => setApptPhone(e.target.value)} />
+          </div>
+          <div>
             <label htmlFor="appt-slot" className="eyebrow block mb-2">Créneau souhaité</label>
             <input id="appt-slot" className="input" placeholder="Mardi matin, vendredi après-midi…"
               value={apptSlot} onChange={e => setApptSlot(e.target.value)} />
@@ -510,7 +533,9 @@ export function ProfilePage() {
             <textarea id="appt-message" className="input h-24 text-sm" placeholder="Décrivez brièvement votre situation…"
               value={apptMessage} onChange={e => setApptMessage(e.target.value)} />
           </div>
-          <button type="submit" className="btn-primary mt-2">Envoyer la demande</button>
+          <button type="submit" className="btn-primary mt-2" disabled={submittingAppt}>
+            {submittingAppt ? 'Envoi…' : 'Envoyer la demande'}
+          </button>
         </form>
       </Modal>
 

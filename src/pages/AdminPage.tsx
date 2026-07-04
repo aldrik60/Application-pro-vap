@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
-import { Profile, VaperStory, DailyMessage, ContentArticle } from '../types'
+import { Profile, VaperStory, DailyMessage, ContentArticle, AppointmentRequest, AppointmentStatus } from '../types'
 import { format, parseISO, subDays, differenceInDays } from 'date-fns'
 import toast from 'react-hot-toast'
 import { Modal } from '../components/Modal'
 import { Pencil, Trash2, Plus, Check, X } from 'lucide-react'
 
-type Tab = 'dashboard' | 'utilisateurs' | 'temoignages' | 'messages' | 'articles' | 'videos' | 'push'
+type Tab = 'dashboard' | 'utilisateurs' | 'rendez-vous' | 'temoignages' | 'messages' | 'articles' | 'videos' | 'push'
 
 // ─── Dashboard Tab ──────────────────────────────────────────────────────────────
 
@@ -258,6 +258,130 @@ function StoriesTab() {
   )
 }
 
+// ─── Appointments Tab ───────────────────────────────────────────────────────────
+
+const APPT_STATUS_META: Record<AppointmentStatus, { label: string; cls: string }> = {
+  nouveau: { label: 'Nouveau', cls: 'bg-pv-terracotta/10 text-flame-text border-pv-terracotta/30' },
+  traite:  { label: 'Traité',  cls: 'bg-success/10 text-success border-success/30' },
+  annule:  { label: 'Annulé',  cls: 'bg-ink/5 text-ink-3 border-line' },
+}
+
+function AppointmentsTab() {
+  const [requests, setRequests] = useState<AppointmentRequest[]>([])
+  const [loading, setLoading] = useState(true)
+  const [filter, setFilter] = useState<'tous' | AppointmentStatus>('tous')
+
+  useEffect(() => {
+    supabase.from('appointment_requests').select('*').order('created_at', { ascending: false })
+      .then(({ data }) => { if (data) setRequests(data as AppointmentRequest[]); setLoading(false) })
+  }, [])
+
+  const setStatus = async (id: string, status: AppointmentStatus) => {
+    const { error } = await supabase.from('appointment_requests').update({ status }).eq('id', id)
+    if (error) { toast.error('Erreur'); return }
+    setRequests(prev => prev.map(r => r.id === id ? { ...r, status } : r))
+    toast.success('Statut mis à jour.')
+  }
+
+  const remove = async (id: string) => {
+    if (!confirm('Supprimer cette demande ?')) return
+    await supabase.from('appointment_requests').delete().eq('id', id)
+    setRequests(prev => prev.filter(r => r.id !== id))
+    toast.success('Demande supprimée.')
+  }
+
+  if (loading) return <div className="flex justify-center py-8"><div className="w-6 h-6 border-2 border-pv-terracotta border-t-transparent rounded-full animate-spin" /></div>
+
+  const newCount = requests.filter(r => r.status === 'nouveau').length
+  const shown = filter === 'tous' ? requests : requests.filter(r => r.status === filter)
+
+  const FILTERS: { id: 'tous' | AppointmentStatus; label: string }[] = [
+    { id: 'tous', label: 'Toutes' },
+    { id: 'nouveau', label: `Nouvelles${newCount ? ` (${newCount})` : ''}` },
+    { id: 'traite', label: 'Traitées' },
+    { id: 'annule', label: 'Annulées' },
+  ]
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2 overflow-x-auto pb-1 hide-scrollbar">
+        {FILTERS.map(f => (
+          <button
+            key={f.id}
+            onClick={() => setFilter(f.id)}
+            className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${filter === f.id ? 'bg-pv-terracotta text-pv-ivory' : 'bg-bg-elev text-ink-3 border border-line'}`}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
+      {shown.length === 0 && (
+        <p className="text-ink-3 text-sm italic text-center py-6">Aucune demande de rendez-vous.</p>
+      )}
+
+      <div className="flex flex-col gap-3">
+        {shown.map(r => {
+          const meta = APPT_STATUS_META[r.status]
+          return (
+            <div key={r.id} className="card p-4">
+              <div className="flex justify-between items-start gap-2 mb-2">
+                <div className="min-w-0">
+                  <span className="text-sm font-semibold text-ink">{r.name}</span>
+                  <span className="block text-xs text-ink-3">{r.shop} · {format(parseISO(r.created_at), 'dd/MM/yyyy à HH:mm')}</span>
+                </div>
+                <span className={`shrink-0 text-[11px] px-2 py-1 rounded border ${meta.cls}`}>{meta.label}</span>
+              </div>
+
+              <div className="space-y-1 mb-3">
+                <a href={`mailto:${r.email}`} className="block text-sm text-flame-text break-all">{r.email}</a>
+                {r.phone && <a href={`tel:${r.phone}`} className="block text-sm text-flame-text">{r.phone}</a>}
+                {r.preferred_slot && (
+                  <p className="text-sm text-ink-3"><span className="text-ink font-medium">Créneau :</span> {r.preferred_slot}</p>
+                )}
+                {r.message && <p className="text-sm text-ink italic leading-relaxed mt-1">"{r.message}"</p>}
+              </div>
+
+              <div className="flex gap-2 flex-wrap">
+                {r.status !== 'traite' && (
+                  <button
+                    onClick={() => setStatus(r.id, 'traite')}
+                    className="flex-1 min-w-[90px] flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-medium bg-success text-white"
+                  >
+                    <Check size={14} /> Traité
+                  </button>
+                )}
+                {r.status === 'nouveau' && (
+                  <button
+                    onClick={() => setStatus(r.id, 'annule')}
+                    className="flex-1 min-w-[90px] flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-medium border border-line text-ink-3"
+                  >
+                    <X size={14} /> Annuler
+                  </button>
+                )}
+                {r.status !== 'nouveau' && (
+                  <button
+                    onClick={() => setStatus(r.id, 'nouveau')}
+                    className="flex-1 min-w-[90px] py-2 rounded-lg text-sm font-medium border border-line text-ink-3"
+                  >
+                    Rouvrir
+                  </button>
+                )}
+                <button
+                  onClick={() => remove(r.id)}
+                  className="px-3 py-2 rounded-lg border border-line text-ink-3 hover:border-danger hover:text-danger transition-colors"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 // ─── Messages Tab ───────────────────────────────────────────────────────────────
 
 function MessagesTab() {
@@ -495,6 +619,7 @@ export function AdminPage() {
   const TABS: { id: Tab; label: string }[] = [
     { id: 'dashboard', label: 'Tableau de bord' },
     { id: 'utilisateurs', label: 'Clients' },
+    { id: 'rendez-vous', label: 'Rendez-vous' },
     { id: 'temoignages', label: 'Témoignages' },
     { id: 'messages', label: 'Messages' },
     { id: 'articles', label: 'Articles' },
@@ -524,6 +649,7 @@ export function AdminPage() {
 
       {activeTab === 'dashboard' && <DashboardTab />}
       {activeTab === 'utilisateurs' && <UsersTab />}
+      {activeTab === 'rendez-vous' && <AppointmentsTab />}
       {activeTab === 'temoignages' && <StoriesTab />}
       {activeTab === 'messages' && <MessagesTab />}
       {activeTab === 'articles' && <ArticlesTab />}
