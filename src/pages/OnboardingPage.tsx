@@ -17,7 +17,7 @@ interface BoutiqueItem {
 
 const SHOP_ORDER: Shop[] = [
   'Noyon', 'Compiègne', 'Clermont', 'Nogent-sur-Oise',
-  'Breteuil', 'Beauvais', 'Ferrières-en-Bray', 'Client Internet',
+  'Breteuil', 'Beauvais', 'Ferrières-en-Bray', 'Client Internet', 'Autre boutique',
 ]
 
 const INTERNET_BOUTIQUE: BoutiqueItem = {
@@ -25,6 +25,13 @@ const INTERNET_BOUTIQUE: BoutiqueItem = {
   name: 'Client Internet',
   addr: 'Site provap.fr',
   hours: 'En ligne',
+}
+
+const AUTRE_BOUTIQUE: BoutiqueItem = {
+  id: 'Autre boutique',
+  name: 'Autre boutique',
+  addr: 'Je ne suis pas encore client Pro\'Vap',
+  hours: '',
 }
 
 /**
@@ -62,6 +69,7 @@ export function OnboardingPage() {
       }))
       const byId = new Map(fromDb.map(b => [b.id, b]))
       byId.set(INTERNET_BOUTIQUE.id, INTERNET_BOUTIQUE)
+      byId.set(AUTRE_BOUTIQUE.id, AUTRE_BOUTIQUE)
       setBoutiques(SHOP_ORDER.map(id => byId.get(id)).filter((b): b is BoutiqueItem => !!b))
     })
     return () => { cancelled = true }
@@ -431,7 +439,7 @@ function StepBoutique({
                 <PinIcon color={isSelected ? 'var(--color-gold-text)' : 'var(--color-ink-3)'} />
                 <div className="flex-1 min-w-0">
                   <p className="font-display text-ink" style={{ fontSize: 16, fontWeight: 500 }}>{b.name}</p>
-                  <p className="text-[11px] text-ink-3 mt-0.5">{b.addr} · {b.hours}</p>
+                  <p className="text-[11px] text-ink-3 mt-0.5">{[b.addr, b.hours].filter(Boolean).join(' · ')}</p>
                 </div>
                 {isSelected && <CheckIcon />}
               </button>

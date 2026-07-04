@@ -7,6 +7,7 @@ export type Shop =
   | 'Breteuil'
   | 'Beauvais'
   | 'Ferrières-en-Bray'
+  | 'Autre boutique'
 
 export interface ShopData {
   id: string

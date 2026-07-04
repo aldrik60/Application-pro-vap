@@ -17,7 +17,7 @@ import type { TobaccoType } from '../types'
 
 const SHOPS = [
   'Client Internet', 'Noyon', 'Compiègne', 'Clermont', 'Nogent-sur-Oise',
-  'Breteuil', 'Beauvais', 'Ferrières-en-Bray',
+  'Breteuil', 'Beauvais', 'Ferrières-en-Bray', 'Autre boutique',
 ]
 
 const TOBACCO_TYPES = [
@@ -397,8 +397,13 @@ export function ProfilePage() {
           <section className="px-5 mt-3">
             <div className="card p-5">
               <p className="font-display text-ink" style={{ fontSize: 20, fontWeight: 500 }}>
-                Boutique de {preferredShop}
+                {shopData?.address ? `Boutique de ${preferredShop}` : 'Prendre rendez-vous'}
               </p>
+              {!shopData?.address && (
+                <p className="text-sm text-ink-3 mt-1">
+                  Un conseiller Pro'Vap vous recontacte pour vous accompagner, où que vous soyez.
+                </p>
+              )}
               <div className="mt-3 space-y-2">
                 {shopData?.address && (
                   <p className="text-sm text-ink-3 flex items-start gap-2">
