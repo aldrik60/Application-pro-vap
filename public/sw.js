@@ -1,12 +1,12 @@
-const CACHE_NAME = 'provap-cache-v11';
+const CACHE_NAME = 'provap-cache-v12';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/manifest.json',
-  '/favicon.svg',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-  '/icons/apple-touch-icon.png',
+  '/manifest.json?v=5',
+  '/favicon.svg?v=5',
+  '/icons/icon-192.png?v=5',
+  '/icons/icon-512.png?v=5',
+  '/icons/apple-touch-icon.png?v=5',
 ];
 
 self.addEventListener('install', (event) => {
