@@ -1,4 +1,6 @@
-// Edge Function notify-rdv v1 — DÉPLOYÉE EN PROD le 2026-07-22.
+// Edge Function notify-rdv v2 — DÉPLOYÉE EN PROD le 2026-07-22.
+// v2 : mode healthcheck (POST {"healthcheck": true} → présence des secrets
+// SMTP, sans créer de demande ni envoyer de push).
 // Déclenchée par le trigger Postgres `appointment_requests_notify` (pg_net)
 // à chaque nouvelle demande de RDV conseiller. Voir supabase/notify_rdv.sql.
 //
@@ -28,7 +30,19 @@ Deno.serve(async (req) => {
   try {
     if (req.method !== 'POST') return json({ error: 'POST only' }, 405)
 
-    const { id } = await req.json().catch(() => ({}))
+    const body = await req.json().catch(() => ({}))
+
+    // Healthcheck : état de la config sans effet de bord (ni donnée, ni push).
+    if (body?.healthcheck === true) {
+      return json({
+        ok: true,
+        smtp_configured: Boolean(
+          Deno.env.get('SMTP_HOST') && Deno.env.get('SMTP_USER') && Deno.env.get('SMTP_PASS')
+        ),
+      })
+    }
+
+    const { id } = body
     if (!id || typeof id !== 'string') return json({ error: 'id required' }, 400)
 
     const admin = createClient(
