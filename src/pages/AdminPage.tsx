@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
-import { Profile, VaperStory, DailyMessage, ContentArticle, AppointmentRequest, AppointmentStatus } from '../types'
+import { Profile, VaperStory, DailyMessage, ContentArticle, AppointmentRequest, AppointmentStatus, Video } from '../types'
+import { getYouTubeId } from '../lib/youtube'
 import { format, parseISO, subDays, differenceInDays } from 'date-fns'
 import toast from 'react-hot-toast'
 import { Modal } from '../components/Modal'
@@ -558,51 +559,82 @@ function ArticlesTab() {
 // ─── Videos Tab ─────────────────────────────────────────────────────────────────
 
 function VideosTab() {
-  const [videos, setVideos] = useState<{ id: string; title: string; url: string }[]>([])
+  const [videos, setVideos] = useState<Video[]>([])
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
+  const [description, setDescription] = useState('')
 
   useEffect(() => {
-    supabase.from('videos').select('*').order('created_at', { ascending: false })
-      .then(({ data }) => { if (data) setVideos(data) })
+    supabase.from('videos').select('*')
+      .order('order_number', { ascending: true })
+      .order('created_at', { ascending: false })
+      .then(({ data }) => { if (data) setVideos(data as Video[]) })
   }, [])
 
   const add = async (e: React.SyntheticEvent) => {
     e.preventDefault()
-    const { data, error } = await supabase.from('videos').insert({ title, url }).select().single()
+    if (!getYouTubeId(url)) {
+      toast.error('Lien YouTube non reconnu. Copiez le lien de partage de la vidéo.')
+      return
+    }
+    const { data, error } = await supabase.from('videos')
+      .insert({ title: title.trim(), youtube_url: url.trim(), description: description.trim() || null, is_published: true })
+      .select().single()
     if (error) { toast.error('Erreur : ' + error.message); return }
-    if (data) setVideos(prev => [data, ...prev])
-    setTitle(''); setUrl('')
-    toast.success('Vidéo ajoutée.')
+    if (data) setVideos(prev => [...prev, data as Video])
+    setTitle(''); setUrl(''); setDescription('')
+    toast.success('Vidéo ajoutée et visible dans Ressources.')
+  }
+
+  const togglePublished = async (v: Video) => {
+    const { error } = await supabase.from('videos').update({ is_published: !v.is_published }).eq('id', v.id)
+    if (error) { toast.error('Erreur : ' + error.message); return }
+    setVideos(prev => prev.map(x => x.id === v.id ? { ...x, is_published: !v.is_published } : x))
+    toast.success(v.is_published ? 'Vidéo masquée.' : 'Vidéo publiée.')
   }
 
   const remove = async (id: string) => {
-    await supabase.from('videos').delete().eq('id', id)
+    if (!confirm('Supprimer cette vidéo ?')) return
+    const { error } = await supabase.from('videos').delete().eq('id', id)
+    if (error) { toast.error('Erreur : ' + error.message); return }
     setVideos(prev => prev.filter(v => v.id !== id))
     toast.success('Vidéo supprimée.')
   }
 
   return (
     <div className="space-y-4">
-      <div className="card p-4 space-y-3">
+      <form onSubmit={add} className="card p-4 space-y-3">
         <h3 className="text-sm font-semibold text-gold-text">Ajouter une vidéo YouTube</h3>
-        <input className="input text-sm" placeholder="Titre de la vidéo" value={title} onChange={e => setTitle(e.target.value)} />
-        <input className="input text-sm" placeholder="URL YouTube (https://...)" value={url} onChange={e => setUrl(e.target.value)} />
-        <button onClick={add} disabled={!title || !url} className="btn-primary text-sm py-2.5">
+        <input className="input text-sm" placeholder="Titre de la vidéo" value={title} onChange={e => setTitle(e.target.value)} required />
+        <input className="input text-sm" placeholder="Lien YouTube (https://youtu.be/…)" value={url} onChange={e => setUrl(e.target.value)} required />
+        <textarea className="input text-sm h-16" placeholder="Courte description (facultatif)" value={description} onChange={e => setDescription(e.target.value)} />
+        <p className="text-[11px] text-ink-3 leading-relaxed">
+          Conseil : mettez la vidéo en « non répertoriée » sur YouTube. Elle reste visible dans l'app sans apparaître dans les recherches.
+        </p>
+        <button type="submit" disabled={!title || !url} className="btn-primary text-sm py-2.5">
           <Plus size={14} className="inline mr-1" /> Ajouter
         </button>
-      </div>
+      </form>
 
       {videos.length === 0 && (
-        <p className="text-ink-3 text-sm italic text-center py-4">Aucune vidéo pour l'instant.</p>
+        <p className="text-ink-3 text-sm italic text-center py-4">
+          Aucune vidéo pour l'instant. La section Vidéos reste masquée dans l'app tant qu'aucune n'est publiée.
+        </p>
       )}
       {videos.map(v => (
         <div key={v.id} className="card p-4 flex justify-between items-center gap-3">
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-ink truncate">{v.title}</p>
-            <p className="text-xs text-ink-3 truncate">{v.url}</p>
+            <p className="text-xs text-ink-3 truncate">{v.youtube_url}</p>
+            <p className={`text-[11px] mt-1 font-semibold ${v.is_published ? 'text-success' : 'text-ink-3'}`}>
+              {v.is_published ? 'Publiée' : 'Masquée'}
+            </p>
           </div>
-          <button onClick={() => remove(v.id)} className="p-2 text-ink-3 hover:text-danger shrink-0">
+          <button onClick={() => togglePublished(v)} className="p-2 text-ink-3 hover:text-gold-text shrink-0"
+            aria-label={v.is_published ? 'Masquer la vidéo' : 'Publier la vidéo'}>
+            {v.is_published ? <X size={16} /> : <Check size={16} />}
+          </button>
+          <button onClick={() => remove(v.id)} className="p-2 text-ink-3 hover:text-danger shrink-0" aria-label="Supprimer la vidéo">
             <Trash2 size={16} />
           </button>
         </div>

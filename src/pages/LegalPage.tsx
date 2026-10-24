@@ -47,7 +47,7 @@ export function LegalPage() {
             <p><strong>RCS :</strong> Compiègne 804 189 322</p>
             <p><strong>TVA intracommunautaire :</strong> FR80 804 189 322</p>
             <p><strong>Directeur de la publication :</strong> Antony Antic</p>
-            <p><strong>Contact :</strong> contact@provap.fr</p>
+            <p><strong>Contact :</strong> contact@pro-vap.com</p>
           </div>
         </section>
 
@@ -76,7 +76,7 @@ export function LegalPage() {
           <h3 className="text-base font-semibold text-ink mt-4 mb-2">4.1 Responsable du traitement</h3>
           <p className="text-ink">
             Pro'Vap SAS, 5 esplanade Marguerite Perey, 60200 Compiègne, représentée par Antony Antic.
-            Contact RGPD : <span className="text-gold-text">contact@provap.fr</span>.
+            Délégué à la protection des données (DPO) : <span className="text-gold-text">rgpd@pro-vap.com</span>.
           </p>
 
           <h3 className="text-base font-semibold text-ink mt-4 mb-2">4.2 Données collectées</h3>
@@ -112,7 +112,7 @@ export function LegalPage() {
             <li><strong>Accès et portabilité :</strong> téléchargement de l'ensemble de vos données depuis l'onglet Profil ("Exporter mes données").</li>
             <li><strong>Rectification :</strong> modification de votre profil à tout moment depuis l'app.</li>
             <li><strong>Effacement :</strong> suppression complète et définitive depuis l'onglet Profil ("Supprimer mon compte").</li>
-            <li><strong>Opposition / limitation :</strong> à exercer par email à contact@provap.fr.</li>
+            <li><strong>Opposition / limitation :</strong> à exercer par email à rgpd@pro-vap.com.</li>
             <li><strong>Réclamation :</strong> auprès de la CNIL (<span className="text-gold-text">www.cnil.fr</span>) si vous estimez vos droits non respectés.</li>
           </ul>
 

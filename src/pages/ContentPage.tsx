@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { ContentArticle, VaperStory } from '../types'
+import { ContentArticle, VaperStory, Video } from '../types'
 import { Modal } from '../components/Modal'
-import { PlusCircle, ChevronDown, ChevronUp } from 'lucide-react'
+import { PlusCircle, ChevronDown, ChevronUp, Play } from 'lucide-react'
+import { getYouTubeId, youTubeEmbedUrl } from '../lib/youtube'
 import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/AuthContext'
 import { IS_FULL } from '../lib/appMode'
@@ -159,10 +160,56 @@ const FAQ_ITEMS: { question: string; answer: string; fullOnly?: boolean }[] = [
   },
   {
     question: 'Puis-je contacter ma boutique Pro\'Vap directement ?',
-    answer: 'Bien sûr ! Nos 7 boutiques en Picardie sont là pour vous accompagner. Vous pouvez appeler ou prendre rendez-vous depuis l\'onglet Profil de cette application. Nos conseillers sont formés au sevrage tabagique et peuvent adapter vos recommandations selon votre évolution.',
+    answer: 'Bien sûr ! Nos boutiques en Picardie sont là pour vous accompagner. Vous pouvez appeler ou prendre rendez-vous depuis l\'onglet Profil de cette application. Nos conseillers sont formés au sevrage tabagique et peuvent adapter vos recommandations selon votre évolution.',
     fullOnly: true,
   },
 ]
+
+// ─── Vidéo : rien n'est chargé depuis YouTube avant le clic ────────────────────
+
+function VideoCard({ video }: { video: Video }) {
+  const [playing, setPlaying] = useState(false)
+  const id = getYouTubeId(video.youtube_url)
+  if (!id) return null
+
+  return (
+    <div className="card overflow-hidden">
+      <div className="relative w-full" style={{ aspectRatio: '16 / 9', background: 'var(--color-bg-elev)' }}>
+        {playing ? (
+          <iframe
+            className="absolute inset-0 w-full h-full"
+            src={youTubeEmbedUrl(id)}
+            title={video.title}
+            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+            allowFullScreen
+          />
+        ) : (
+          <button
+            onClick={() => setPlaying(true)}
+            className="absolute inset-0 w-full h-full flex flex-col items-center justify-center gap-2"
+            aria-label={`Lire la vidéo : ${video.title}`}
+          >
+            <span
+              className="w-14 h-14 rounded-full flex items-center justify-center"
+              style={{ background: 'var(--color-pv-terracotta)', color: 'var(--color-pv-ivory)' }}
+            >
+              <Play size={22} strokeWidth={1.6} style={{ marginLeft: 3 }} />
+            </span>
+            <span className="text-[11px] text-ink-3">Lecture via YouTube</span>
+          </button>
+        )}
+      </div>
+      <div className="p-4">
+        <p className="font-display text-ink" style={{ fontSize: 17, fontWeight: 500, lineHeight: 1.25 }}>
+          {video.title}
+        </p>
+        {video.description && (
+          <p className="text-xs text-ink-3 mt-1.5 leading-relaxed">{video.description}</p>
+        )}
+      </div>
+    </div>
+  )
+}
 
 // ─── Component ─────────────────────────────────────────────────────────────────
 
@@ -170,6 +217,8 @@ export function ContentPage() {
   const { user, profile } = useAuth()
   const [dbArticles, setDbArticles] = useState<ContentArticle[]>([])
   const [stories, setStories] = useState<VaperStory[]>([])
+  const [videos, setVideos] = useState<Video[]>([])
+  const [shops, setShops] = useState<string[]>([])
   const [shopFilter, setShopFilter] = useState<string>('all')
 
   const [selectedArticle, setSelectedArticle] = useState<ContentArticle | typeof STATIC_ARTICLES[0] | null>(null)
@@ -194,6 +243,22 @@ export function ContentPage() {
       .order('created_at', { ascending: false })
       .then(({ data }) => {
         if (data) setStories(data)
+      })
+
+    supabase.from('videos')
+      .select('*')
+      .eq('is_published', true)
+      .order('order_number', { ascending: true })
+      .order('created_at', { ascending: true })
+      .then(({ data }) => {
+        if (data) setVideos(data as Video[])
+      })
+
+    supabase.from('shops')
+      .select('name')
+      .order('name', { ascending: true })
+      .then(({ data }) => {
+        if (data) setShops(data.map(s => s.name as string))
       })
   }, [])
 
@@ -223,8 +288,6 @@ export function ContentPage() {
   const filteredStories = shopFilter === 'all'
     ? stories
     : stories.filter(s => s.shop === shopFilter)
-
-  const SHOPS = ['Noyon', 'Compiègne', 'Clermont', 'Nogent-sur-Oise', 'Breteuil', 'Beauvais', 'Ferrières-en-Bray']
 
   return (
     <div className="page pb-32">
@@ -315,7 +378,7 @@ export function ContentPage() {
             >
               Toutes
             </button>
-            {SHOPS.map(s => (
+            {shops.map(s => (
               <button
                 key={s}
                 onClick={() => setShopFilter(s)}
@@ -362,16 +425,15 @@ export function ContentPage() {
         </section>
       )}
 
-      {/* ── Vidéos (placeholder) ─────────────────────────────────────────── */}
-      <section className="px-5 mt-7">
-        <span className="eyebrow">Vidéos &amp; conseils</span>
-        <div className="card mt-3 p-8 text-center" style={{ borderStyle: 'dashed' }}>
-          <p className="display-italic text-ink-2" style={{ fontSize: 20 }}>Bientôt disponible.</p>
-          <p className="text-[12px] text-ink-3 mt-2 leading-relaxed">
-            Des vidéos de conseils et témoignages sont en préparation.
-          </p>
-        </div>
-      </section>
+      {/* ── Vidéos : section affichée seulement si au moins une vidéo est publiée ── */}
+      {videos.length > 0 && (
+        <section className="px-5 mt-7">
+          <span className="eyebrow">Vidéos &amp; conseils</span>
+          <div className="mt-3 flex flex-col gap-3">
+            {videos.map(v => <VideoCard key={v.id} video={v} />)}
+          </div>
+        </section>
+      )}
 
       {/* Disclaimer */}
       <p className="text-[11px] text-ink-3 text-center leading-relaxed mt-7 px-6">

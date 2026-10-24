@@ -79,6 +79,16 @@ export interface ContentArticle {
   created_at: string
 }
 
+export interface Video {
+  id: string
+  title: string
+  youtube_url: string
+  description: string | null
+  is_published: boolean
+  order_number: number
+  created_at: string
+}
+
 export interface NicotineCheckIn {
   id: string
   user_id: string

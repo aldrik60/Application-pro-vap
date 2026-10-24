@@ -19,6 +19,9 @@ dist-ssr
 qr-provap*.png
 qr-provap*.svg
 
+# Exports de la base de production (peuvent contenir des données clients)
+supabase/backups/
+
 # Environment variables (NEVER commit these)
 .env
 .env.local

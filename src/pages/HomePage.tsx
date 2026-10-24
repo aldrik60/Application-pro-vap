@@ -461,7 +461,7 @@ export function HomePage() {
                     Guides &amp; <span className="display-italic">conseils.</span>
                   </p>
                   <p className="text-[12px] text-ink-3 mt-1 leading-relaxed">
-                    Articles, FAQ, vidéos pour vous accompagner.
+                    Guides pratiques et questions fréquentes.
                   </p>
                 </div>
               </div>
