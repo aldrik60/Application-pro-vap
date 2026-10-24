@@ -46,7 +46,7 @@ Regardez votre montre et dites-vous : "Dans 5 minutes, ça sera passé." Observe
 Posez une main sur votre ventre. Inspirez en gonflant le ventre (pas la poitrine) sur 4 secondes, expirez sur 6 secondes. 5 cycles suffisent pour activer le système nerveux parasympathique et réduire le cortisol.
 
 2. L'ACTIVITÉ PHYSIQUE
-30 minutes de marche libèrent des endorphines — les mêmes molécules que la nicotine stimule. Même 10 minutes de marche rapide changent votre état d'esprit.
+30 minutes de marche libèrent des endorphines, les mêmes molécules que la nicotine stimule. Même 10 minutes de marche rapide changent votre état d'esprit.
 
 3. LA TECHNIQUE "5-4-3-2-1"
 Nommez 5 choses que vous voyez, 4 que vous entendez, 3 que vous touchez, 2 que vous sentez, 1 que vous goûtez. Cet exercice ancre dans le présent et coupe le circuit anxieux.
@@ -63,7 +63,7 @@ Identifiez vos situations de stress habituelles (réunion difficile, embouteilla
     body: `Comprendre le sevrage, c'est déjà le maîtriser à moitié. Voici ce qui se passe vraiment dans votre cerveau et votre corps.
 
 1. LA DÉPENDANCE À LA NICOTINE
-La nicotine se fixe sur des récepteurs spécifiques du cerveau et déclenche une libération de dopamine — la molécule du plaisir. Votre cerveau finit par s'y attendre. Sans nicotine, il manque de dopamine : c'est le manque.
+La nicotine se fixe sur des récepteurs spécifiques du cerveau et déclenche une libération de dopamine, la molécule du plaisir. Votre cerveau finit par s'y attendre. Sans nicotine, il manque de dopamine : c'est le manque.
 
 2. LES SYMPTÔMES DU SEVRAGE
 Les premières 72h sont les plus intenses (irritabilité, concentration difficile, envies fortes). Après J+7, les symptômes s'atténuent. Après J+21, votre cerveau commence à se recâbler.
@@ -148,7 +148,7 @@ const FAQ_ITEMS: { question: string; answer: string; fullOnly?: boolean }[] = [
   },
   {
     question: 'Je vapote beaucoup plus qu\'avant, est-ce normal ?',
-    answer: 'Oui, c\'est fréquent au début. Vous compensez l\'absence de cigarettes et les gestes associés. Avec le temps, la fréquence diminue souvent naturellement. Si vous avez l\'impression de vaper excessivement, il est possible que votre taux de nicotine soit trop faible — un professionnel de la vape ou de l\'arrêt du tabac peut vous orienter.',
+    answer: 'Oui, c\'est fréquent au début. Vous compensez l\'absence de cigarettes et les gestes associés. Avec le temps, la fréquence diminue souvent naturellement. Si vous avez l\'impression de vaper excessivement, il est possible que votre taux de nicotine soit trop faible. Un professionnel de la vape ou de l\'arrêt du tabac peut vous orienter.',
   },
   {
     question: 'Quand faut-il changer la résistance de sa vape ?',
@@ -156,7 +156,7 @@ const FAQ_ITEMS: { question: string; answer: string; fullOnly?: boolean }[] = [
   },
   {
     question: 'Comment descendre progressivement en nicotine ?',
-    answer: 'Attendez de vous sentir stable à votre taux actuel (4 à 8 semaines minimum), puis descendez d\'un palier : 16 → 12 → 9 → 6 → 3 → 0 mg/ml. Ne sautez pas d\'étapes. Si vous ressentez un manque intense, remontez d\'un palier et attendez plus longtemps. Certaines personnes restent à 3 mg à long terme — c\'est parfaitement acceptable pour votre santé.',
+    answer: 'Attendez de vous sentir stable à votre taux actuel (4 à 8 semaines minimum), puis descendez d\'un palier : 16 → 12 → 9 → 6 → 3 → 0 mg/ml. Ne sautez pas d\'étapes. Si vous ressentez un manque intense, remontez d\'un palier et attendez plus longtemps. Certaines personnes restent à 3 mg longtemps avant d\'aller plus loin : avancez à votre rythme.',
   },
   {
     question: 'Puis-je contacter ma boutique Pro\'Vap directement ?',
