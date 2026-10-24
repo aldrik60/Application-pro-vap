@@ -38,6 +38,10 @@ const HEALTH_MILESTONES = [
   { day: 1825, hours: 0, label: '5 ans',      description: 'Risque cardiovasculaire proche d\'un non-fumeur' },
 ]
 
+// Série de messages « tenir dans la durée », rejouée en boucle après J120.
+const LONG_RUN_FIRST_DAY = 91
+const LONG_RUN_LAST_DAY = 120
+
 function getNextMilestone(totalHours: number) {
   for (const m of HEALTH_MILESTONES) {
     const milestoneHours = m.day * 24 + m.hours
@@ -102,16 +106,29 @@ export function HomePage() {
   const vapNextDay = nextStageDay(vapStage)
   const vapProgress = stageProgress(vapStage, daysSmokeFree)
 
+  // Message du jour : message propre au jour s'il existe (J1 à J120, puis caps
+  // comme J180, J365, J730). Au-delà de J120 sans message propre, on fait
+  // tourner la série « tenir dans la durée » (J91 à J120).
   useEffect(() => {
-    if (daysSmokeFree > 0 && daysSmokeFree <= 90) {
-      supabase.from('daily_messages')
-        .select('message')
-        .eq('day_number', daysSmokeFree)
-        .single()
-        .then(({ data }) => {
-          if (data) setDailyMessage(data.message)
-        })
-    }
+    if (daysSmokeFree <= 0) return
+    supabase.from('daily_messages')
+      .select('message')
+      .eq('day_number', daysSmokeFree)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) { setDailyMessage(data.message); return }
+        if (daysSmokeFree <= LONG_RUN_FIRST_DAY) return
+        supabase.from('daily_messages')
+          .select('message')
+          .gte('day_number', LONG_RUN_FIRST_DAY)
+          .lte('day_number', LONG_RUN_LAST_DAY)
+          .order('day_number', { ascending: true })
+          .then(({ data: pool }) => {
+            if (pool && pool.length > 0) {
+              setDailyMessage(pool[(daysSmokeFree - LONG_RUN_FIRST_DAY) % pool.length].message)
+            }
+          })
+      })
   }, [daysSmokeFree])
 
   useEffect(() => {
