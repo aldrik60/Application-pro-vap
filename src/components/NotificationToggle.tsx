@@ -157,7 +157,7 @@ export function NotificationToggle() {
           {status === 'permission-granted' && (
             <>
               <p className="text-[12px] mt-1 leading-snug" style={{ color: 'var(--color-ink-3, #686868)' }}>
-                Vous êtes abonné aux notifications Pro'Vap.
+                Notifications Pro'Vap activées.
               </p>
               <button
                 onClick={handleDisable}

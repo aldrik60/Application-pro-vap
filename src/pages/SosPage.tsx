@@ -118,7 +118,7 @@ export function SosPage() {
             L'envie<br/>est passée.
           </h1>
           <p className="text-base text-pv-ivory/70 mt-6 leading-relaxed max-w-xs">
-            Vous venez de gagner une victoire silencieuse. Aucun mérite n'est plus durable que celui qu'on accumule chaque jour.
+            Vous venez de gagner une victoire silencieuse. Chaque envie traversée compte.
           </p>
           <button onClick={handleSuccess} className="btn-primary mt-10 max-w-xs">
             J'ai tenu
@@ -285,7 +285,7 @@ export function SosPage() {
         </p>
 
         <p className="text-pv-ivory/50 text-xs leading-relaxed mt-8" style={{ maxWidth: 280 }}>
-          L'envie passera. Elle dure rarement plus de trois minutes — votre souffle la traverse.
+          L'envie passera. Elle dure en général quelques minutes. Votre souffle la traverse.
         </p>
       </main>
 

@@ -374,7 +374,7 @@ export function HomePage() {
       {IS_FULL && kitPrice > 0 && (
         <section className="px-5 mt-3">
           <div className="card p-5">
-            <span className="eyebrow">Kit Pro'Vap — Amortissement</span>
+            <span className="eyebrow">Kit Pro'Vap : amortissement</span>
             {netSavings < 0 ? (
               <>
                 <div className="flex justify-between items-baseline mt-3">
@@ -445,14 +445,14 @@ export function HomePage() {
       <section className="px-5 mt-5">
         <button onClick={() => navigate('/sos')} className="btn-primary w-full" style={{ minHeight: 60 }}>
           <AlertTriangle size={18} strokeWidth={1.6} />
-          <span>SOS — j'ai une envie</span>
+          <span>SOS : j'ai une envie</span>
         </button>
         <button
           onClick={() => { setLapseView('reassure'); setLapseOpen(true) }}
           className="w-full text-center text-xs text-ink-3 hover:text-ink-2 transition-colors mt-1"
           style={{ minHeight: 44 }}
         >
-          Vous avez craqué ? <span className="display-italic text-ink-2">Ce n'est pas grave.</span>
+          Une cigarette ? <span className="display-italic text-ink-2">Ce n'est pas grave.</span>
         </button>
       </section>
 
@@ -505,7 +505,7 @@ export function HomePage() {
               Vos <strong>{daysSmokeFree} jour{daysSmokeFree > 1 ? 's' : ''}</strong>, vos{' '}
               <strong>{Math.round(cigsAvoided)} cigarettes évitées</strong> et vos{' '}
               <strong>{moneySaved.toFixed(0)} €</strong> restent acquis. Une cigarette ne remet pas
-              ce compteur à zéro — ce qui compte, c'est la prochaine envie.
+              ce compteur à zéro. Ce qui compte, c'est la prochaine envie.
             </p>
             <p className="text-sm text-ink-2 leading-relaxed">
               Le réflexe qui marche : trois minutes de respiration, et l'envie passe.
@@ -707,7 +707,7 @@ function MoodCheckin({ userId }: { userId: string }) {
           {justSaved
             ? 'Noté. Un jour à la fois.'
             : mood
-              ? "Enregistré aujourd'hui — modifiable d'un tap."
+              ? "Enregistré aujourd'hui, modifiable d'un tap."
               : loaded
                 ? 'Un tap suffit, retrouvez tout dans votre journal.'
                 : '\u00a0'}

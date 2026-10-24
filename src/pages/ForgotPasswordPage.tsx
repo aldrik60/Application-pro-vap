@@ -49,7 +49,7 @@ export function ForgotPasswordPage() {
             Mot de passe <span className="display-italic">oublié.</span>
           </h1>
           <p className="text-sm text-ink-2 mt-4 leading-relaxed max-w-[320px] mx-auto">
-            Entrez votre adresse email — nous vous enverrons un lien de réinitialisation.
+            Entrez votre adresse e-mail : nous vous enverrons un lien de réinitialisation.
           </p>
         </div>
 

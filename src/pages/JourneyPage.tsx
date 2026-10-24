@@ -12,12 +12,16 @@ import toast from 'react-hot-toast'
 /**
  * Page "Vape" — Descente nicotinique.
  *
- * Le client voit son taux actuel en hero, son plan de descente sur 6 mois,
+ * Le client voit son taux actuel en hero, son plan de descente indicatif,
  * un conseil personnalisé Pro'Vap, et son historique de check-ins.
  *
- * Le plan est calculé : 100 % → 75 % → 50 % → 25 % → palier final → 0
- * relatif au taux de départ (premier check-in ou 12 mg/ml par défaut).
+ * Le plan part du taux de départ (premier check-in ou 12 mg/ml par défaut)
+ * et descend par les taux vendus en boutique, un palier toutes les
+ * 6 semaines environ (comme le recommande la FAQ : 4 à 8 semaines).
  */
+
+const NIC_TIERS = [20, 16, 12, 9, 6, 3, 0]
+const DAYS_PER_STEP = 42
 
 interface PlanStep {
   day: number
@@ -27,21 +31,14 @@ interface PlanStep {
   current: boolean
 }
 
-function buildPlan(initialMg: number, currentMg: number, daysSinceStart: number): PlanStep[] {
-  const steps: { day: number; ratio: number; label: string }[] = [
-    { day: 0,   ratio: 1.00,  label: 'Démarrage' },
-    { day: 14,  ratio: 0.75,  label: '−25 %' },
-    { day: 30,  ratio: 0.50,  label: '−50 %' },
-    { day: 60,  ratio: 0.25,  label: '−75 %' },
-    { day: 120, ratio: 0.10,  label: 'Palier final' },
-    { day: 180, ratio: 0.00,  label: 'Liberté' },
-  ]
-  return steps.map((s, i, arr) => {
-    const nic = +(initialMg * s.ratio).toFixed(1)
-    const done = daysSinceStart >= s.day
-    const nextDay = arr[i + 1]?.day ?? Infinity
-    const current = done && daysSinceStart < nextDay
-    return { day: s.day, nic, label: s.label, done, current }
+function buildPlan(initialMg: number, daysSinceStart: number): PlanStep[] {
+  const rates = [initialMg, ...NIC_TIERS.filter(t => t < initialMg)]
+  return rates.map((nic, i) => {
+    const day = i * DAYS_PER_STEP
+    const label = i === 0 ? 'Démarrage' : nic === 0 ? 'Sans nicotine' : `Palier ${i}`
+    const done = daysSinceStart >= day
+    const current = done && daysSinceStart < day + DAYS_PER_STEP
+    return { day, nic, label, done, current }
   })
 }
 
@@ -98,7 +95,7 @@ export function JourneyPage() {
     ? Math.max(0, Math.floor((Date.now() - parseISO(firstCheckin.date).getTime()) / 86400000))
     : 0
 
-  const plan = useMemo(() => buildPlan(initialMg, currentMg, daysSinceStart), [initialMg, currentMg, daysSinceStart])
+  const plan = useMemo(() => buildPlan(initialMg, daysSinceStart), [initialMg, daysSinceStart])
   const nextStep = plan.find(s => !s.done)
 
   const chartData = checkins.map(c => ({
@@ -202,9 +199,12 @@ export function JourneyPage() {
         </section>
       )}
 
-      {/* Plan sur 6 mois */}
+      {/* Plan de descente indicatif */}
       <section className="px-6 mt-6">
-        <span className="eyebrow">Votre plan sur 6 mois</span>
+        <span className="eyebrow">Votre plan indicatif</span>
+        <p className="text-[12px] text-ink-3 mt-1.5 leading-relaxed">
+          Environ 6 semaines par palier. Ne baissez que lorsque vous vous sentez stable : votre rythme passe avant le calendrier.
+        </p>
       </section>
       <section className="px-5 mt-3">
         {plan.map((s, i) => (

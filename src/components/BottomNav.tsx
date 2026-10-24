@@ -70,7 +70,7 @@ export function BottomNav() {
       <div className="flex-1 flex justify-center relative">
         <button
           onClick={() => navigate('/sos')}
-          aria-label="SOS — j'ai une envie"
+          aria-label="SOS : j'ai une envie"
           aria-current={sosActive ? 'page' : undefined}
           className="absolute top-[-18px] w-14 h-14 rounded-full transition-transform active:scale-95"
           style={{

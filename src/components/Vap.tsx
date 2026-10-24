@@ -73,7 +73,7 @@ export function Vap({ stage = 3, size = 200, withScene = false, className = '' }
       className={className}
       style={{ position: 'relative', display: 'block', flexShrink: 0, width: w, height: h }}
       role="img"
-      aria-label={`Vap — ${VAP_STAGES[stage - 1].title}`}
+      aria-label={`Vap : ${VAP_STAGES[stage - 1].title}`}
     >
       <svg
         viewBox="0 0 200 240"

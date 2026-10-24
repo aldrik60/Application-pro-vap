@@ -32,7 +32,7 @@ L'eau refroidit la gorge et occupe les mains. Buvez lentement, une gorgée à la
 Si vous êtes dans un endroit associé à la cigarette (bureau, terrasse, voiture), bougez. Un simple changement de pièce peut suffire.
 
 5. CHRONOMÉTREZ L'ENVIE
-Regardez votre montre et dites-vous : "Dans 5 minutes, ça sera passé." Observez l'envie diminuer. Vous devenez plus fort à chaque fois que vous résistez.`,
+Regardez votre montre et dites-vous : "Dans 5 minutes, ça sera passé." Observez l'envie diminuer. Chaque envie traversée rend la suivante plus facile.`,
   },
   {
     id: 'static-2',
@@ -399,7 +399,7 @@ export function ContentPage() {
           <div className="flex overflow-x-auto gap-3 pb-4 snap-x hide-scrollbar">
             {filteredStories.length === 0 ? (
               <p className="display-italic text-ink-3 text-sm py-2 px-1">
-                Soyez le premier à partager votre histoire.
+                Partagez la première histoire.
               </p>
             ) : (
               filteredStories.map(story => (

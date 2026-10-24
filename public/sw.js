@@ -1,4 +1,4 @@
-const CACHE_NAME = 'provap-cache-v12';
+const CACHE_NAME = 'provap-cache-v13';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -7,6 +7,14 @@ const urlsToCache = [
   '/icons/icon-192.png?v=5',
   '/icons/icon-512.png?v=5',
   '/icons/apple-touch-icon.png?v=5',
+  // Mascotte Vap : affichée dès l'accueil, doit rester visible hors connexion
+  '/assets/vap/vap-1-premier-jour.svg',
+  '/assets/vap/vap-2-premier-souffle.svg',
+  '/assets/vap/vap-3-sur-ses-pieds.svg',
+  '/assets/vap/vap-4-en-marche.svg',
+  '/assets/vap/vap-5-ascension.svg',
+  '/assets/vap/vap-6-au-sommet.svg',
+  '/assets/logo-provap-blanc.svg',
 ];
 
 self.addEventListener('install', (event) => {
@@ -43,8 +51,20 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Stratégie cache-first pour les icônes / manifest (changent rarement)
+  // Les images locales de /assets/ sont gardées en cache au premier chargement.
+  const url = new URL(req.url);
+  const isLocalImage = req.method === 'GET' && url.origin === self.location.origin && url.pathname.startsWith('/assets/') && !isHashedAsset;
   event.respondWith(
-    caches.match(req).then((cached) => cached || fetch(req))
+    caches.match(req).then((cached) => {
+      if (cached) return cached;
+      return fetch(req).then((res) => {
+        if (isLocalImage && res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, copy)).catch(() => {});
+        }
+        return res;
+      });
+    })
   );
 });
 

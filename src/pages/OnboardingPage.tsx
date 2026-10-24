@@ -222,7 +222,7 @@ function StepWelcome({ onContinue }: { onContinue: () => void }) {
             Voici <span className="display-italic">Vap.</span><br />Il vous accompagne.
           </h1>
           <p className="mt-5 text-sm text-ink-2 leading-relaxed max-w-[300px] mx-auto">
-            Plus vous tenez, plus il se redresse. Au bout d'un an, il sera au sommet — avec vous.
+            Plus vous tenez, plus il avance. Au bout d'un an, il sera au sommet, avec vous.
           </p>
         </div>
       </div>
@@ -319,7 +319,7 @@ function StepSmoker({
               </div>
             )}
             <p className="mt-2 text-[12px] text-ink-3 leading-relaxed">
-              Pas encore arrêté ? Laissez « Aujourd'hui » — votre compteur démarre maintenant.
+              Vous n'avez pas encore arrêté ? Laissez « Aujourd'hui » : votre compteur démarre maintenant.
             </p>
             <div className="mt-2 hairline" />
           </div>

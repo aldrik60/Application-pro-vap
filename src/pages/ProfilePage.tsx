@@ -264,7 +264,7 @@ export function ProfilePage() {
             className="display-italic mt-3"
             style={{ fontSize: 17, lineHeight: 1.45, color: 'rgba(40,40,45,0.85)' }}
           >
-            Je m'engage à essayer, un jour à la fois, sans me punir si je tombe — et à reprendre le lendemain.
+            Je m'engage à essayer, un jour à la fois, sans me punir si je tombe, et à reprendre le lendemain.
           </p>
           <div className="mt-4" style={{ height: 1, background: 'rgba(40,40,45,0.12)' }} />
           <div className="mt-3 flex justify-between items-end">
@@ -276,7 +276,7 @@ export function ProfilePage() {
                 className="script mt-1"
                 style={{ fontSize: 26, color: 'rgba(40,40,45,0.9)' }}
               >
-                {profile?.name?.split(' ')[0] || '—'}
+                {profile?.name?.split(' ')[0] || ''}
               </p>
             </div>
             <span
@@ -525,7 +525,7 @@ export function ProfilePage() {
           </div>
           <div>
             <label htmlFor="appt-phone" className="eyebrow block mb-2">Votre téléphone (optionnel)</label>
-            <input id="appt-phone" type="tel" className="input" placeholder="Pour être rappelé plus vite"
+            <input id="appt-phone" type="tel" className="input" placeholder="Pour un rappel plus rapide"
               value={apptPhone} onChange={e => setApptPhone(e.target.value)} />
           </div>
           <div>

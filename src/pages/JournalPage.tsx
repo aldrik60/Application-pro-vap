@@ -160,7 +160,7 @@ export function JournalPage() {
             className="mt-1 w-4 h-4 accent-[var(--color-primary)]"
           />
           <div>
-            <span className="text-sm text-ink font-medium">J'ai craqué aujourd'hui</span>
+            <span className="text-sm text-ink font-medium">J'ai fumé aujourd'hui</span>
             <p className="text-xs text-ink-3 mt-0.5 leading-relaxed">
               Sans culpabilité. Reconnaître un écart aide à comprendre les déclencheurs et à rebondir.
             </p>
@@ -210,8 +210,8 @@ export function JournalPage() {
                         </span>
                       )}
                       {e.relapsed && (
-                        <span className="text-[11px] px-1.5 py-0.5 rounded bg-danger/10 text-danger border border-danger/30 font-semibold uppercase">
-                          Craquage
+                        <span className="text-[11px] px-1.5 py-0.5 rounded bg-bg-elev text-ink-3 border border-line font-semibold uppercase">
+                          Écart
                         </span>
                       )}
                     </div>
