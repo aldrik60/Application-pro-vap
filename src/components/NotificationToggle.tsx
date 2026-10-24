@@ -310,7 +310,7 @@ export function NotificationToggle() {
             <ul className="space-y-1.5 text-[13px] mb-5" style={{ color: '#1f1f24' }}>
               <li className="flex gap-2"><span style={{ color: '#cb8002' }}>·</span> Votre message du jour</li>
               <li className="flex gap-2"><span style={{ color: '#cb8002' }}>·</span> Vos félicitations aux paliers atteints</li>
-              <li className="flex gap-2"><span style={{ color: '#cb8002' }}>·</span> Les rappels et nouveautés de votre boutique</li>
+              <li className="flex gap-2"><span style={{ color: '#cb8002' }}>·</span> Les messages de l'équipe Pro'Vap</li>
             </ul>
             <p className="text-[12px] mb-5" style={{ color: '#686868' }}>
               Aucun spam. Vous pourrez désactiver à tout moment depuis votre profil.

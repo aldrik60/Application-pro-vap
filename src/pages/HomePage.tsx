@@ -16,26 +16,25 @@ import { useUnreadMessages } from '../hooks/useUnreadMessages'
 // Jalons d'amélioration de santé après l'arrêt du tabac.
 // Sources : Santé publique France, Tabac Info Service, OMS, HAS.
 const HEALTH_MILESTONES = [
-  { day: 0, hours: 0.33, label: '20 minutes', description: 'Le rythme cardiaque se normalise' },
+  { day: 0, hours: 0.33, label: '20 minutes', description: 'Plus de fumée inhalée : le premier pas est fait' },
   { day: 0, hours: 8,    label: '8 heures',   description: 'Le monoxyde de carbone baisse dans le sang' },
   { day: 1, hours: 0,    label: 'J+1',        description: 'Le souffle paraît plus léger' },
   { day: 3, hours: 0,    label: 'J+3',        description: 'Le goût et l\'odorat reviennent' },
-  { day: 7, hours: 0,    label: 'J+7',        description: 'Une semaine. La phase aiguë est passée.' },
+  { day: 7, hours: 0,    label: 'J+7',        description: 'Une semaine. Le plus intense est en général passé.' },
   { day: 14, hours: 0,   label: 'J+14',       description: 'La circulation sanguine s\'améliore' },
   { day: 21, hours: 0,   label: 'J+21',       description: 'La nouvelle habitude s\'installe' },
   { day: 30, hours: 0,   label: 'J+30',       description: 'Les poumons amorcent leur récupération' },
   { day: 45, hours: 0,   label: 'J+45',       description: 'L\'énergie quotidienne s\'améliore' },
   { day: 60, hours: 0,   label: 'J+60',       description: 'La capacité respiratoire progresse' },
   { day: 75, hours: 0,   label: 'J+75',       description: 'Le système immunitaire récupère' },
-  { day: 90, hours: 0,   label: 'J+90',       description: 'Le sevrage physique est largement derrière' },
-  { day: 120, hours: 0,  label: 'J+120',      description: 'Le risque cardiovasculaire recule' },
+  { day: 90, hours: 0,   label: 'J+90',       description: 'Les envies de fumer se font rares' },
+  { day: 120, hours: 0,  label: 'J+120',      description: 'La toux et l\'essoufflement diminuent (source : OMS)' },
   { day: 180, hours: 0,  label: 'J+180',      description: 'Les poumons continuent de se régénérer' },
   { day: 270, hours: 0,  label: 'J+270',      description: 'Moins d\'infections respiratoires' },
-  { day: 365, hours: 0,  label: '1 an',       description: 'Le risque coronarien recule (source : OMS)' },
-  { day: 545, hours: 0,  label: '18 mois',    description: 'Le risque de plusieurs cancers diminue' },
+  { day: 365, hours: 0,  label: '1 an',       description: 'Le risque coronarien est réduit de moitié (source : OMS)' },
   { day: 730, hours: 0,  label: '2 ans',      description: 'La fonction pulmonaire s\'est nettement améliorée' },
   { day: 1095, hours: 0, label: '3 ans',      description: 'Trois ans sans tabac' },
-  { day: 1825, hours: 0, label: '5 ans',      description: 'Risque cardiovasculaire proche d\'un non-fumeur' },
+  { day: 1825, hours: 0, label: '5 ans',      description: 'Le risque d\'AVC rejoint peu à peu celui d\'un non-fumeur (source : OMS)' },
 ]
 
 // Série de messages « tenir dans la durée », rejouée en boucle après J120.

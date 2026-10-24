@@ -69,7 +69,7 @@ La nicotine se fixe sur des récepteurs spécifiques du cerveau et déclenche un
 Les premières 72h sont les plus intenses (irritabilité, concentration difficile, envies fortes). Après J+7, les symptômes s'atténuent. Après J+21, votre cerveau commence à se recâbler.
 
 3. LE RÔLE DE LA VAPE
-La cigarette électronique délivre de la nicotine sans combustion, ce qui supprime le manque sans les 7 000 substances toxiques de la fumée. Elle permet une transition progressive.
+La cigarette électronique délivre de la nicotine sans combustion, ce qui calme le manque sans le goudron ni le monoxyde de carbone de la fumée de cigarette, qui contient plus de 7 000 substances chimiques. Elle permet une transition progressive.
 
 4. LA DÉSENSIBILISATION DES RÉCEPTEURS
 En maintenant un taux de nicotine stable via la vape, les récepteurs de votre cerveau commencent à se désensibiliser. En descendant progressivement le taux, vous réduisez la dépendance sans souffrir.
@@ -144,7 +144,7 @@ const FAQ_ITEMS: { question: string; answer: string; fullOnly?: boolean }[] = [
   },
   {
     question: 'Quand l\'envie de fumer disparaît-elle complètement ?',
-    answer: 'La dépendance physique à la nicotine disparaît généralement entre J+21 et J+90. Après 3 mois sans fumer, les envies sont rares et faibles. La dépendance psychologique (les habitudes, rituels) peut persister plus longtemps, mais devient de plus en plus gérable. La vape aide à maintenir le geste tout en éliminant la dépendance chimique progressive.',
+    answer: 'Les envies de fumer deviennent en général rares entre 3 semaines et 3 mois. Après 3 mois sans fumer, elles sont rares et faibles. Les habitudes (café, pause, soirée) peuvent persister plus longtemps, mais deviennent de plus en plus gérables. Avec la vape, vous gardez le geste et la nicotine, puis vous baissez le taux par paliers, à votre rythme, jusqu\'à pouvoir vous en passer.',
   },
   {
     question: 'Je vapote beaucoup plus qu\'avant, est-ce normal ?',

@@ -75,10 +75,10 @@ export function FagerstromPage() {
   const totalScore = answers.reduce((a, b) => a + b, 0)
 
   const interpretation = (() => {
-    if (totalScore <= 2) return { level: 'Dépendance faible', advice: 'Votre dépendance physique est faible. La vape avec un taux réduit (3 à 6 mg/ml) suffira à combler les envies comportementales.', color: 'var(--color-success)' }
-    if (totalScore <= 4) return { level: 'Dépendance faible à modérée', advice: 'Une dépendance légère. Un dosage entre 6 et 9 mg/ml vous assurera une transition douce.', color: 'var(--color-gold-text)' }
-    if (totalScore <= 6) return { level: 'Dépendance modérée', advice: 'La dépendance physique est présente. Nous recommandons un e-liquide autour de 12 mg/ml pour éviter le manque.', color: 'var(--color-pv-terracotta)' }
-    return { level: 'Dépendance forte à très forte', advice: "Votre dépendance est importante. Démarrez fort (16 à 20 mg/ml ou sels de nicotine) — la descente viendra ensuite.", color: 'var(--color-danger)' }
+    if (totalScore <= 2) return { level: 'Pas ou peu de dépendance', advice: 'Votre dépendance physique est très faible. La vape avec un taux réduit (3 à 6 mg/ml) suffira à combler les envies comportementales.', color: 'var(--color-success)' }
+    if (totalScore <= 4) return { level: 'Dépendance faible', advice: 'Une dépendance légère. Un dosage entre 6 et 9 mg/ml vous assurera une transition douce.', color: 'var(--color-gold-text)' }
+    if (totalScore <= 6) return { level: 'Dépendance moyenne', advice: 'La dépendance physique est présente. Nous recommandons un e-liquide autour de 12 mg/ml pour éviter le manque.', color: 'var(--color-pv-terracotta)' }
+    return { level: 'Dépendance forte à très forte', advice: "Votre dépendance est importante. Démarrez fort (16 à 20 mg/ml ou sels de nicotine). La descente viendra ensuite.", color: 'var(--color-danger)' }
   })()
 
   const handleSave = async () => {
@@ -209,7 +209,7 @@ export function FagerstromPage() {
       </div>
 
       <p className="text-[12px] text-ink-3 text-center mt-8 leading-relaxed">
-        Test médical validé par la Haute Autorité de Santé. Évalue la dépendance physique à la nicotine.
+        Test de Fagerström, outil de référence recommandé par la Haute Autorité de Santé. Évalue la dépendance physique à la nicotine.
       </p>
     </div>
   )

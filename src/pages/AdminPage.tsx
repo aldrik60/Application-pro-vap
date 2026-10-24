@@ -996,7 +996,7 @@ function PushTab() {
           <label className="block text-[11px] uppercase font-bold text-ink-3 tracking-wider mb-1">Message</label>
           <textarea
             className="input text-sm h-20"
-            placeholder="Votre conseiller a une nouveauté pour vous."
+            placeholder="Un nouveau guide vous attend dans Ressources."
             maxLength={140}
             value={body}
             onChange={e => setBody(e.target.value)}
