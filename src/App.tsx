@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
+import { lazy, Suspense, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Outlet, Navigate, useLocation } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { BottomNav } from './components/BottomNav'
@@ -43,6 +43,16 @@ function PageLoader() {
   )
 }
 
+// C'est #root qui défile (pas la fenêtre) : on revient en haut à chaque changement de page.
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    document.getElementById('root')?.scrollTo(0, 0)
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null
+}
+
 function Layout() {
   // ChatBot mis en pause pour la V1 — le moteur à règles actuel ne donne pas
   // une qualité de réponse suffisante. Réactivation prévue en V2 avec une
@@ -59,6 +69,7 @@ function Layout() {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AuthProvider>
         <Suspense fallback={<PageLoader />}>
           <Routes>
@@ -91,6 +102,9 @@ function App() {
             {IS_FULL && (
               <Route path="/diagnostic-kit" element={<ProtectedRoute><DiagnosticKitPage /></ProtectedRoute>} />
             )}
+
+            {/* Adresse inconnue ou ancien lien : retour à l'accueil plutôt qu'une page blanche */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
         <InstallPrompt />

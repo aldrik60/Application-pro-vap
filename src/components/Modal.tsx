@@ -99,7 +99,11 @@ export function Modal({ isOpen, onClose, title, children, fullScreen = false }: 
           </button>
         </div>
 
-        <div className="p-4 overflow-y-auto flex-1 overscroll-none">
+        <div
+          className="p-4 overflow-y-auto flex-1 overscroll-none"
+          // Le dernier bouton reste au-dessus du trait d'accueil de l'iPhone
+          style={{ paddingBottom: 'calc(16px + env(safe-area-inset-bottom, 0px))' }}
+        >
           {children}
         </div>
       </div>

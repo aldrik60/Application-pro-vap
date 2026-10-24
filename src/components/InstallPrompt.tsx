@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { X, Share, Plus, Download, MoreVertical } from 'lucide-react'
 
 // Écrans dont le bouton principal est en bas : le bandeau le recouvrirait.
-const HIDDEN_ON = ['/login', '/register', '/forgot-password', '/reset-password', '/onboarding', '/sos']
+const HIDDEN_ON = ['/login', '/register', '/forgot-password', '/reset-password', '/onboarding', '/sos', '/fagerstrom', '/diagnostic-kit']
 
 const DISMISSED_KEY = 'provap_install_dismissed_v2'
 const DISMISS_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 jours
@@ -11,15 +11,19 @@ const SHOW_DELAY_MS = 3000
 const ANDROID_PROMPT_FALLBACK_MS = 8000
 
 function isDismissedRecently(): boolean {
-  const raw = localStorage.getItem(DISMISSED_KEY)
-  if (!raw) return false
-  const ts = parseInt(raw, 10)
-  if (Number.isNaN(ts)) return false
-  return (Date.now() - ts) < DISMISS_TTL_MS
+  try {
+    const raw = localStorage.getItem(DISMISSED_KEY)
+    if (!raw) return false
+    const ts = parseInt(raw, 10)
+    if (Number.isNaN(ts)) return false
+    return (Date.now() - ts) < DISMISS_TTL_MS
+  } catch {
+    return false
+  }
 }
 
 function markDismissed() {
-  localStorage.setItem(DISMISSED_KEY, String(Date.now()))
+  try { localStorage.setItem(DISMISSED_KEY, String(Date.now())) } catch { /* stockage indisponible */ }
 }
 
 type BeforeInstallPromptEvent = Event & {
@@ -106,7 +110,8 @@ export function InstallPrompt() {
       aria-label="Installer l'application"
       className="fixed left-0 right-0 z-50 px-4 pointer-events-none"
       style={{
-        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
+        // Au-dessus de la barre du bas et du bouton SOS
+        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 104px)',
         animation: 'installPromptSlide 0.4s ease-out',
       }}
     >
@@ -121,7 +126,7 @@ export function InstallPrompt() {
         <div className="flex items-start gap-3">
           <div
             className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
-            style={{ background: '#cb8002', color: '#fff' }}
+            style={{ background: '#a2371a', color: '#fff' }}
           >
             <Download size={18} strokeWidth={2} />
           </div>
@@ -131,7 +136,7 @@ export function InstallPrompt() {
               className="font-semibold text-[15px] leading-tight"
               style={{ color: '#28282d' }}
             >
-              Installer <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic' }}>Pro'Vap</span>
+              Installer <span style={{ fontFamily: 'var(--font-display)' }}>Pro'Vap</span>
             </p>
 
             {mode === 'ios' && (
@@ -144,6 +149,11 @@ export function InstallPrompt() {
                 <span className="font-medium" style={{ color: '#1f1f24' }}>« Sur l'écran d'accueil »</span>{' '}
                 <span className="inline-flex items-center align-middle">
                   <Plus size={12} strokeWidth={2.5} />
+                </span>
+                <br />
+                <span className="block mt-1.5">
+                  Ouvrez ensuite Pro'Vap depuis votre écran d'accueil et reconnectez-vous une fois,
+                  avec le même e-mail et le même mot de passe.
                 </span>
               </p>
             )}
@@ -184,7 +194,7 @@ export function InstallPrompt() {
           <button
             onClick={dismiss}
             aria-label="Fermer"
-            className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-colors hover:bg-black/5"
+            className="shrink-0 w-11 h-11 -m-2 rounded-full flex items-center justify-center transition-colors hover:bg-black/5"
             style={{ color: '#686868' }}
           >
             <X size={14} strokeWidth={2} />

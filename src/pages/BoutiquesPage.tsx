@@ -86,7 +86,7 @@ export function BoutiquesPage() {
         <div>
           <span className="eyebrow">Le réseau</span>
           <h1 className="display text-ink mt-1" style={{ fontSize: 32 }}>
-            Les <span className="display-italic">8 boutiques</span>
+            Nos <span className="display-italic">boutiques</span>
           </h1>
         </div>
       </header>
@@ -131,7 +131,7 @@ export function BoutiquesPage() {
             className="absolute eyebrow text-ink-3"
             style={{ bottom: 10, left: 14 }}
           >
-            Picardie · 8 points de vente
+            Nos boutiques et la boutique en ligne
           </p>
         </div>
       </section>

@@ -61,6 +61,8 @@ export function FagerstromPage() {
   const [saving, setSaving] = useState(false)
 
   const handleSelect = (score: number, idx: number) => {
+    // Un double appui ne doit pas sauter la question suivante
+    if (selected !== null) return
     setSelected(idx)
     const newAnswers = [...answers]
     newAnswers[currentStep] = score
@@ -77,7 +79,7 @@ export function FagerstromPage() {
   const interpretation = (() => {
     if (totalScore <= 2) return { level: 'Pas ou peu de dépendance', advice: 'Votre dépendance physique est très faible. La vape avec un taux réduit (3 à 6 mg/ml) suffira à combler les envies comportementales.', color: 'var(--color-success)' }
     if (totalScore <= 4) return { level: 'Dépendance faible', advice: 'Une dépendance légère. Un dosage entre 6 et 9 mg/ml vous assurera une transition douce.', color: 'var(--color-gold-text)' }
-    if (totalScore <= 6) return { level: 'Dépendance moyenne', advice: 'La dépendance physique est présente. Nous recommandons un e-liquide autour de 12 mg/ml pour éviter le manque.', color: 'var(--color-pv-terracotta)' }
+    if (totalScore <= 6) return { level: 'Dépendance moyenne', advice: 'La dépendance physique est présente. Nous recommandons un e-liquide autour de 12 mg/ml pour éviter le manque.', color: 'var(--color-flame-text)' }
     return { level: 'Dépendance forte à très forte', advice: "Votre dépendance est importante. Démarrez fort (16 à 20 mg/ml ou sels de nicotine). La descente viendra ensuite.", color: 'var(--color-danger)' }
   })()
 

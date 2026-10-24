@@ -9,16 +9,24 @@ export function ResetPasswordPage() {
   const [confirm, setConfirm] = useState('')
   const [loading, setLoading] = useState(false)
   const [ready, setReady] = useState(false)
+  const [expired, setExpired] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
+    // Lien expiré ou déjà utilisé : Supabase renvoie une erreur dans l'adresse
+    const params = `${window.location.hash} ${window.location.search}`
+    if (params.includes('error=') || params.includes('error_code=')) setExpired(true)
+
+    let isReady = false
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY') setReady(true)
+      if (event === 'PASSWORD_RECOVERY') { isReady = true; setReady(true) }
     })
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) setReady(true)
+      if (session) { isReady = true; setReady(true) }
     })
-    return () => subscription.unsubscribe()
+    // Sans session au bout de 8 secondes, le lien n'est plus valable
+    const t = setTimeout(() => { if (!isReady) setExpired(true) }, 8000)
+    return () => { subscription.unsubscribe(); clearTimeout(t) }
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,8 +46,12 @@ export function ResetPasswordPage() {
       toast.success('Mot de passe mis à jour.')
       navigate('/', { replace: true })
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Erreur lors de la mise à jour.'
-      toast.error(message)
+      const raw = error instanceof Error ? error.message : ''
+      toast.error(/different from the old/i.test(raw)
+        ? "Choisissez un mot de passe différent de l'ancien."
+        : /weak|characters|should contain/i.test(raw)
+          ? 'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caractère spécial.'
+          : 'La mise à jour n\'a pas abouti. Réessayez ou demandez un nouveau lien.')
     } finally {
       setLoading(false)
     }
@@ -47,8 +59,20 @@ export function ResetPasswordPage() {
 
   if (!ready) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-center bg-bg p-6">
-        <p className="text-ink-3 text-sm">Vérification du lien…</p>
+      <div className="min-h-screen flex flex-col items-center justify-center text-center bg-bg p-6 gap-4">
+        {expired ? (
+          <>
+            <p className="text-ink font-semibold">Ce lien a expiré ou a déjà servi.</p>
+            <p className="text-ink-3 text-sm max-w-xs leading-relaxed">
+              Demandez un nouveau lien : il arrive par e-mail en quelques minutes.
+            </p>
+            <button className="btn-primary max-w-xs" onClick={() => navigate('/forgot-password', { replace: true })}>
+              Recevoir un nouveau lien
+            </button>
+          </>
+        ) : (
+          <p className="text-ink-3 text-sm">Vérification du lien…</p>
+        )}
       </div>
     )
   }
@@ -69,7 +93,7 @@ export function ResetPasswordPage() {
             Nouveau <span className="display-italic">mot de passe.</span>
           </h1>
           <p className="text-sm text-ink-2 mt-4 leading-relaxed max-w-[320px] mx-auto">
-            Choisissez un mot de passe d'au moins 8 caractères.
+            Au moins 8 caractères, avec une majuscule, une minuscule, un chiffre et un caractère spécial.
           </p>
         </div>
 

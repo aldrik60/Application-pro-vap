@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
@@ -12,7 +12,7 @@ import { useShop } from '../hooks/useShop'
 import { IS_FULL } from '../lib/appMode'
 import { Vap, vapStageFromDays } from '../components/Vap'
 import { NotificationToggle } from '../components/NotificationToggle'
-import { buildLocalDateStr, MONTHS_FR } from '../lib/dates'
+import { buildLocalDateStr, todayLocalDateStr, MONTHS_FR } from '../lib/dates'
 import type { TobaccoType } from '../types'
 
 const SHOPS = [
@@ -29,13 +29,16 @@ const TOBACCO_TYPES = [
   { value: 'mixte',        label: 'Mixte' },
 ]
 
+// Menus de date : moins de marge pour que le mois s'affiche en entier (« Septembre »)
+const DATE_SELECT_STYLE = { paddingLeft: 10, paddingRight: 26, backgroundPosition: 'right 8px center' }
+
 const AGE_RANGES = ['Moins de 25 ans', '25-40 ans', '40-55 ans', 'Plus de 55 ans']
 
 function parseDateParts(dateStr: string | null) {
-  if (!dateStr) return { day: '', month: '', year: '' }
-  const d = new Date(dateStr)
-  if (isNaN(d.getTime())) return { day: '', month: '', year: '' }
-  return { day: String(d.getDate()), month: String(d.getMonth() + 1), year: String(d.getFullYear()) }
+  // Lecture directe de AAAA-MM-JJ : pas de conversion de fuseau horaire.
+  const m = dateStr ? /^(\d{4})-(\d{2})-(\d{2})/.exec(dateStr) : null
+  if (!m) return { day: '', month: '', year: '' }
+  return { day: String(parseInt(m[3])), month: String(parseInt(m[2])), year: m[1] }
 }
 
 export function ProfilePage() {
@@ -67,8 +70,14 @@ export function ProfilePage() {
   const [apptSlot, setApptSlot] = useState('')
   const [submittingAppt, setSubmittingAppt] = useState(false)
 
+  // Le formulaire reprend les valeurs enregistrées au chargement et après un
+  // enregistrement, pas à chaque relecture du profil (une saisie en cours serait perdue).
+  const formFilledFor = useRef<string | null>(null)
   useEffect(() => {
     if (profile) {
+      const key = `${profile.id}|${profile.quit_date}|${profile.cigarettes_per_day}|${profile.pack_price}|${profile.preferred_shop}|${profile.reward_name}|${profile.reward_amount}|${profile.tobacco_type}|${profile.age_range}`
+      if (formFilledFor.current === key) return
+      formFilledFor.current = key
       const p = parseDateParts(profile.quit_date)
       setQuitDay(p.day); setQuitMonth(p.month); setQuitYear(p.year)
       setCigsPerDay(profile.cigarettes_per_day)
@@ -90,10 +99,19 @@ export function ProfilePage() {
   const stage = vapStageFromDays(daysSmokeFree)
 
   const handleSave = async () => {
-    if (!user) return
+    // Profil pas encore chargé : on n'écrase jamais les données avec un formulaire vide.
+    if (!user || !profile || loading) return
+    const qd = buildLocalDateStr(quitDay, quitMonth, quitYear)
+    if ((quitDay || quitMonth || quitYear) && !qd) {
+      toast.error("Date d'arrêt incomplète ou impossible. Vérifiez le jour, le mois et l'année.")
+      return
+    }
+    if (qd && qd > todayLocalDateStr()) {
+      toast.error("La date d'arrêt ne peut pas être dans le futur.")
+      return
+    }
     try {
       setLoading(true)
-      const qd = buildLocalDateStr(quitDay, quitMonth, quitYear)
       const { error } = await supabase.from('profiles').update({
         quit_date: qd || null,
         cigarettes_per_day: parseInt(cigsPerDay.toString()) || 0,
@@ -118,18 +136,27 @@ export function ProfilePage() {
     if (!user) return
     try {
       setExporting(true)
-      const [{ data: profileRow }, { data: checkins }, { data: stories }] = await Promise.all([
+      const [{ data: profileRow }, { data: checkins }, { data: stories }, { data: moods }, { data: rdv }] = await Promise.all([
         supabase.from('profiles').select('*').eq('id', user.id).single(),
         supabase.from('nicotine_checkins').select('*').eq('user_id', user.id),
         supabase.from('vaper_stories').select('*').eq('user_id', user.id),
+        supabase.from('mood_entries').select('*').eq('user_id', user.id),
+        supabase.from('appointment_requests').select('*').eq('user_id', user.id),
       ])
       const payload = {
         export_date: new Date().toISOString(),
-        export_format_version: 1,
+        export_format_version: 2,
         application: "Pro'Vap Sevrage",
+        compte: {
+          email: user.email ?? null,
+          cree_le: user.created_at ?? null,
+          consentement_suivi_at: (user.user_metadata as Record<string, unknown> | undefined)?.consentement_suivi_at ?? null,
+        },
         profile: profileRow ?? null,
+        mood_entries: moods ?? [],
         nicotine_checkins: checkins ?? [],
         vaper_stories: stories ?? [],
+        appointment_requests: rdv ?? [],
       }
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
       const url = URL.createObjectURL(blob)
@@ -137,7 +164,8 @@ export function ProfilePage() {
       a.href = url
       a.download = `provap-export-${new Date().toISOString().split('T')[0]}.json`
       document.body.appendChild(a); a.click(); document.body.removeChild(a)
-      URL.revokeObjectURL(url)
+      // Safari a besoin que le lien reste valable un moment après le clic
+      setTimeout(() => URL.revokeObjectURL(url), 10000)
       toast.success('Vos données ont été exportées.')
     } catch {
       toast.error("Erreur lors de l'export.")
@@ -159,8 +187,8 @@ export function ProfilePage() {
       toast.success('Compte supprimé.')
       navigate('/login', { replace: true })
     } catch (e) {
-      const message = e instanceof Error ? e.message : 'Erreur lors de la suppression.'
-      toast.error(message)
+      console.error(e)
+      toast.error('Impossible de supprimer le compte pour le moment. Réessayez dans quelques instants.')
     } finally {
       setDeleting(false)
     }
@@ -236,8 +264,8 @@ export function ProfilePage() {
             >
               {initialLetter}
             </div>
-            <div>
-              <p className="font-display text-ink" style={{ fontSize: 26, fontWeight: 500 }}>
+            <div className="min-w-0 pr-16">
+              <p className="font-display text-ink break-words" style={{ fontSize: 26, fontWeight: 500 }}>
                 {profile?.name || 'Votre nom'}
               </p>
               <p className="text-[11px] text-ink-3 mt-1" style={{ letterSpacing: '0.12em', textTransform: 'uppercase' }}>
@@ -298,16 +326,16 @@ export function ProfilePage() {
           {/* Date d'arrêt */}
           <div>
             <span className="eyebrow block mb-2">Date d'arrêt du tabac</span>
-            <div className="grid grid-cols-3 gap-2">
-              <select className="input text-sm" value={quitDay} onChange={e => setQuitDay(e.target.value)} aria-label="Jour d'arrêt">
+            <div className="grid gap-2" style={{ gridTemplateColumns: '1fr 1.7fr 1.2fr' }}>
+              <select className="input text-sm" style={DATE_SELECT_STYLE} value={quitDay} onChange={e => setQuitDay(e.target.value)} aria-label="Jour d'arrêt">
                 <option value="">Jour</option>
                 {days.map(d => <option key={d} value={d}>{d}</option>)}
               </select>
-              <select className="input text-sm" value={quitMonth} onChange={e => setQuitMonth(e.target.value)} aria-label="Mois d'arrêt">
+              <select className="input text-sm" style={DATE_SELECT_STYLE} value={quitMonth} onChange={e => setQuitMonth(e.target.value)} aria-label="Mois d'arrêt">
                 <option value="">Mois</option>
                 {MONTHS_FR.map((m, i) => <option key={i} value={String(i + 1)}>{m}</option>)}
               </select>
-              <select className="input text-sm" value={quitYear} onChange={e => setQuitYear(e.target.value)} aria-label="Année d'arrêt">
+              <select className="input text-sm" style={DATE_SELECT_STYLE} value={quitYear} onChange={e => setQuitYear(e.target.value)} aria-label="Année d'arrêt">
                 <option value="">Année</option>
                 {years.map(y => <option key={y} value={y}>{y}</option>)}
               </select>
@@ -383,8 +411,11 @@ export function ProfilePage() {
           <div>
             <label htmlFor="profile-reward-amount" className="eyebrow block mb-2">Montant cible (€)</label>
             <input id="profile-reward-amount" type="number" className="input" placeholder="500"
-              value={rewardAmount} onChange={e => setRewardAmount(e.target.value)} />
+              min="0" value={rewardAmount} onChange={e => setRewardAmount(e.target.value)} />
           </div>
+          <button onClick={handleSave} className="btn-primary" disabled={loading}>
+            {loading ? 'Enregistrement…' : 'Enregistrer mon objectif'}
+          </button>
         </div>
       </section>
 
@@ -461,7 +492,7 @@ export function ProfilePage() {
           />
           {IS_FULL && (
             <SettingsRow
-              label="Les 8 boutiques"
+              label="Nos boutiques"
               icon={<MapPin size={16} strokeWidth={1.3} />}
               onClick={() => navigate('/boutiques')}
             />
@@ -506,7 +537,7 @@ export function ProfilePage() {
       </section>
 
       <p className="text-center display-italic text-ink-3 mt-8 px-5" style={{ fontSize: 13 }}>
-        Pro'Vap Sevrage · v1.0 · Picardie
+        Pro'Vap Sevrage · v1.0
       </p>
 
       {/* Appointment Modal */}
@@ -555,7 +586,7 @@ export function ProfilePage() {
             style={{ background: 'rgba(200,74,42,0.10)', border: '1px solid rgba(200,74,42,0.30)' }}>
             <p className="text-sm text-ink font-semibold mb-2">Action irréversible</p>
             <p className="text-xs text-ink-2 leading-relaxed">
-              Cette action supprime définitivement votre compte, votre profil, vos check-ins, vos témoignages et toute donnée associée. Aucun retour en arrière possible.
+              Cette action supprime définitivement votre compte, votre profil, votre journal d'humeur, vos points d'étape nicotine, vos demandes de rendez-vous, vos témoignages et toute donnée associée. Aucun retour en arrière possible.
             </p>
           </div>
           <p className="text-xs text-ink-3">

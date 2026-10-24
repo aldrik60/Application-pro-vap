@@ -10,117 +10,6 @@ import { IS_FULL } from '../lib/appMode'
 
 // ─── Static content ────────────────────────────────────────────────────────────
 
-const STATIC_ARTICLES = [
-  {
-    id: 'static-1',
-    title: 'Gérer une envie soudaine',
-    summary: 'Les envies de fumer sont intenses mais brèves. Voici comment les traverser sans craquer.',
-    category: 'sevrage',
-    created_at: '',
-    body: `Une envie de fumer dure rarement plus de 3 à 5 minutes. Si vous pouvez traverser ce pic, la sensation s'atténue d'elle-même.
-
-1. VAPOTEZ IMMÉDIATEMENT
-Votre e-cigarette est votre premier allié. Quelques bouffées suffisent souvent à calmer l'envie grâce à la nicotine, qui agit en quelques secondes.
-
-2. RESPIREZ PROFONDÉMENT
-La technique 4-4-4 est redoutable : inspirez lentement sur 4 secondes, retenez votre souffle 4 secondes, expirez sur 4 secondes. Répétez 3 fois.
-
-3. BUVEZ UN GRAND VERRE D'EAU
-L'eau refroidit la gorge et occupe les mains. Buvez lentement, une gorgée à la fois.
-
-4. CHANGEZ D'ENVIRONNEMENT
-Si vous êtes dans un endroit associé à la cigarette (bureau, terrasse, voiture), bougez. Un simple changement de pièce peut suffire.
-
-5. CHRONOMÉTREZ L'ENVIE
-Regardez votre montre et dites-vous : "Dans 5 minutes, ça sera passé." Observez l'envie diminuer. Chaque envie traversée rend la suivante plus facile.`,
-  },
-  {
-    id: 'static-2',
-    title: 'Le stress sans tabac',
-    summary: 'Le tabac semblait calmer le stress. Comment gérer ses émotions autrement ?',
-    category: 'bien-être',
-    created_at: '',
-    body: `Le tabac crée l'illusion de réduire le stress, mais en réalité, il ne fait que soulager le manque de nicotine qu'il a lui-même créé. Sans cigarette, votre niveau de stress basal sera plus bas.
-
-1. LA RESPIRATION ABDOMINALE
-Posez une main sur votre ventre. Inspirez en gonflant le ventre (pas la poitrine) sur 4 secondes, expirez sur 6 secondes. 5 cycles suffisent pour activer le système nerveux parasympathique et réduire le cortisol.
-
-2. L'ACTIVITÉ PHYSIQUE
-30 minutes de marche libèrent des endorphines, les mêmes molécules que la nicotine stimule. Même 10 minutes de marche rapide changent votre état d'esprit.
-
-3. LA TECHNIQUE "5-4-3-2-1"
-Nommez 5 choses que vous voyez, 4 que vous entendez, 3 que vous touchez, 2 que vous sentez, 1 que vous goûtez. Cet exercice ancre dans le présent et coupe le circuit anxieux.
-
-4. ANTICIPEZ VOS DÉCLENCHEURS
-Identifiez vos situations de stress habituelles (réunion difficile, embouteillages, conflit). Prévoyez votre kit à portée et une stratégie pour chacune.`,
-  },
-  {
-    id: 'static-3',
-    title: 'Comment fonctionne le sevrage ?',
-    summary: 'Comprendre ce qui se passe dans votre corps vous aide à mieux traverser cette période.',
-    category: 'science',
-    created_at: '',
-    body: `Comprendre le sevrage, c'est déjà le maîtriser à moitié. Voici ce qui se passe vraiment dans votre cerveau et votre corps.
-
-1. LA DÉPENDANCE À LA NICOTINE
-La nicotine se fixe sur des récepteurs spécifiques du cerveau et déclenche une libération de dopamine, la molécule du plaisir. Votre cerveau finit par s'y attendre. Sans nicotine, il manque de dopamine : c'est le manque.
-
-2. LES SYMPTÔMES DU SEVRAGE
-Les premières 72h sont les plus intenses (irritabilité, concentration difficile, envies fortes). Après J+7, les symptômes s'atténuent. Après J+21, votre cerveau commence à se recâbler.
-
-3. LE RÔLE DE LA VAPE
-La cigarette électronique délivre de la nicotine sans combustion, ce qui calme le manque sans le goudron ni le monoxyde de carbone de la fumée de cigarette, qui contient plus de 7 000 substances chimiques. Elle permet une transition progressive.
-
-4. LA DÉSENSIBILISATION DES RÉCEPTEURS
-En maintenant un taux de nicotine stable via la vape, les récepteurs de votre cerveau commencent à se désensibiliser. En descendant progressivement le taux, vous réduisez la dépendance sans souffrir.
-
-5. LA RÉCUPÉRATION EST PROGRESSIVE
-À J+30, les poumons commencent à se régénérer. À J+90, la phase aiguë du sevrage est généralement passée. À 1 an, le risque cardiovasculaire diminue significativement (source : OMS). Votre corps possède une remarquable capacité de récupération.
-
-Ces informations sont indicatives et ne remplacent pas l'avis d'un professionnel de santé.`,
-  },
-  {
-    id: 'static-4',
-    title: 'Les bénéfices heure par heure',
-    summary: 'Ce qui se passe dans votre corps dès que vous arrêtez de fumer.',
-    category: 'santé',
-    created_at: '',
-    body: `Votre corps commence à se réparer dès la première seconde sans cigarette. Voici le calendrier indicatif de votre récupération (sources : OMS, Santé publique France, Tabac Info Service).
-
-⏱ 20 MINUTES
-Votre rythme cardiaque et votre pression artérielle baissent. La circulation sanguine dans vos mains et vos pieds s'améliore.
-
-🕐 8 HEURES
-Le taux de monoxyde de carbone (CO) dans votre sang est normalisé. L'oxygène peut à nouveau circuler correctement jusqu'à vos cellules.
-
-📅 24 HEURES
-Le risque cardiovasculaire commence à diminuer. La respiration devient souvent plus facile sans le monoxyde de carbone.
-
-📅 48 HEURES
-Les terminaisons nerveuses du goût et de l'odorat, endommagées par la fumée, commencent à se régénérer.
-
-📅 72 HEURES (J+3)
-Les bronches se relâchent, rendant la respiration plus facile. La capacité pulmonaire augmente déjà.
-
-📅 2 SEMAINES À 3 MOIS
-La circulation sanguine s'améliore sensiblement. La marche et l'exercice deviennent plus faciles. Les poumons fonctionnent mieux de semaine en semaine.
-
-📅 1 À 9 MOIS
-Les cils bronchiques (qui évacuent le mucus) se régénèrent. Les infections respiratoires diminuent. L'énergie revient.
-
-📅 1 AN
-Le risque de maladie coronarienne diminue significativement (source : OMS).
-
-📅 5 ANS
-Le risque d'AVC se rapproche progressivement de celui d'un non-fumeur. Le risque de plusieurs cancers (buccal, gorge, œsophage) tend également à reculer.
-
-📅 10 ANS
-Le risque de cancer du poumon continue de diminuer, ainsi que celui d'autres cancers liés au tabac.
-
-Ces données proviennent de l'OMS et de Santé publique France. Elles sont indicatives et ne remplacent pas l'avis d'un professionnel de santé.`,
-  },
-]
-
 const FAQ_ITEMS: { question: string; answer: string; fullOnly?: boolean }[] = [
   {
     question: 'Combien de temps durent les envies de fumer ?',
@@ -132,7 +21,7 @@ const FAQ_ITEMS: { question: string; answer: string; fullOnly?: boolean }[] = [
   },
   {
     question: 'Quel taux de nicotine choisir pour commencer ?',
-    answer: 'Le taux dépend de votre consommation quotidienne :\n• Moins de 5 cigarettes/jour → 3 mg/ml\n• 5 à 10 cigarettes/jour → 6 mg/ml\n• 10 à 20 cigarettes/jour → 12 mg/ml\n• Plus de 20 cigarettes/jour → 16 mg/ml\n\nIl vaut mieux commencer légèrement plus haut que nécessaire pour éviter le manque, puis descendre progressivement.',
+    answer: 'Le taux dépend de votre consommation quotidienne :\n• Moins de 5 cigarettes/jour → 3 mg/ml\n• 5 à 9 cigarettes/jour → 6 mg/ml\n• 10 à 20 cigarettes/jour → 12 mg/ml\n• Plus de 20 cigarettes/jour → 16 mg/ml\n\nIl vaut mieux commencer légèrement plus haut que nécessaire pour éviter le manque, puis descendre progressivement.',
   },
   {
     question: 'Vais-je grossir en arrêtant de fumer ?',
@@ -148,7 +37,7 @@ const FAQ_ITEMS: { question: string; answer: string; fullOnly?: boolean }[] = [
   },
   {
     question: 'Je vapote beaucoup plus qu\'avant, est-ce normal ?',
-    answer: 'Oui, c\'est fréquent au début. Vous compensez l\'absence de cigarettes et les gestes associés. Avec le temps, la fréquence diminue souvent naturellement. Si vous avez l\'impression de vaper excessivement, il est possible que votre taux de nicotine soit trop faible. Un professionnel de la vape ou de l\'arrêt du tabac peut vous orienter.',
+    answer: 'Oui, c\'est fréquent au début. Vous compensez l\'absence de cigarettes et les gestes associés. Avec le temps, la fréquence diminue souvent naturellement. Si vous avez l\'impression de vapoter beaucoup, il est possible que votre taux de nicotine soit trop faible. Un professionnel de la vape ou de l\'arrêt du tabac peut vous orienter.',
   },
   {
     question: 'Quand faut-il changer la résistance de sa vape ?',
@@ -160,7 +49,7 @@ const FAQ_ITEMS: { question: string; answer: string; fullOnly?: boolean }[] = [
   },
   {
     question: 'Puis-je contacter ma boutique Pro\'Vap directement ?',
-    answer: 'Bien sûr ! Nos boutiques en Picardie sont là pour vous accompagner. Vous pouvez appeler ou prendre rendez-vous depuis l\'onglet Profil de cette application. Nos conseillers sont formés au sevrage tabagique et peuvent adapter vos recommandations selon votre évolution.',
+    answer: 'Bien sûr ! Nos boutiques sont là pour vous accompagner. Vous pouvez appeler ou prendre rendez-vous depuis l\'onglet Profil de cette application. Nos conseillers sont formés au sevrage tabagique et peuvent adapter vos recommandations selon votre évolution.',
     fullOnly: true,
   },
 ]
@@ -221,12 +110,13 @@ export function ContentPage() {
   const [shops, setShops] = useState<string[]>([])
   const [shopFilter, setShopFilter] = useState<string>('all')
 
-  const [selectedArticle, setSelectedArticle] = useState<ContentArticle | typeof STATIC_ARTICLES[0] | null>(null)
+  const [selectedArticle, setSelectedArticle] = useState<ContentArticle | null>(null)
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false)
   const [newStoryText, setNewStoryText] = useState('')
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
-  const allArticles = dbArticles.length > 0 ? dbArticles : STATIC_ARTICLES
+  // Les guides viennent uniquement de la base (plus d'ancienne copie dans le code)
+  const allArticles = dbArticles
   const visibleFaqs = IS_FULL ? FAQ_ITEMS : FAQ_ITEMS.filter(f => !f.fullOnly)
 
   useEffect(() => {

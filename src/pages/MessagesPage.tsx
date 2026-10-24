@@ -20,8 +20,10 @@ export function MessagesPage() {
   const [messages, setMessages] = useState<PushMessage[]>([])
   const [loading, setLoading] = useState(true)
   const [lastRead] = useState<number>(() => {
-    const raw = localStorage.getItem(LAST_READ_KEY)
-    return raw ? parseInt(raw, 10) : 0
+    try {
+      const raw = localStorage.getItem(LAST_READ_KEY)
+      return raw ? parseInt(raw, 10) : 0
+    } catch { return 0 }
   })
 
   useEffect(() => {
@@ -34,7 +36,7 @@ export function MessagesPage() {
         setLoading(false)
       })
     // Marque tous les messages comme lus à l'ouverture de la page
-    localStorage.setItem(LAST_READ_KEY, String(Date.now()))
+    try { localStorage.setItem(LAST_READ_KEY, String(Date.now())) } catch { /* stockage indisponible */ }
   }, [])
 
   const formatDate = (iso: string) => {
@@ -99,15 +101,15 @@ export function MessagesPage() {
               Aucun message pour l'instant.
             </p>
             <p className="text-[13px] text-ink-3 mt-2 leading-relaxed max-w-xs mx-auto">
-              Activez les notifications depuis votre profil pour recevoir
-              les messages de votre conseiller.
+              Les messages de l'équipe Pro'Vap apparaîtront ici.
+              Votre message du jour est sur l'accueil.
             </p>
             <button
               onClick={() => navigate('/profil')}
               className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90"
-              style={{ background: '#a2371a', color: '#ffffff' }}
+              style={{ background: '#a2371a', color: '#ffffff', minHeight: 44 }}
             >
-              <Bell size={14} strokeWidth={1.8} /> Activer les notifications
+              <Bell size={14} strokeWidth={1.8} /> Régler mes notifications
             </button>
           </div>
         )}
@@ -119,7 +121,13 @@ export function MessagesPage() {
               return (
               <button
                 key={msg.id}
-                onClick={() => hasLink && navigate(msg.url!)}
+                onClick={() => {
+                  if (!hasLink) return
+                  const url = msg.url!.trim()
+                  // Lien vers un autre site : nouvel onglet ; lien interne : navigation dans l'app
+                  if (/^https?:\/\//i.test(url)) window.open(url, '_blank', 'noopener')
+                  else navigate(url.startsWith('/') ? url : `/${url}`)
+                }}
                 disabled={!hasLink}
                 className="card p-4 text-left transition-all active:scale-[0.99] hover:border-pv-terracotta/30 disabled:cursor-default"
                 style={{

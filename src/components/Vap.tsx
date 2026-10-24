@@ -18,7 +18,7 @@ export interface VapStageMeta {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const VAP_STAGES: VapStageMeta[] = [
-  { id: 1, day: 0,   title: 'Le départ',       sub: 'Le premier jour est le plus dur.' },
+  { id: 1, day: 0,   title: 'Le départ',       sub: 'Un jour à la fois.' },
   { id: 2, day: 1,   title: 'Premier souffle', sub: 'La fumée commence à se lever.' },
   { id: 3, day: 7,   title: 'Sur ses pieds',   sub: "Une semaine pleine. Le rythme s'installe." },
   { id: 4, day: 30,  title: 'En marche',       sub: 'Un mois. Le corps reprend ses droits.' },

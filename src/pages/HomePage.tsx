@@ -40,6 +40,8 @@ const HEALTH_MILESTONES = [
 // Série de messages « tenir dans la durée », rejouée en boucle après J120.
 const LONG_RUN_FIRST_DAY = 91
 const LONG_RUN_LAST_DAY = 120
+// Messages liés à leur jour précis (« 100 jours », « le cap des 90 »…) : jamais rejoués.
+const LONG_RUN_EXCLUDED = [91, 99, 100, 117]
 
 function getNextMilestone(totalHours: number) {
   for (const m of HEALTH_MILESTONES) {
@@ -121,6 +123,7 @@ export function HomePage() {
           .select('message')
           .gte('day_number', LONG_RUN_FIRST_DAY)
           .lte('day_number', LONG_RUN_LAST_DAY)
+          .not('day_number', 'in', `(${LONG_RUN_EXCLUDED.join(',')})`)
           .order('day_number', { ascending: true })
           .then(({ data: pool }) => {
             if (pool && pool.length > 0) {
@@ -193,7 +196,7 @@ export function HomePage() {
         await navigator.share(shareData)
       } else if (navigator.clipboard) {
         await navigator.clipboard.writeText(`${text} ${shareData.url}`)
-        toast.success('Message copié dans le presse-papier')
+        toast.success('Message copié dans le presse-papiers.')
       }
     } catch {
       /* annulation utilisateur */
@@ -290,7 +293,7 @@ export function HomePage() {
             {daysSmokeFree <= 1 ? 'jour' : 'jours'} sans tabac
           </div>
           {hoursSmokeFree > 0 && (
-            <div className="eyebrow text-gold-text mt-2">+ {hoursSmokeFree} heures</div>
+            <div className="eyebrow text-gold-text mt-2">+ {hoursSmokeFree} heure{hoursSmokeFree > 1 ? 's' : ''}</div>
           )}
         </div>
 
@@ -300,7 +303,7 @@ export function HomePage() {
             <div className="progress-fill" style={{ width: `${vapProgress}%` }} />
           </div>
           <div className="text-[12px] text-gold-text whitespace-nowrap" style={{ letterSpacing: '0.05em' }}>
-            Prochain palier · J+{vapNextDay}
+            {vapStage >= 6 ? 'Dernier stade atteint' : `Prochain palier · J+${vapNextDay}`}
           </div>
           <ChevronRight size={14} className="text-ink-3 transition-transform group-hover:translate-x-0.5" />
         </Link>
@@ -586,13 +589,14 @@ export function HomePage() {
 
 function StatTile({ eyebrow, value, unit, accent }: { eyebrow: string; value: string; unit: string; accent?: boolean }) {
   return (
-    <div className="card p-4">
+    <div className="card p-4 flex flex-col justify-between">
       <span className="eyebrow" style={{ fontSize: 10 }}>{eyebrow}</span>
-      <div className="flex items-baseline gap-1 mt-2">
+      <div className="flex items-baseline gap-1 mt-2 min-w-0">
         <span
           className="font-display tabular"
           style={{
-            fontSize: 32,
+            // Gros chiffres (plus de 4 caractères) : un cran plus petit pour tenir à 320 px
+            fontSize: value.length > 4 ? 26 : 32,
             color: accent ? 'var(--color-flame-text)' : 'var(--color-ink)',
             fontWeight: 500,
             letterSpacing: '-0.02em',

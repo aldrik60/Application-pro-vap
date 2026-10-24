@@ -9,7 +9,7 @@ import { format, parseISO, subDays } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
 const MOODS: { level: MoodLevel; emoji: string; label: string; color: string }[] = [
-  { level: 'tres_difficile', emoji: '😞', label: 'Très difficile', color: 'var(--color-danger)' },
+  { level: 'tres_difficile', emoji: '😞', label: 'Très dur', color: 'var(--color-danger)' },
   { level: 'difficile',      emoji: '😕', label: 'Difficile',      color: '#D97706' },
   { level: 'neutre',         emoji: '😐', label: 'Neutre',         color: 'var(--color-text-muted)' },
   { level: 'bien',           emoji: '🙂', label: 'Bien',           color: 'var(--color-secondary)' },
@@ -118,12 +118,12 @@ export function JournalPage() {
           <label className="block text-sm text-ink mb-3 font-medium">
             Comment vous sentez-vous aujourd'hui ?
           </label>
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-5 gap-1.5">
             {MOODS.map(m => (
               <button
                 key={m.level}
                 onClick={() => setTodayMood(m.level)}
-                className={`flex flex-col items-center gap-1 p-3 rounded-[14px] border transition-all active:scale-95 ${
+                className={`flex flex-col items-center gap-1 px-1 py-2 min-w-0 rounded-[14px] border transition-all active:scale-95 ${
                   todayMood === m.level
                     ? 'border-pv-terracotta bg-pv-terracotta/10'
                     : 'border-line bg-bg-elev hover:border-pv-terracotta/40'
@@ -132,7 +132,7 @@ export function JournalPage() {
                 aria-pressed={todayMood === m.level}
               >
                 <span className="text-3xl" aria-hidden>{m.emoji}</span>
-                <span className="text-[10px] text-ink-3 font-semibold uppercase tracking-wider leading-tight">
+                <span className="text-[10px] text-ink-3 font-semibold leading-tight text-center">
                   {m.label}
                 </span>
               </button>

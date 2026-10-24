@@ -23,6 +23,8 @@ import webpush from 'https://esm.sh/web-push@3.6.7?bundle&target=denonext'
 const SEND_HOUR_PARIS = 9
 const LONG_RUN_FIRST_DAY = 91
 const LONG_RUN_LAST_DAY = 120
+// Messages liés à leur jour précis (« 100 jours »…) : jamais rejoués (comme HomePage).
+const LONG_RUN_EXCLUDED = [91, 99, 100, 117]
 const DAY_MS = 86_400_000
 
 Deno.serve(async (req) => {
@@ -98,7 +100,7 @@ Deno.serve(async (req) => {
     const badgeByDay = new Map((badges ?? []).map(b => [b.day_threshold as number, b]))
     const messageByDay = new Map((messages ?? []).map(m => [m.day_number as number, m.message as string]))
     const pool = (messages ?? [])
-      .filter(m => m.day_number >= LONG_RUN_FIRST_DAY && m.day_number <= LONG_RUN_LAST_DAY)
+      .filter(m => m.day_number >= LONG_RUN_FIRST_DAY && m.day_number <= LONG_RUN_LAST_DAY && !LONG_RUN_EXCLUDED.includes(m.day_number))
       .map(m => m.message as string)
 
     // Notification à envoyer pour chaque compte

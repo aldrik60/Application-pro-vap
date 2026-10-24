@@ -165,6 +165,8 @@ export function DiagnosticKitPage() {
   const progressPercent = ((step + 1) / QUESTIONS.length) * 100
 
   const handleAnswer = (value: string) => {
+    // Un double appui ne doit pas sauter la question suivante
+    if (selected !== null) return
     setSelected(value)
     const newAnswers = { ...answers, [currentQ.id]: value }
     setAnswers(newAnswers)
@@ -276,7 +278,7 @@ export function DiagnosticKitPage() {
         <div className="card p-5 mt-3" style={{ borderColor: 'rgba(122, 138, 94, 0.30)' }}>
           <p className="text-sm text-ink leading-relaxed">
             À <span className="font-semibold text-gold-text">{packPrice.toFixed(2)}€</span> le paquet, votre kit sera amorti en environ{' '}
-            <span className="font-semibold text-success">{daysToAmortize} jours</span>. Ensuite, chaque euro est un bénéfice net.
+            <span className="font-semibold text-success">{daysToAmortize} jours</span>. Ensuite, vos économies continuent de s'accumuler, hors e-liquides et résistances.
           </p>
         </div>
 

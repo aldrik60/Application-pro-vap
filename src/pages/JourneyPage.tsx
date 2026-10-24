@@ -47,6 +47,7 @@ export function JourneyPage() {
   const [checkins, setCheckins] = useState<NicotineCheckIn[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
 
   const [mg, setMg] = useState('12')
   const [eliquid, setEliquid] = useState('')
@@ -60,6 +61,7 @@ export function JourneyPage() {
       .select('*')
       .eq('user_id', user.id)
       .order('date', { ascending: true })
+      .order('created_at', { ascending: true })
     if (data) setCheckins(data)
     setLoading(false)
   }
@@ -69,11 +71,18 @@ export function JourneyPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!user) return
+    // Un double appui ne crée pas deux points d'étape
+    if (!user || saving) return
+    const value = parseFloat(mg)
+    if (!Number.isFinite(value) || value < 0 || value > 50) {
+      toast.error('Indiquez un taux entre 0 et 50 mg/ml.')
+      return
+    }
     try {
+      setSaving(true)
       const { error } = await supabase.from('nicotine_checkins').insert({
         user_id: user.id,
-        nicotine_mg: parseFloat(mg),
+        nicotine_mg: value,
         eliquid_name: eliquid || 'Non spécifié',
         feeling,
         notes,
@@ -85,6 +94,8 @@ export function JourneyPage() {
       fetchCheckins()
     } catch {
       toast.error('Erreur lors de l\'enregistrement')
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -218,7 +229,7 @@ export function JourneyPage() {
               style={{
                 border: '1px solid ' + (s.current ? 'var(--color-gold-text)' : s.done ? 'var(--color-line-strong)' : 'var(--color-line)'),
                 background: s.current ? 'var(--color-bg-card)' : 'transparent',
-                color: s.done ? 'var(--color-gold-text)' : 'var(--color-ink-4)',
+                color: s.done ? 'var(--color-gold-text)' : 'var(--color-ink-3)',
                 fontFamily: 'var(--font-display)',
                 fontStyle: 'italic',
                 fontSize: 15,
@@ -382,7 +393,7 @@ export function JourneyPage() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="checkin-mg" className="eyebrow block mb-2">Taux (mg/ml)</label>
-              <input id="checkin-mg" type="number" step="0.1" className="input" value={mg} onChange={e => setMg(e.target.value)} required />
+              <input id="checkin-mg" type="number" step="0.1" min="0" max="50" inputMode="decimal" className="input" value={mg} onChange={e => setMg(e.target.value)} required />
             </div>
             <div>
               <label htmlFor="checkin-eliquid" className="eyebrow block mb-2">E-liquide</label>
@@ -425,7 +436,9 @@ export function JourneyPage() {
             />
           </div>
 
-          <button type="submit" className="btn-primary mt-2">Valider mon étape</button>
+          <button type="submit" className="btn-primary mt-2 disabled:opacity-50" disabled={saving}>
+            {saving ? 'Enregistrement…' : 'Valider mon étape'}
+          </button>
         </form>
       </Modal>
     </div>

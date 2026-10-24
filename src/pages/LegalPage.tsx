@@ -15,8 +15,14 @@ export function LegalPage() {
     <div className="page pb-24">
       <header className="px-6 pt-6">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            // Ouverte dans un nouvel onglet (depuis l'inscription) : pas d'historique
+            const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0
+            if (idx > 0) navigate(-1)
+            else navigate('/login', { replace: true })
+          }}
           className="flex items-center gap-2 text-ink-3 text-sm hover:text-ink transition-colors mb-6"
+          style={{ minHeight: 44 }}
         >
           <ChevronLeft size={18} /> Retour
         </button>

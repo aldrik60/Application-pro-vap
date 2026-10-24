@@ -28,6 +28,20 @@ Pour chaque étape : notez **OK**, ou décrivez ce qui ne va pas avec une captur
 | 20 | Le vendredi 30 à 9 h, avant de supprimer les comptes de test | Chaque téléphone reçoit « Jour 101 · Votre message du jour » (le compte a démarré il y a 100 jours le jeudi) | | |
 | 21 | Profil : supprimer le compte de test | Le compte disparaît, retour à l'écran de connexion | | |
 
+**Ajouts après l'audit du 25 octobre :**
+
+| # | Étape | Ce qui doit se passer | iPhone | Android |
+|---|---|---|---|---|
+| 22 | Mode avion, puis ouvrir l'app installée | « Connexion indisponible » avec un bouton « Réessayer », jamais « indiquez votre date d'arrêt » | | |
+| 23 | Wifi sans internet (partage de connexion coupé), ouvrir l'app | L'écran apparaît en moins de 5 secondes | | |
+| 24 | Profil ouvert dans Safari, app pas encore installée (iPhone) | « Installez d'abord Pro'Vap sur votre écran d'accueil… » | | |
+| 25 | Profil : désactiver les notifications, quitter, revenir | Le bouton affiche « Activer les notifications », pas « activées » | | |
+| 26 | Toucher le champ e-mail ou la note du journal | L'écran ne zoome pas tout seul | | |
+| 27 | Descendre en bas de l'accueil, toucher « Profil » | La page Profil s'ouvre en haut | | |
+| 28 | SOS : poser le téléphone sans y toucher pendant l'exercice | L'écran reste allumé jusqu'à la fin (environ 3 minutes) | | |
+| 29 | Journal en mode sombre | Les 5 humeurs sont lisibles, rien ne sort des cases, cases à cocher sombres | | |
+| 30 | Mode sombre, écran de connexion | Le logo Pro'Vap est bien visible en blanc | | |
+
 **Avec votre compte admin, en plus :**
 - Admin → Vidéos : ajouter une vidéo YouTube de test (même une vidéo publique quelconque). Elle doit apparaître dans Ressources sur le téléphone, puis la supprimer.
 - Admin → Articles : ouvrir un guide, corriger un mot, enregistrer : la correction apparaît dans l'app.

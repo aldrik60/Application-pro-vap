@@ -24,8 +24,8 @@
   /* — Accents TEXTE (contraste WCAG garanti dans les deux modes) —
      gold-text est conservé comme nom historique mais rend désormais du
      terracotta : la charte du site vit en blanc + terracotta, sans doré. */
-  --color-gold-text:  #d4623f;      /* terracotta éclairci, 4,8:1 sur fond sombre */
-  --color-flame-text: #d4623f;      /* idem — alias sémantique */
+  --color-gold-text:  #de6e4a;      /* terracotta éclairci, 4,8:1 sur les cartes sombres */
+  --color-flame-text: #de6e4a;      /* idem — alias sémantique */
 
   /* — Rôles (dark par défaut — le charbon du site) — */
   --color-bg:         #1a1a1a;
@@ -43,9 +43,9 @@
   --color-line-strong: rgba(246, 241, 232, 0.20);
 
   --color-accent:    #a2371a;
-  --color-accent-2:  #d4623f;
-  --color-success:   #7a8a5e;
-  --color-danger:    #c84a2a;
+  --color-accent-2:  #de6e4a;
+  --color-success:   #8a9b6c;
+  --color-danger:    #e2694a;
 
   /* — Anciens alias compatibilité (pas casser le code existant pendant la migration) — */
   --color-surface:    #202020;
@@ -55,7 +55,7 @@
   --color-text-muted: rgba(246, 241, 232, 0.72);
   --color-text-dim:   rgba(246, 241, 232, 0.55);
   --color-primary:    #a2371a;
-  --color-secondary:  #d4623f;
+  --color-secondary:  #de6e4a;
   --color-warning:    #cb8002;
   --color-focus-ring: rgba(162, 55, 26, 0.60);
 
@@ -94,11 +94,14 @@
    indépendamment de la propagation Tailwind 4 @theme. */
 :root {
   --color-bg-paper: #f6f1e8;
+  /* Cases à cocher, menus et barres de défilement natifs suivent le thème */
+  color-scheme: dark;
 }
 
 /* ─── Mode clair automatique (ivoire papier) ─────────────────────────────── */
 @media (prefers-color-scheme: light) {
   :root {
+    color-scheme: light;
     --color-bg:         #f6f1e8;
     --color-bg-elev:    #fbf7ee;
     --color-bg-card:    #ffffff;
@@ -115,6 +118,8 @@
     --color-flame-text: #a2371a;
     --color-secondary:  #a2371a;
     --color-accent-2:   #a2371a;
+    --color-success:    #5f6e45;
+    --color-danger:     #b03f22;
 
     --color-line:        rgba(40, 40, 45, 0.10);
     --color-line-strong: rgba(40, 40, 45, 0.22);
@@ -208,13 +213,17 @@ body::after {
   line-height: 1.2;
 }
 
-.eyebrow {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-ink-3);
+/* Dans la couche components : une classe de couleur Tailwind (text-gold-text,
+   text-flame-text…) posée à côté reprend la main, comme prévu par la charte. */
+@layer components {
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
 }
 
 .hairline { height: 1px; background: var(--color-line); border: 0; }
@@ -321,7 +330,8 @@ textarea:focus-visible {
   font-family: var(--font-body);
   padding: 12px 16px;
   width: 100%;
-  font-size: 14px;
+  /* 16 px minimum : en dessous, l'iPhone zoome à chaque saisie */
+  font-size: 16px;
   outline: none;
   transition: border-color var(--duration-base), box-shadow var(--duration-base);
 }
@@ -389,7 +399,7 @@ textarea.input { resize: vertical; min-height: 80px; }
 .btn-gold { background-color: var(--color-pv-terracotta); color: var(--color-pv-ivory); }
 .btn-gold:hover:not(:disabled) { opacity: 0.92; }
 
-.btn-danger { background-color: var(--color-danger); color: var(--color-pv-ivory); }
+.btn-danger { background-color: #b03f22; color: var(--color-pv-ivory); }
 .btn-danger:hover:not(:disabled) { opacity: 0.92; }
 
 .btn-ivory {
@@ -466,7 +476,9 @@ textarea.input { resize: vertical; min-height: 80px; }
 
 .divider { border: none; border-top: 1px solid var(--color-line); }
 
-/* Logo : inverser en mode clair (le SVG source est blanc) */
+/* Logo : le SVG source n'a pas de couleur de remplissage, il s'affiche en noir.
+   Mode sombre : on l'inverse en blanc. Mode clair : gris très foncé. */
+.pv-logo, [data-pv-logo] { filter: invert(1); }
 @media (prefers-color-scheme: light) {
   .pv-logo, [data-pv-logo] { filter: invert(1) brightness(0.15); }
 }

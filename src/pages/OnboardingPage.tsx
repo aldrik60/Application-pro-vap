@@ -48,6 +48,9 @@ const AUTRE_BOUTIQUE: BoutiqueItem = {
  * Direction V2 : charte pro-vap.com — Space Grotesk, Outfit, Marck Script.
  */
 
+// Menus de date : moins de marge pour que le mois s'affiche en entier (« Septembre »)
+const DATE_SELECT_STYLE = { paddingLeft: 10, paddingRight: 26, backgroundPosition: 'right 8px center' }
+
 type QuitChoice = 'today' | 'yesterday' | 'custom'
 
 export function OnboardingPage() {
@@ -121,8 +124,8 @@ export function OnboardingPage() {
       await refreshProfile()
       navigate('/', { replace: true })
     } catch (e) {
-      const message = e instanceof Error ? e.message : "Erreur lors de l'enregistrement."
-      toast.error(message)
+      console.error(e)
+      toast.error("L'enregistrement n'a pas abouti. Vérifiez votre connexion et réessayez.")
     } finally {
       setSaving(false)
     }
@@ -158,7 +161,16 @@ export function OnboardingPage() {
             quitDay={quitDay} quitMonth={quitMonth} quitYear={quitYear}
             onQuitDay={setQuitDay} onQuitMonth={setQuitMonth} onQuitYear={setQuitYear}
             onBack={() => setStep(1)}
-            onContinue={() => setStep(3)}
+            onContinue={() => {
+              if (quitChoice !== 'today' && quitChoice !== 'yesterday') {
+                const qd = buildLocalDateStr(quitDay, quitMonth, quitYear)
+                if (!qd || qd > todayLocalDateStr()) {
+                  toast.error("Choisissez une date complète, aujourd'hui ou avant.")
+                  return
+                }
+              }
+              setStep(3)
+            }}
           />
         )}
         {step === 3 && (
@@ -303,16 +315,16 @@ function StepSmoker({
               })}
             </div>
             {quitChoice === 'custom' && (
-              <div className="mt-3 grid grid-cols-3 gap-2">
-                <select className="input text-sm" value={quitDay} onChange={e => onQuitDay(e.target.value)} aria-label="Jour">
+              <div className="mt-3 grid gap-2" style={{ gridTemplateColumns: '1fr 1.7fr 1.2fr' }}>
+                <select className="input text-sm" style={DATE_SELECT_STYLE} value={quitDay} onChange={e => onQuitDay(e.target.value)} aria-label="Jour">
                   <option value="">Jour</option>
                   {days.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
-                <select className="input text-sm" value={quitMonth} onChange={e => onQuitMonth(e.target.value)} aria-label="Mois">
+                <select className="input text-sm" style={DATE_SELECT_STYLE} value={quitMonth} onChange={e => onQuitMonth(e.target.value)} aria-label="Mois">
                   <option value="">Mois</option>
                   {MONTHS_FR.map((m, i) => <option key={i} value={String(i + 1)}>{m}</option>)}
                 </select>
-                <select className="input text-sm" value={quitYear} onChange={e => onQuitYear(e.target.value)} aria-label="Année">
+                <select className="input text-sm" style={DATE_SELECT_STYLE} value={quitYear} onChange={e => onQuitYear(e.target.value)} aria-label="Année">
                   <option value="">Année</option>
                   {years.map(y => <option key={y} value={y}>{y}</option>)}
                 </select>

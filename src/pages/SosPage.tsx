@@ -10,12 +10,12 @@ import { X, Pause, Play } from 'lucide-react'
  * Aucune UI mobile classique : texte serif italique, ambiance cuir/papier brûlé.
  *
  * Cycle 4-7-8 : Inspirez 4s · Retenez 7s · Expirez 8s.
- * 6 cycles complets = ~3 min, durée recommandée pour passer une envie.
+ * 9 cycles complets (4-7-8 s) = 2 min 51, soit environ 3 minutes, durée annoncée sur l'accueil.
  */
 
 type Phase = 'inhale' | 'hold' | 'exhale'
 
-const CYCLES_TOTAL = 6
+const CYCLES_TOTAL = 9
 const PHASE_DURATIONS: Record<Phase, number> = { inhale: 4, hold: 7, exhale: 8 }
 const PHASE_ORDER: Phase[] = ['inhale', 'hold', 'exhale']
 
@@ -37,6 +37,19 @@ export function SosPage() {
 
   const currentPhase = PHASE_ORDER[phaseIdx]
   const meta = PHASE_META[currentPhase]
+
+  // L'écran reste allumé pendant l'exercice (sinon il se met en veille au milieu)
+  useEffect(() => {
+    if (done) return
+    type WakeLockLike = { release: () => Promise<void> }
+    const nav = navigator as Navigator & { wakeLock?: { request: (t: 'screen') => Promise<WakeLockLike> } }
+    let lock: WakeLockLike | null = null
+    let cancelled = false
+    nav.wakeLock?.request('screen')
+      .then(l => { if (cancelled) l.release().catch(() => {}); else lock = l })
+      .catch(() => { /* non pris en charge : sans effet */ })
+    return () => { cancelled = true; lock?.release().catch(() => {}) }
+  }, [done])
 
   // Retour sûr : en accès direct (deep link, notification), il n'y a pas
   // d'historique dans l'app — on retombe sur l'accueil au lieu d'en sortir.
@@ -118,7 +131,7 @@ export function SosPage() {
             L'envie<br/>est passée.
           </h1>
           <p className="text-base text-pv-ivory/70 mt-6 leading-relaxed max-w-xs">
-            Vous venez de gagner une victoire silencieuse. Chaque envie traversée compte.
+            Vous venez de remporter une victoire silencieuse. Chaque envie traversée compte.
           </p>
           <button onClick={handleSuccess} className="btn-primary mt-10 max-w-xs">
             J'ai tenu

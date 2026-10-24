@@ -30,18 +30,19 @@ export type PushSupportStatus =
 export function getPushSupport(): PushSupportStatus {
   if (typeof window === 'undefined') return 'unsupported'
 
+  // iOS d'abord : dans un onglet Safari (app non installée), Notification et
+  // PushManager n'existent pas. Il faut dire « installez l'app », pas
+  // « non pris en charge ».
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as Window & { MSStream?: unknown }).MSStream
+  // @ts-expect-error - standalone propriété non standard iOS
+  const isStandalone = navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
+  if (isIOS && !isStandalone) return 'ios-needs-install'
+
   const hasNotifications = 'Notification' in window
   const hasServiceWorker = 'serviceWorker' in navigator
   const hasPushManager = 'PushManager' in window
 
   if (!hasNotifications || !hasServiceWorker || !hasPushManager) return 'unsupported'
-
-  // Détection iOS Safari hors PWA : push impossible tant que l'app n'est pas
-  // ajoutée à l'écran d'accueil (limitation Apple).
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as Window & { MSStream?: unknown }).MSStream
-  // @ts-expect-error - standalone propriété non standard iOS
-  const isStandalone = navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
-  if (isIOS && !isStandalone) return 'ios-needs-install'
 
   switch (Notification.permission) {
     case 'granted': return 'permission-granted'
@@ -63,17 +64,19 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array {
  * Demande la permission et enregistre la subscription côté serveur.
  * À appeler depuis un click utilisateur (les navigateurs imposent un user gesture).
  */
-export async function subscribeUserToPush(userId: string): Promise<boolean> {
+export type SubscribeResult = 'ok' | 'denied' | 'error'
+
+export async function subscribeUserToPush(userId: string): Promise<SubscribeResult> {
   if (!VAPID_PUBLIC_KEY) {
-    console.warn('[push] VITE_VAPID_PUBLIC_KEY manquante — souscription désactivée')
-    return false
+    console.warn('[push] VITE_VAPID_PUBLIC_KEY manquante, souscription désactivée')
+    return 'error'
   }
 
   if (Notification.permission === 'default') {
     const result = await Notification.requestPermission()
-    if (result !== 'granted') return false
+    if (result !== 'granted') return 'denied'
   } else if (Notification.permission !== 'granted') {
-    return false
+    return 'denied'
   }
 
   const registration = await navigator.serviceWorker.ready
@@ -99,11 +102,32 @@ export async function subscribeUserToPush(userId: string): Promise<boolean> {
     { onConflict: 'user_id,endpoint' }
   )
 
-  return !error
+  return error ? 'error' : 'ok'
+}
+
+// serviceWorker.ready ne se résout jamais sans service worker : on plafonne l'attente.
+async function readyRegistration(ms = 3000): Promise<ServiceWorkerRegistration | null> {
+  if (!('serviceWorker' in navigator)) return null
+  return Promise.race([
+    navigator.serviceWorker.ready,
+    new Promise<null>(resolve => setTimeout(() => resolve(null), ms)),
+  ])
+}
+
+/** Abonnement réel de cet appareil (et non la seule autorisation du téléphone). */
+export async function hasActiveSubscription(): Promise<boolean> {
+  try {
+    const registration = await readyRegistration()
+    if (!registration || !('pushManager' in registration)) return false
+    return (await registration.pushManager.getSubscription()) !== null
+  } catch {
+    return false
+  }
 }
 
 export async function unsubscribeUserFromPush(): Promise<void> {
-  const registration = await navigator.serviceWorker.ready
+  const registration = await readyRegistration()
+  if (!registration || !('pushManager' in registration)) return
   const subscription = await registration.pushManager.getSubscription()
   if (subscription) {
     await supabase.from('push_subscriptions').delete().eq('endpoint', subscription.endpoint)

@@ -4,10 +4,19 @@ import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/AuthContext'
 import {
   getPushSupport,
+  hasActiveSubscription,
   subscribeUserToPush,
   unsubscribeUserFromPush,
   type PushSupportStatus,
 } from '../lib/pushNotifications'
+
+// L'autorisation du téléphone peut rester accordée après « Désactiver » :
+// on regarde aussi si cet appareil est réellement abonné.
+async function readStatus(): Promise<PushSupportStatus> {
+  const s = getPushSupport()
+  if (s !== 'permission-granted') return s
+  return (await hasActiveSubscription()) ? 'permission-granted' : 'permission-default'
+}
 
 /**
  * Toggle d'activation des notifications push, avec aide contextuelle.
@@ -20,10 +29,12 @@ export function NotificationToggle() {
   const [showSoftPrompt, setShowSoftPrompt] = useState(false)
 
   useEffect(() => {
-    setStatus(getPushSupport())
+    let alive = true
+    readStatus().then(s => { if (alive) setStatus(s) })
+    return () => { alive = false }
   }, [])
 
-  const refresh = () => setStatus(getPushSupport())
+  const refresh = () => { readStatus().then(setStatus) }
 
   const isIOS = typeof navigator !== 'undefined' &&
     /iPad|iPhone|iPod/.test(navigator.userAgent) &&
@@ -41,14 +52,17 @@ export function NotificationToggle() {
     setShowSoftPrompt(false)
     try {
       setLoading(true)
-      const ok = await subscribeUserToPush(user.id)
-      if (ok) {
+      const result = await subscribeUserToPush(user.id)
+      if (result === 'ok') {
         toast.success('Notifications activées.')
         setStatus('permission-granted')
-      } else {
-        toast.error("Permission refusée. Voir les instructions ci-dessous.")
+      } else if (result === 'denied') {
+        toast.error("Notifications refusées sur ce téléphone. Voir les instructions ci-dessous.")
         setStatus(getPushSupport())
         setShowHelp(true)
+      } else {
+        toast.error("L'activation n'a pas abouti. Vérifiez votre connexion et réessayez.")
+        refresh()
       }
     } catch {
       toast.error("Erreur lors de l'activation.")
@@ -82,7 +96,7 @@ export function NotificationToggle() {
         <div
           className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
           style={{
-            background: status === 'permission-granted' ? '#cb8002' : 'rgba(162,55,26,0.1)',
+            background: status === 'permission-granted' ? '#a2371a' : 'rgba(162,55,26,0.1)',
             color: status === 'permission-granted' ? '#fff' : '#a2371a',
           }}
         >
@@ -96,7 +110,9 @@ export function NotificationToggle() {
 
           {status === 'unsupported' && (
             <p className="text-[12px] mt-1 leading-snug" style={{ color: 'var(--color-ink-3, #686868)' }}>
-              Votre navigateur ne prend pas en charge les notifications push.
+              {isIOS
+                ? 'Mettez à jour votre iPhone (iOS 16.4 ou plus récent) pour recevoir les notifications.'
+                : 'Votre navigateur ne prend pas en charge les notifications push.'}
             </p>
           )}
 
@@ -141,7 +157,7 @@ export function NotificationToggle() {
           {status === 'permission-default' && (
             <>
               <p className="text-[12px] mt-1 leading-snug" style={{ color: 'var(--color-ink-3, #686868)' }}>
-                Recevez vos messages quotidiens, rappels et félicitations directement sur votre téléphone.
+                Recevez votre message du jour et vos félicitations aux paliers atteints, directement sur votre téléphone.
               </p>
               <button
                 onClick={requestActivation}
@@ -189,19 +205,19 @@ export function NotificationToggle() {
               </p>
               <ol className="space-y-2 text-[12px]" style={{ color: 'var(--color-ink-2, #686868)' }}>
                 <li className="flex gap-2">
-                  <span className="shrink-0 font-bold" style={{ color: '#cb8002' }}>1.</span>
+                  <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>1.</span>
                   <span>En haut de l'écran, à gauche de l'adresse, appuyez sur l'icône <Lock size={11} className="inline" strokeWidth={2.5} /> (cadenas) ou les 3 points <SettingsIcon size={11} className="inline" strokeWidth={2.5} />.</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="shrink-0 font-bold" style={{ color: '#cb8002' }}>2.</span>
+                  <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>2.</span>
                   <span>Appuyez sur <strong>Autorisations</strong> ou <strong>Paramètres du site</strong>.</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="shrink-0 font-bold" style={{ color: '#cb8002' }}>3.</span>
+                  <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>3.</span>
                   <span>Trouvez <strong>Notifications</strong> et choisissez <strong>Autoriser</strong>.</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="shrink-0 font-bold" style={{ color: '#cb8002' }}>4.</span>
+                  <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>4.</span>
                   <span>Revenez ici et cliquez sur <strong>« J'ai réactivé, réessayer »</strong>.</span>
                 </li>
               </ol>
@@ -215,23 +231,23 @@ export function NotificationToggle() {
               </p>
               <ol className="space-y-2 text-[12px]" style={{ color: 'var(--color-ink-2, #686868)' }}>
                 <li className="flex gap-2">
-                  <span className="shrink-0 font-bold" style={{ color: '#cb8002' }}>1.</span>
+                  <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>1.</span>
                   <span>Ouvrez l'app <strong>Réglages</strong> de votre iPhone.</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="shrink-0 font-bold" style={{ color: '#cb8002' }}>2.</span>
+                  <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>2.</span>
                   <span>Descendez et appuyez sur <strong>Notifications</strong>.</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="shrink-0 font-bold" style={{ color: '#cb8002' }}>3.</span>
+                  <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>3.</span>
                   <span>Trouvez <strong>Pro'Vap</strong> dans la liste et appuyez dessus.</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="shrink-0 font-bold" style={{ color: '#cb8002' }}>4.</span>
+                  <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>4.</span>
                   <span>Activez <strong>« Autoriser les notifications »</strong>.</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="shrink-0 font-bold" style={{ color: '#cb8002' }}>5.</span>
+                  <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>5.</span>
                   <span>Revenez dans l'app et cliquez sur <strong>« J'ai réactivé, réessayer »</strong>.</span>
                 </li>
               </ol>
@@ -245,15 +261,15 @@ export function NotificationToggle() {
               </p>
               <ol className="space-y-2 text-[12px]" style={{ color: 'var(--color-ink-2, #686868)' }}>
                 <li className="flex gap-2">
-                  <span className="shrink-0 font-bold" style={{ color: '#cb8002' }}>1.</span>
+                  <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>1.</span>
                   <span>Cliquez sur l'icône <Lock size={11} className="inline" strokeWidth={2.5} /> à gauche de l'adresse de la page.</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="shrink-0 font-bold" style={{ color: '#cb8002' }}>2.</span>
+                  <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>2.</span>
                   <span>Trouvez <strong>Notifications</strong> dans la liste et choisissez <strong>Autoriser</strong>.</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="shrink-0 font-bold" style={{ color: '#cb8002' }}>3.</span>
+                  <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>3.</span>
                   <span>Rechargez la page (Cmd+R ou Ctrl+R) puis cliquez sur <strong>« Réessayer »</strong>.</span>
                 </li>
               </ol>
@@ -290,14 +306,14 @@ export function NotificationToggle() {
             <div className="flex items-center gap-3 mb-4">
               <div
                 className="w-12 h-12 rounded-2xl flex items-center justify-center"
-                style={{ background: '#cb8002', color: '#fff' }}
+                style={{ background: '#a2371a', color: '#fff' }}
               >
                 <Bell size={20} strokeWidth={1.8} />
               </div>
               <div>
                 <p
                   className="font-semibold text-[15px] leading-tight"
-                  style={{ color: '#1f1f24', fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic' }}
+                  style={{ color: '#1f1f24', fontFamily: 'var(--font-display)' }}
                 >
                   Restons en contact.
                 </p>
@@ -308,9 +324,9 @@ export function NotificationToggle() {
               Pro'Vap vous enverra :
             </p>
             <ul className="space-y-1.5 text-[13px] mb-5" style={{ color: '#1f1f24' }}>
-              <li className="flex gap-2"><span style={{ color: '#cb8002' }}>·</span> Votre message du jour</li>
-              <li className="flex gap-2"><span style={{ color: '#cb8002' }}>·</span> Vos félicitations aux paliers atteints</li>
-              <li className="flex gap-2"><span style={{ color: '#cb8002' }}>·</span> Les messages de l'équipe Pro'Vap</li>
+              <li className="flex gap-2"><span style={{ color: '#a2371a' }}>·</span> Votre message du jour</li>
+              <li className="flex gap-2"><span style={{ color: '#a2371a' }}>·</span> Vos félicitations aux paliers atteints</li>
+              <li className="flex gap-2"><span style={{ color: '#a2371a' }}>·</span> Les messages de l'équipe Pro'Vap</li>
             </ul>
             <p className="text-[12px] mb-5" style={{ color: '#686868' }}>
               Aucun spam. Vous pourrez désactiver à tout moment depuis votre profil.
