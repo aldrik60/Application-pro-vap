@@ -155,7 +155,7 @@ export function LegalPage() {
           <h2 className="text-lg font-semibold text-gold-text mb-3">5. Avertissement</h2>
           <div className="card p-4 bg-pv-terracotta/5 border-pv-terracotta/30 text-ink">
             <p>
-              Cette application est un outil d'accompagnement personnel et ne constitue ni un avis médical, ni un traitement, ni un dispositif médical. Les informations affichées sont indicatives. Pour toute question médicale liée à l'arrêt du tabac, consultez un professionnel de santé ou contactez <strong className="text-gold-text">Tabac Info Service au 3989</strong> (appel non surtaxé du lundi au samedi, 8h-20h).
+              Cette application est un outil d'accompagnement personnel et ne constitue ni un avis médical, ni un traitement, ni un dispositif médical. Les informations affichées sont indicatives. Pour toute question médicale liée à l'arrêt du tabac, consultez un professionnel de santé ou contactez <strong className="text-gold-text">Tabac Info Service au 39 89</strong> (service gratuit, prix d'un appel, du lundi au samedi de 8 h à 20 h).
             </p>
           </div>
         </section>

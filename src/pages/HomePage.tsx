@@ -494,7 +494,7 @@ export function HomePage() {
       <p className="text-[11px] text-ink-3 text-center leading-relaxed px-5 pt-5">
         Informations indicatives, ne remplacent pas l'avis d'un professionnel de santé.
         <br />
-        <span className="text-gold-text font-medium">Tabac Info Service 3989</span> · gratuit, lun-sam 8h-20h.
+        <span className="text-gold-text font-medium">Tabac Info Service 39 89</span> · service gratuit, prix d'un appel, du lundi au samedi de 8 h à 20 h.
       </p>
 
       {/* Modale écart / rechute — recadrage bienveillant, jamais de reset silencieux */}

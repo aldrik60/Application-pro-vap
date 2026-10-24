@@ -328,8 +328,8 @@ export function ContentPage() {
       {/* Disclaimer */}
       <p className="text-[11px] text-ink-3 text-center leading-relaxed mt-7 px-6">
         Les informations affichées sont indicatives et ne remplacent pas l'avis d'un professionnel de santé.
-        Pour un accompagnement gratuit et confidentiel, contactez{' '}
-        <span className="text-gold-text font-semibold">Tabac Info Service au 3989</span>.
+        Pour un accompagnement confidentiel, contactez{' '}
+        <span className="text-gold-text font-semibold">Tabac Info Service au 39 89</span> (service gratuit, prix d'un appel).
       </p>
 
       {/* Article Modal */}
