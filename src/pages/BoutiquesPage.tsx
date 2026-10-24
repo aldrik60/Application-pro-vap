@@ -20,7 +20,7 @@ interface Boutique {
 
 const INTERNET_BOUTIQUE: Boutique = {
   id: 'Client Internet',
-  name: 'provap.fr',
+  name: 'pro-vap.com',
   addr: 'Boutique en ligne',
   hours: '24h / 24',
   phone: undefined,

@@ -23,7 +23,7 @@ const SHOP_ORDER: Shop[] = [
 const INTERNET_BOUTIQUE: BoutiqueItem = {
   id: 'Client Internet',
   name: 'Client Internet',
-  addr: 'Site provap.fr',
+  addr: 'Site pro-vap.com',
   hours: 'En ligne',
 }
 
