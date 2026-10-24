@@ -9,6 +9,8 @@ export function RegisterPage() {
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const [acceptTerms, setAcceptTerms] = useState(false)
+  // Consentement explicite au suivi (RGPD art. 9) : case séparée, jamais pré-cochée.
+  const [acceptHealthData, setAcceptHealthData] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
@@ -26,12 +28,17 @@ export function RegisterPage() {
       toast.error('Vous devez accepter la politique de confidentialité.')
       return
     }
+    if (!acceptHealthData) {
+      toast.error("Votre accord pour l'enregistrement de votre suivi est nécessaire.")
+      return
+    }
     try {
       setLoading(true)
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { full_name: name } },
+        // La date du consentement reste attachée au compte (preuve RGPD).
+        options: { data: { full_name: name, consentement_suivi_at: new Date().toISOString() } },
       })
       if (error) throw error
       toast.success('Compte créé. Bienvenue.')
@@ -139,11 +146,24 @@ export function RegisterPage() {
               <Link to="/mentions-legales" className="text-gold-text hover:underline" target="_blank" rel="noopener noreferrer">
                 politique de confidentialité
               </Link>{' '}
-              et les mentions légales. Je confirme être majeur(e).
+              et les mentions légales. J'ai 18 ans ou plus.
             </span>
           </label>
 
-          <button type="submit" className="btn-primary mt-2" disabled={loading || !acceptTerms}>
+          <label className="flex items-start gap-3 text-xs text-ink-3 leading-relaxed">
+            <input
+              type="checkbox"
+              checked={acceptHealthData}
+              onChange={e => setAcceptHealthData(e.target.checked)}
+              disabled={loading}
+              className="mt-0.5 accent-[var(--color-pv-terracotta)] w-5 h-5 shrink-0"
+            />
+            <span>
+              J'accepte que Pro'Vap enregistre mon suivi (consommation, taux de nicotine, humeur, test de dépendance) pour m'accompagner. Je peux retirer mon accord à tout moment en supprimant mon compte.
+            </span>
+          </label>
+
+          <button type="submit" className="btn-primary mt-2" disabled={loading || !acceptTerms || !acceptHealthData}>
             {loading ? 'Création…' : 'Créer mon compte'}
           </button>
         </form>

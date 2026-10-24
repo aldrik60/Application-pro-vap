@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { X, Share, Plus, Download, MoreVertical } from 'lucide-react'
+
+// Écrans dont le bouton principal est en bas : le bandeau le recouvrirait.
+const HIDDEN_ON = ['/login', '/register', '/forgot-password', '/reset-password', '/onboarding', '/sos']
 
 const DISMISSED_KEY = 'provap_install_dismissed_v2'
 const DISMISS_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 jours
@@ -26,6 +30,7 @@ type BeforeInstallPromptEvent = Event & {
 type Mode = 'hidden' | 'ios' | 'android-native' | 'android-manual'
 
 export function InstallPrompt() {
+  const { pathname } = useLocation()
   const [mode, setMode] = useState<Mode>('hidden')
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null)
 
@@ -93,7 +98,7 @@ export function InstallPrompt() {
     setMode('hidden')
   }
 
-  if (mode === 'hidden') return null
+  if (mode === 'hidden' || HIDDEN_ON.includes(pathname)) return null
 
   return (
     <div

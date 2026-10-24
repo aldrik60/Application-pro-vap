@@ -10,7 +10,6 @@ import { ChevronLeft } from 'lucide-react'
  */
 export function LegalPage() {
   const navigate = useNavigate()
-  const today = new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })
 
   return (
     <div className="page pb-24">
@@ -27,7 +26,7 @@ export function LegalPage() {
           Mentions <span className="display-italic">légales.</span>
         </h1>
         <p className="text-[12px] text-ink-3 mt-2" style={{ letterSpacing: '0.06em' }}>
-          Dernière mise à jour : {today}
+          Dernière mise à jour : 24 octobre 2026
         </p>
       </header>
 
@@ -83,10 +82,15 @@ export function LegalPage() {
           <ul className="list-disc list-inside text-ink space-y-1">
             <li><strong>Identification :</strong> nom, adresse email.</li>
             <li><strong>Profil de sevrage :</strong> date d'arrêt déclarée, consommation quotidienne de cigarettes, prix du paquet, type de tabac, tranche d'âge.</li>
-            <li><strong>Suivi :</strong> check-ins de nicotine, score Fagerström, objectif personnel, compteur de "cravings" surmontés.</li>
+            <li><strong>Suivi :</strong> points d'étape nicotine, score Fagerström, humeur du jour et notes de journal, objectif personnel, compteur d'envies surmontées.</li>
+            <li><strong>Boutique :</strong> boutique de référence, demandes de rendez-vous (nom, e-mail, téléphone, créneau, message).</li>
             <li><strong>Témoignages :</strong> textes que vous publiez volontairement (modération avant publication).</li>
-            <li><strong>Données techniques :</strong> aucune donnée de navigation n'est collectée à des fins publicitaires. Aucun cookie tiers, aucun traceur Google/Facebook.</li>
+            <li><strong>Notifications :</strong> identifiant technique de votre appareil, si vous activez les notifications.</li>
+            <li><strong>Données techniques :</strong> aucune donnée n'est collectée à des fins publicitaires, aucun cookie publicitaire, aucun traceur Facebook. Les polices de caractères sont chargées depuis Google Fonts, qui reçoit à cette occasion votre adresse IP.</li>
           </ul>
+          <p className="text-ink mt-2">
+            Plusieurs de ces informations (consommation, test de dépendance, humeur) concernent votre santé. Elles ne sont enregistrées qu'avec votre accord explicite, donné par une case dédiée lors de la création du compte.
+          </p>
 
           <h3 className="text-base font-semibold text-ink mt-4 mb-2">4.3 Finalités</h3>
           <ul className="list-disc list-inside text-ink space-y-1">
@@ -98,12 +102,15 @@ export function LegalPage() {
 
           <h3 className="text-base font-semibold text-ink mt-4 mb-2">4.4 Base légale</h3>
           <p className="text-ink">
-            Le traitement repose sur votre consentement (article 6.1.a du RGPD), donné lors de la création de votre compte. Vous pouvez le retirer à tout moment via la suppression de votre compte.
+            Le traitement repose sur votre consentement (article 6.1.a du RGPD) et, pour les informations qui concernent votre santé, sur votre consentement explicite (article 9.2.a), donnés lors de la création de votre compte. Vous pouvez les retirer à tout moment par e-mail ou en supprimant votre compte.
+          </p>
+          <p className="text-ink mt-2">
+            <strong>Qui voit quoi :</strong> l'équipe Pro'Vap peut consulter votre profil de sevrage (date d'arrêt, consommation déclarée, score Fagerström, boutique) pour vous accompagner. Votre journal d'humeur et vos points d'étape nicotine ne sont visibles que par vous.
           </p>
 
           <h3 className="text-base font-semibold text-ink mt-4 mb-2">4.5 Durée de conservation</h3>
           <p className="text-ink">
-            Vos données sont conservées tant que votre compte est actif. À la suppression de votre compte, l'ensemble de vos données est effacé sous 30 jours, à l'exception des données strictement nécessaires aux obligations légales (facturation, journalisation de sécurité), conservées au maximum 5 ans.
+            Vos données sont conservées tant que votre compte est actif. À la suppression de votre compte, l'ensemble de vos données est effacé sous 30 jours, à l'exception des journaux techniques de sécurité, conservés au maximum 12 mois.
           </p>
 
           <h3 className="text-base font-semibold text-ink mt-4 mb-2">4.6 Vos droits</h3>
@@ -118,12 +125,12 @@ export function LegalPage() {
 
           <h3 className="text-base font-semibold text-ink mt-4 mb-2">4.7 Hébergement et transferts</h3>
           <p className="text-ink">
-            Vos données personnelles sont stockées sur des serveurs Supabase situés en Irlande (Union européenne). Aucun transfert n'est effectué hors UE pour les données personnelles. Les services techniques d'hébergement (Vercel) peuvent traiter des journaux techniques (adresses IP) aux États-Unis, encadrés par les Clauses Contractuelles Types de la Commission européenne.
+            Vos données personnelles sont stockées sur des serveurs Supabase situés en Irlande (Union européenne). Vercel et Supabase sont des sociétés américaines, et Google Fonts ainsi que les services de notification de votre téléphone (Apple, Google, Mozilla) peuvent traiter des données techniques, comme votre adresse IP, hors de l'Union européenne. Ces transferts sont encadrés par les Clauses Contractuelles Types de la Commission européenne ou le cadre de protection des données UE-États-Unis.
           </p>
 
           <h3 className="text-base font-semibold text-ink mt-4 mb-2">4.8 Sécurité</h3>
           <p className="text-ink">
-            L'accès à vos données est protégé par authentification (Supabase Auth) et chiffrement TLS de bout en bout. Vos données sensibles (check-ins, profil) sont protégées par des règles d'accès strictes (Row Level Security) qui garantissent qu'aucun autre utilisateur ne peut y accéder.
+            L'accès à vos données est protégé par authentification (Supabase Auth) et les échanges entre votre appareil et nos serveurs sont chiffrés (TLS). Des règles d'accès strictes (Row Level Security) garantissent qu'aucun autre utilisateur ne peut voir vos données.
           </p>
 
           <h3 className="text-base font-semibold text-ink mt-4 mb-2">4.9 Mineurs</h3>
