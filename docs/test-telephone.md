@@ -25,7 +25,8 @@ Pour chaque étape : notez **OK**, ou décrivez ce qui ne va pas avec une captur
 | 17 | Couper le wifi et les données, rouvrir l'app | L'app s'ouvre, la mascotte s'affiche (les données se rechargent au retour du réseau) | | |
 | 18 | Mentions légales (bas de l'écran de connexion) | Siège à Compiègne, contact rgpd@pro-vap.com, mise à jour du 24 octobre 2026 | | |
 | 19 | Mode sombre du téléphone activé | Textes lisibles partout, mascotte sans taches blanches | | |
-| 20 | Profil : supprimer le compte de test | Le compte disparaît, retour à l'écran de connexion | | |
+| 20 | Le vendredi 30 à 9 h, avant de supprimer les comptes de test | Chaque téléphone reçoit « Jour 101 · Votre message du jour » (le compte a démarré il y a 100 jours le jeudi) | | |
+| 21 | Profil : supprimer le compte de test | Le compte disparaît, retour à l'écran de connexion | | |
 
 **Avec votre compte admin, en plus :**
 - Admin → Vidéos : ajouter une vidéo YouTube de test (même une vidéo publique quelconque). Elle doit apparaître dans Ressources sur le téléphone, puis la supprimer.
