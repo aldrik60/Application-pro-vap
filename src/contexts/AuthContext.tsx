@@ -37,9 +37,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .select('*')
         .eq('id', userId)
         .maybeSingle()
-      if (error) { setProfileError(true); return }
+      // Erreur réseau, ou profil introuvable (cas rare) : l'écran d'attente
+      // propose alors « Réessayer » et « Me déconnecter » au lieu d'attendre sans fin.
+      if (error || !data) { setProfileError(true); return }
       setProfileError(false)
-      if (data) setProfile(data as Profile)
+      setProfile(data as Profile)
     } catch {
       setProfileError(true)
     }

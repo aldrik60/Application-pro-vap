@@ -78,7 +78,7 @@ export function NotificationToggle() {
       toast.success('Notifications désactivées.')
       setStatus('permission-default')
     } catch {
-      toast.error('Erreur lors de la désactivation.')
+      toast.error("La désactivation n'a pas abouti. Réessayez dans un instant.")
     } finally {
       setLoading(false)
     }

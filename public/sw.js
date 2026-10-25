@@ -1,4 +1,4 @@
-const CACHE_NAME = 'provap-cache-v14';
+const CACHE_NAME = 'provap-cache-v15';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -49,19 +49,26 @@ self.addEventListener('fetch', (event) => {
   if (isNavigate || isHashedAsset) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
-      try {
-        const res = await Promise.race([fetch(req), timeout(isNavigate ? NAV_TIMEOUT : ASSET_TIMEOUT)]);
+      const cacheKey = isNavigate ? '/index.html' : req;
+      // La requête réseau part tout de suite et continue même si le délai est dépassé.
+      const network = fetch(req).then((res) => {
         // On ne garde que les bonnes réponses du bon type : jamais une erreur,
         // ni une page HTML reçue à la place d'un fichier JS.
         const type = res.headers.get('content-type') || '';
         const goodType = isNavigate ? type.includes('text/html') : !type.includes('text/html');
         if (res.ok && res.type === 'basic' && goodType && !url.search.includes('code=')) {
-          cache.put(isNavigate ? '/index.html' : req, res.clone()).catch(() => {});
+          cache.put(cacheKey, res.clone()).catch(() => {});
         }
         return res;
+      });
+      try {
+        return await Promise.race([network, timeout(isNavigate ? NAV_TIMEOUT : ASSET_TIMEOUT)]);
       } catch {
-        const cached = isNavigate ? await cache.match('/index.html') : await cache.match(req);
-        return cached || Response.error();
+        // Réseau trop lent ou coupé : la copie locale si elle existe…
+        const cached = await cache.match(cacheKey);
+        if (cached) return cached;
+        // …sinon on attend quand même le réseau (4G faible : il finit par répondre).
+        try { return await network; } catch { return Response.error(); }
       }
     })());
     return;

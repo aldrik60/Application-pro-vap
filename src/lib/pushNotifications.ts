@@ -127,7 +127,8 @@ export async function hasActiveSubscription(): Promise<boolean> {
 
 export async function unsubscribeUserFromPush(): Promise<void> {
   const registration = await readyRegistration()
-  if (!registration || !('pushManager' in registration)) return
+  // Service de notifications injoignable : on le signale au lieu d'afficher « désactivées »
+  if (!registration || !('pushManager' in registration)) throw new Error('push indisponible')
   const subscription = await registration.pushManager.getSubscription()
   if (subscription) {
     await supabase.from('push_subscriptions').delete().eq('endpoint', subscription.endpoint)
