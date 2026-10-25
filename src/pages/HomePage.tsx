@@ -669,12 +669,24 @@ function MoodCheckin({ userId }: { userId: string }) {
       <div className="card p-5">
         <div className="flex justify-between items-center mb-3">
           <span className="eyebrow" id="mood-checkin-label">Votre journée</span>
+          {/* Pastille visible (maquette Designer, chantier 2) : 34 px affichés,
+              zone d'appui portée à 44 px par le ::after. */}
           <Link
             to="/journal"
-            className="text-[11px] text-gold-text"
-            style={{ letterSpacing: '0.06em', padding: 10, margin: -10 }}
+            className="relative inline-flex items-center rounded-full border text-ink after:absolute after:-inset-[5px] after:content-['']"
+            style={{
+              gap: 2,
+              minHeight: 34,
+              padding: '0 8px 0 12px',
+              margin: '-5px -6px -5px 0',
+              borderColor: 'var(--color-line-strong)',
+              fontSize: 12,
+              fontWeight: 500,
+              letterSpacing: '0.02em',
+            }}
           >
-            Journal →
+            Votre journal
+            <ChevronRight size={15} className="text-flame-text" aria-hidden />
           </Link>
         </div>
         <div className="grid grid-cols-5 gap-1.5" role="radiogroup" aria-labelledby="mood-checkin-label">

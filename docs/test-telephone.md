@@ -41,6 +41,7 @@ Pour chaque étape : notez **OK**, ou décrivez ce qui ne va pas avec une captur
 | 28 | SOS : poser le téléphone sans y toucher pendant l'exercice | L'écran reste allumé jusqu'à la fin (environ 3 minutes) | | |
 | 29 | Journal en mode sombre | Les 5 humeurs sont lisibles, rien ne sort des cases, cases à cocher sombres | | |
 | 30 | Mode sombre, écran de connexion | Le logo Pro'Vap est bien visible en blanc | | |
+| 31 | Accueil, carte « Votre journée » : toucher la pastille « Votre journal › » en haut à droite, en clair puis en sombre | La pastille se voit bien et se touche du premier coup ; le journal s'ouvre | | |
 
 **Avec votre compte admin, en plus :**
 - Admin → Vidéos : ajouter une vidéo YouTube de test (même une vidéo publique quelconque). Elle doit apparaître dans Ressources sur le téléphone, puis la supprimer.
