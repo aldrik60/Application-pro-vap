@@ -67,6 +67,9 @@ Elles sont stockées en Europe, en Irlande. Elles ne servent à aucune publicit�
 **Qu'est-ce que la boutique voit de moi ?**
 L'équipe Pro'Vap peut voir votre profil : votre date d'arrêt, le nombre de cigarettes que vous avez indiqué, le résultat de votre test de dépendance et votre boutique. C'est ce qui nous permet de vous conseiller. Votre journal d'humeur et votre suivi de nicotine, personne d'autre que vous ne les voit.
 
+**J'ai oublié le nom de mon liquide ou mon taux.**
+Ouvrez l'onglet Vape : votre taux et votre liquide y sont notés à chaque point d'étape. Montrez l'écran au vendeur, il vous sert le bon.
+
 **Je n'ai pas encore arrêté, ça sert à quelque chose ?**
 Oui. À l'inscription, laissez « Aujourd'hui » comme date : votre compteur démarre maintenant. Vous avancez à votre rythme.
 
@@ -136,7 +139,7 @@ Ces phrases sont destinées au public (affiche) ou dites au client. Elles décri
 
 ## Points à confirmer par Antony
 
-- **Qui voit le profil.** Le texte dit « l'équipe Pro'Vap », comme les mentions légales. Aujourd'hui, seul le compte admin a l'écran qui affiche les profils : les vendeurs ne les voient pas en boutique. Si c'est voulu, on peut répondre plus simplement au client : « En boutique, on ne voit rien de votre app. Seule la direction Pro'Vap voit votre profil, pour vous accompagner. » À trancher.
+- **Qui voit le profil.** Tranché par Antony le 25/10 : l'équipe Pro'Vap voit le profil pour suivre le client ; le journal et le suivi de nicotine restent au client. Pour un liquide oublié, le client montre son onglet Vape.
 - **Gratuite pour tous ou pour les clients ?** L'app accepte aussi les personnes qui ne sont pas encore clientes (choix « Autre boutique »). Le kit dit « gratuite », sans condition.
 - **iPhone, éviter la reconnexion.** En théorie, si le client installe l'app sur l'écran d'accueil *avant* de créer son compte, il n'a pas à se reconnecter. À vérifier pendant le test téléphone du jeudi 29 octobre ; si c'est confirmé, on change l'ordre des étapes iPhone.
 - **Libellés iPhone.** Sur les iPhone récents (iOS 26), le bouton Partager de Safari est rangé dans le menu « ••• ». À vérifier aussi le 29.
