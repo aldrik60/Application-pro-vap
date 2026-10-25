@@ -50,7 +50,7 @@ Placez l'affiche près de la caisse, à hauteur des yeux, le QR code bien à pla
 Non. L'app est gratuite. Pas d'abonnement, rien à acheter dedans.
 
 **Il faut créer un compte ?**
-Oui : un prénom (ou un pseudo), une adresse e-mail et un mot de passe. Pas d'e-mail à confirmer, on commence tout de suite. L'app est réservée aux personnes de 18 ans et plus.
+Oui : un prénom (ou un pseudo), une adresse e-mail et un mot de passe. Le mot de passe doit faire au moins 8 caractères, avec une majuscule, une minuscule, un chiffre et un symbole (! ? # …). Pas d'e-mail à confirmer, on commence tout de suite. L'app est réservée aux personnes de 18 ans et plus.
 
 **Ça marche sur iPhone et sur Android ?**
 Oui, sur les deux. Sur iPhone, on passe par Safari. Sur Android, par Chrome.
@@ -84,6 +84,8 @@ Oui. Dans l'onglet Profil, vous pouvez appeler votre boutique ou demander un ren
 ## 4. Installer l'app avec le client, sur son téléphone
 
 Le client tient son téléphone. Vous lui montrez où toucher, vous ne tapez pas son mot de passe à sa place.
+
+**Au moment du mot de passe, prévenez le client :** 8 caractères au moins, avec une majuscule, une minuscule, un chiffre et un symbole (! ? # …). Sinon l'app le refuse. Ne proposez pas d'exemple tout fait : chacun choisit le sien.
 
 ### Sur iPhone (Safari)
 
