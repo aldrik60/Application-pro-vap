@@ -1,4 +1,4 @@
-# Pro'Vap Sevrage
+# My Pro'Vap
 
 Application métier mobile-first pour accompagner les clients Pro'Vap dans leur arrêt du tabac.
 

@@ -34,7 +34,7 @@ Pour chaque étape : notez **OK**, ou décrivez ce qui ne va pas avec une captur
 |---|---|---|---|---|
 | 22 | Mode avion, puis ouvrir l'app installée | « Connexion indisponible » avec un bouton « Réessayer », jamais « indiquez votre date d'arrêt » | | |
 | 23 | Wifi sans internet (partage de connexion coupé), ouvrir l'app | L'écran apparaît en moins de 5 secondes | | |
-| 24 | Profil ouvert dans Safari, app pas encore installée (iPhone) | « Installez d'abord Pro'Vap sur votre écran d'accueil… » | | |
+| 24 | Profil ouvert dans Safari, app pas encore installée (iPhone) | « Installez d'abord My Pro'Vap sur votre écran d'accueil… » | | |
 | 25 | Profil : désactiver les notifications, quitter, revenir | Le bouton affiche « Activer les notifications », pas « activées » | | |
 | 26 | Toucher le champ e-mail ou la note du journal | L'écran ne zoome pas tout seul | | |
 | 27 | Descendre en bas de l'accueil, toucher « Profil » | La page Profil s'ouvre en haut | | |
