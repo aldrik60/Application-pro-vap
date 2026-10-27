@@ -136,7 +136,7 @@ export function InstallPrompt() {
               className="font-semibold text-[15px] leading-tight"
               style={{ color: '#28282d' }}
             >
-              Installer <span style={{ fontFamily: 'var(--font-display)' }}>Pro'Vap</span>
+              Installer <span style={{ fontFamily: 'var(--font-display)' }}>My Pro'Vap</span>
             </p>
 
             {mode === 'ios' && (
@@ -152,7 +152,7 @@ export function InstallPrompt() {
                 </span>
                 <br />
                 <span className="block mt-1.5">
-                  Ouvrez ensuite Pro'Vap depuis votre écran d'accueil et reconnectez-vous une fois,
+                  Ouvrez ensuite My Pro'Vap depuis votre écran d'accueil et reconnectez-vous une fois,
                   avec le même e-mail et le même mot de passe.
                 </span>
               </p>

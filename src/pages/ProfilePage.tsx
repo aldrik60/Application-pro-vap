@@ -146,7 +146,7 @@ export function ProfilePage() {
       const payload = {
         export_date: new Date().toISOString(),
         export_format_version: 2,
-        application: "Pro'Vap Sevrage",
+        application: "My Pro'Vap",
         compte: {
           email: user.email ?? null,
           cree_le: user.created_at ?? null,
@@ -537,7 +537,7 @@ export function ProfilePage() {
       </section>
 
       <p className="text-center display-italic text-ink-3 mt-8 px-5" style={{ fontSize: 13 }}>
-        Pro'Vap Sevrage · v1.0
+        My Pro'Vap · v1.0
       </p>
 
       {/* Appointment Modal */}

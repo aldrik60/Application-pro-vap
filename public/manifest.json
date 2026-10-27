@@ -1,6 +1,6 @@
 {
-  "name": "Pro'Vap Sevrage",
-  "short_name": "Pro'Vap",
+  "name": "My Pro'Vap",
+  "short_name": "My Pro'Vap",
   "description": "Votre compagnon de sevrage tabagique Pro'Vap",
   "start_url": "/",
   "scope": "/",

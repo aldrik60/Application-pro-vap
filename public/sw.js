@@ -1,4 +1,4 @@
-const CACHE_NAME = 'provap-cache-v15';
+const CACHE_NAME = 'provap-cache-v16';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -110,16 +110,16 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('push', (event) => {
   // Apple exige qu'une notification soit toujours affichée : titre par défaut si vide.
-  let data = { title: "Pro'Vap Sevrage", body: '' };
+  let data = { title: "My Pro'Vap", body: '' };
   if (event.data) {
     try {
       data = event.data.json();
     } catch {
-      data = { title: "Pro'Vap Sevrage", body: event.data.text() };
+      data = { title: "My Pro'Vap", body: event.data.text() };
     }
   }
 
-  const title = data.title || "Pro'Vap Sevrage";
+  const title = data.title || "My Pro'Vap";
   const options = {
     body: data.body || '',
     icon: '/icons/icon-192.png',

@@ -188,9 +188,9 @@ export function HomePage() {
     const cigsRound = Math.round(cigsAvoided)
     const moneyRound = Math.round(moneySaved)
     const text = daysSmokeFree >= 1
-      ? `${daysSmokeFree} jour${daysSmokeFree > 1 ? 's' : ''} sans tabac. ${cigsRound} cigarettes évitées, ${moneyRound}€ économisés. Mon parcours avec Pro'Vap Sevrage.`
-      : `J'ai commencé mon sevrage tabagique avec Pro'Vap Sevrage.`
-    const shareData = { title: "Pro'Vap Sevrage", text, url: window.location.origin }
+      ? `${daysSmokeFree} jour${daysSmokeFree > 1 ? 's' : ''} sans tabac. ${cigsRound} cigarettes évitées, ${moneyRound}€ économisés. Mon parcours avec My Pro'Vap.`
+      : `J'ai commencé mon sevrage tabagique avec My Pro'Vap.`
+    const shareData = { title: "My Pro'Vap", text, url: window.location.origin }
     try {
       if (navigator.share) {
         await navigator.share(shareData)

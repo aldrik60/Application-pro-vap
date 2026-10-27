@@ -1,8 +1,8 @@
-# Kit de lancement de l'app Pro'Vap : pour les vendeurs
+# Kit de lancement de l'app My Pro'Vap : pour les vendeurs
 
-À partir du lundi 2 novembre 2026, chaque client qui achète un kit repart avec l'app Pro'Vap sur son téléphone. Ce document vous donne les mots pour la présenter, l'installer avec le client et répondre à ses questions.
+À partir du lundi 2 novembre 2026, chaque client qui achète un kit repart avec l'app My Pro'Vap sur son téléphone. Ce document vous donne les mots pour la présenter, l'installer avec le client et répondre à ses questions.
 
-> Pour l'équipe : le nom de l'app n'est pas encore définitif. Partout, il est écrit « l'app Pro'Vap ». Le jour où le nom est choisi, on remplace ces mots, rien d'autre.
+> Pour l'équipe : l'app s'appelle **My Pro'Vap** (nom choisi par Antony le 27 octobre 2026). C'est aussi le nom écrit sous son icône sur le téléphone.
 
 ---
 
@@ -12,7 +12,7 @@
 
 > **Le coaching en plus, aussi dans votre poche.**
 >
-> L'app Pro'Vap vous accompagne chaque jour, à votre rythme.
+> L'app My Pro'Vap vous accompagne chaque jour, à votre rythme.
 > Gratuite, avec un bouton SOS quand l'envie de fumer arrive.
 >
 > **Scannez le code avec l'appareil photo de votre téléphone.**
@@ -21,7 +21,7 @@
 
 > **On ne vous laisse pas repartir seul.**
 >
-> L'app Pro'Vap suit vos jours, vos économies et votre taux de nicotine.
+> L'app My Pro'Vap suit vos jours, vos économies et votre taux de nicotine.
 > Gratuite, sur iPhone et Android.
 >
 > **Scannez, on l'installe avec vous.**
@@ -34,7 +34,7 @@ Placez l'affiche près de la caisse, à hauteur des yeux, le QR code bien à pla
 
 À dire au moment où le client a choisi son kit, avant l'encaissement ou juste après. Ton naturel, pas récité.
 
-> « Avant que vous partiez : chez Pro'Vap, l'accompagnement ne s'arrête pas au comptoir. On a une app, l'app Pro'Vap, gratuite. Vous y suivez vos jours, l'argent que vous économisez et votre taux de nicotine. Quand une envie de fumer arrive, il y a un bouton SOS : trois minutes de respiration guidée. Chaque matin à 9 h, vous recevez un petit message. Et si vous avez besoin de nous, vous demandez un rendez-vous depuis l'app. On l'installe ensemble ? Ça prend deux minutes. »
+> « Avant que vous partiez : chez Pro'Vap, l'accompagnement ne s'arrête pas au comptoir. On a une app gratuite, My Pro'Vap. Vous y suivez vos jours, l'argent que vous économisez et votre taux de nicotine. Quand une envie de fumer arrive, il y a un bouton SOS : trois minutes de respiration guidée. Chaque matin à 9 h, vous recevez un petit message. Et si vous avez besoin de nous, vous demandez un rendez-vous depuis l'app. On l'installe ensemble ? Ça prend deux minutes. »
 
 **Si le client est pressé (10 secondes)**
 
@@ -130,7 +130,7 @@ Montrez enfin le **bouton SOS** au centre, en bas de l'écran : c'est celui dont
 Ces phrases sont destinées au public (affiche) ou dites au client. Elles décrivent le service, sans promesse de résultat, mais elles parlent de tabac ou de santé.
 
 1. Affiche, version retenue : « Gratuite, avec un bouton SOS quand l'envie de fumer arrive. »
-2. Affiche, variante : « L'app Pro'Vap suit vos jours, vos économies et votre taux de nicotine. »
+2. Affiche, variante : « L'app My Pro'Vap suit vos jours, vos économies et votre taux de nicotine. »
 3. Présentation 30 s : « Quand une envie de fumer arrive, il y a un bouton SOS : trois minutes de respiration guidée. »
 4. Présentation 30 s : « Vous y suivez vos jours, l'argent que vous économisez et votre taux de nicotine. »
 5. Réponse « Je n'ai pas encore arrêté » : « votre compteur démarre maintenant. »

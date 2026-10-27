@@ -46,7 +46,7 @@ export function LoginPage() {
             className="display mt-3 text-ink"
             style={{ fontSize: 30 }}
           >
-            Pro'Vap <span className="display-italic">Sevrage</span>
+            <span className="display-italic">My</span> Pro'Vap
           </h1>
           <p className="script text-flame-text mt-3" style={{ fontSize: 22 }}>
             Votre compagnon vers la liberté

@@ -118,7 +118,7 @@ export function NotificationToggle() {
 
           {status === 'ios-needs-install' && (
             <p className="text-[12px] mt-1 leading-snug" style={{ color: 'var(--color-ink-3, #686868)' }}>
-              Installez d'abord Pro'Vap sur votre écran d'accueil pour activer les notifications.
+              Installez d'abord My Pro'Vap sur votre écran d'accueil pour activer les notifications.
               <br />
               <span className="text-[12px]">Partage → « Sur l'écran d'accueil »</span>
             </p>
