@@ -3,10 +3,10 @@
 // elle n'envoie qu'à 9 h heure de Paris, ce qui suit l'heure d'été toute seule.
 //
 // Pour chaque appareil abonné (push_subscriptions.enabled) dont le compte a une
-// date d'arrêt :
-//   - si un palier (badge) tombe ce jour-là : « Nouveau palier : {titre} » ;
-//   - sinon le message du jour, comme sur l'accueil (message propre au jour,
-//     ou rotation J91 à J120 au-delà de J120 sans message propre).
+// date d'arrêt, la règle de regle.ts (choix d'Antony du 29/10/2026) :
+//   - si un palier (badge) tombe ce jour-là : « Nouveau palier : {titre} », tout jour ;
+//   - sinon le message du jour, comme sur l'accueil : chaque matin jusqu'à J120,
+//     puis seulement le lundi.
 // Le nombre de jours est calculé comme dans HomePage.
 //
 // Sécurité (verify_jwt=false car pg_net n'envoie pas de JWT) :
@@ -14,17 +14,15 @@
 // - une seule tournée par jour : la date est réservée dans daily_push_runs ;
 // - rien n'est écrit dans push_messages (historique visible par tous).
 //
-// Test : POST {"test_user_id": "<uuid>", "simulate_day"?: 30}
+// Test : POST {"test_user_id": "<uuid>", "simulate_day"?: 30, "simulate_date"?: "2026-11-02"}
 // envoie au seul compte indiqué, sans contrôle d'heure ni réservation du jour.
+// simulate_date remplace la date du jour (et donc le jour de la semaine).
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0'
 import webpush from 'https://esm.sh/web-push@3.6.7?bundle&target=denonext'
+import { longRunPool, pickNotification, type Badge } from './regle.ts'
 
 const SEND_HOUR_PARIS = 9
-const LONG_RUN_FIRST_DAY = 91
-const LONG_RUN_LAST_DAY = 120
-// Messages liés à leur jour précis (« 100 jours »…) : jamais rejoués (comme HomePage).
-const LONG_RUN_EXCLUDED = [91, 99, 100, 117]
 const DAY_MS = 86_400_000
 
 Deno.serve(async (req) => {
@@ -48,8 +46,14 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}))
     const testUserId = typeof body?.test_user_id === 'string' ? body.test_user_id : null
     const simulateDay = Number.isInteger(body?.simulate_day) ? body.simulate_day as number : null
+    const simulateDate = typeof body?.simulate_date === 'string'
+      && /^\d{4}-\d{2}-\d{2}$/.test(body.simulate_date)
+      && Number.isFinite(Date.parse(`${body.simulate_date}T00:00:00Z`))
+      ? body.simulate_date as string : null
 
     const { date: parisDate, hour: parisHour } = parisNow()
+    // Date utilisée pour compter les jours et choisir le message (simulable en test seulement)
+    const today = testUserId && simulateDate ? simulateDate : parisDate
 
     // ─── Tournée normale : bonne heure et une seule fois par jour ────────────
     if (!testUserId) {
@@ -97,41 +101,17 @@ Deno.serve(async (req) => {
       admin.from('daily_messages').select('day_number, message').order('day_number', { ascending: true }),
     ])
 
-    const badgeByDay = new Map((badges ?? []).map(b => [b.day_threshold as number, b]))
+    const badgeByDay = new Map<number, Badge>((badges ?? []).map(b => [b.day_threshold as number, b as Badge]))
     const messageByDay = new Map((messages ?? []).map(m => [m.day_number as number, m.message as string]))
-    const pool = (messages ?? [])
-      .filter(m => m.day_number >= LONG_RUN_FIRST_DAY && m.day_number <= LONG_RUN_LAST_DAY && !LONG_RUN_EXCLUDED.includes(m.day_number))
-      .map(m => m.message as string)
+    const pool = longRunPool((messages ?? []) as Array<{ day_number: number; message: string }>)
 
-    // Notification à envoyer pour chaque compte
-    const todayUtc = Date.parse(`${parisDate}T00:00:00Z`)
+    // Notification à envoyer pour chaque compte (règle : regle.ts)
+    const todayUtc = Date.parse(`${today}T00:00:00Z`)
     const payloadByUser = new Map<string, string>()
     for (const p of profiles ?? []) {
       const days = simulateDay ?? Math.floor((todayUtc - Date.parse(`${p.quit_date}T00:00:00Z`)) / DAY_MS)
-      if (days <= 0) continue
-
-      const badge = badgeByDay.get(days)
-      if (badge) {
-        payloadByUser.set(p.id, JSON.stringify({
-          title: `Nouveau palier : ${badge.title}`,
-          body: badge.description,
-          url: '/badges',
-          tag: `palier-${days}`,
-        }))
-        continue
-      }
-
-      let message = messageByDay.get(days)
-      if (!message && days > LONG_RUN_FIRST_DAY && pool.length > 0) {
-        message = pool[(days - LONG_RUN_FIRST_DAY) % pool.length]
-      }
-      if (!message) continue
-      payloadByUser.set(p.id, JSON.stringify({
-        title: `Jour ${days} · Votre message du jour`,
-        body: message,
-        url: '/',
-        tag: `jour-${parisDate}`,
-      }))
+      const notification = pickNotification(days, today, badgeByDay, messageByDay, pool)
+      if (notification) payloadByUser.set(p.id, JSON.stringify(notification))
     }
 
     // ─── Envoi ───────────────────────────────────────────────────────────────

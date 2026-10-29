@@ -43,6 +43,13 @@ Pour chaque étape : notez **OK**, ou décrivez ce qui ne va pas avec une captur
 | 30 | Mode sombre, écran de connexion | Le logo Pro'Vap est bien visible en blanc | | |
 | 31 | Accueil, carte « Votre journée » : toucher la pastille « Votre journal › » en haut à droite, en clair puis en sombre | La pastille se voit bien et se touche du premier coup ; le journal s'ouvre | | |
 
+**Règle du message de 9 h (choisie le 29 octobre) :** chaque matin pendant les 120 premiers jours, puis le lundi seulement ; une étape est toujours fêtée le jour même.
+
+| # | Étape | Ce qui doit se passer | Votre téléphone |
+|---|---|---|---|
+| 32 | Votre compte admin (arrêt en 2014), vendredi 30, samedi 31 et dimanche 1er à 9 h | Aucun message du jour | |
+| 33 | Le même compte, lundi 2 novembre à 9 h | « Jour 4478 · Votre message du jour » | |
+
 **Avec votre compte admin, en plus :**
 - Admin → Vidéos : ajouter une vidéo YouTube de test (même une vidéo publique quelconque). Elle doit apparaître dans Ressources sur le téléphone, puis la supprimer.
 - Admin → Articles : ouvrir un guide, corriger un mot, enregistrer : la correction apparaît dans l'app.

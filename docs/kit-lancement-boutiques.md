@@ -34,7 +34,7 @@ Placez l'affiche près de la caisse, à hauteur des yeux, le QR code bien à pla
 
 À dire au moment où le client a choisi son kit, avant l'encaissement ou juste après. Ton naturel, pas récité.
 
-> « Avant que vous partiez : chez Pro'Vap, l'accompagnement ne s'arrête pas au comptoir. On a une app gratuite, My Pro'Vap. Vous y suivez vos jours, l'argent que vous économisez et votre taux de nicotine. Quand une envie de fumer arrive, il y a un bouton SOS : trois minutes de respiration guidée. Chaque matin à 9 h, vous recevez un petit message. Et si vous avez besoin de nous, vous demandez un rendez-vous depuis l'app. On l'installe ensemble ? Ça prend deux minutes. »
+> « Avant que vous partiez : chez Pro'Vap, l'accompagnement ne s'arrête pas au comptoir. On a une app gratuite, My Pro'Vap. Vous y suivez vos jours, l'argent que vous économisez et votre taux de nicotine. Quand une envie de fumer arrive, il y a un bouton SOS : trois minutes de respiration guidée. Les premiers mois, vous recevez un petit message chaque matin à 9 h. Et si vous avez besoin de nous, vous demandez un rendez-vous depuis l'app. On l'installe ensemble ? Ça prend deux minutes. »
 
 **Si le client est pressé (10 secondes)**
 
@@ -59,7 +59,7 @@ Oui, sur les deux. Sur iPhone, on passe par Safari. Sur Android, par Chrome.
 Parce qu'on la donne en boutique, à nos clients. Elle s'installe directement depuis le QR code et elle a son icône sur l'écran d'accueil, comme une app classique.
 
 **Je vais recevoir des notifications ?**
-Seulement si vous les activez, dans l'onglet Profil. Vous recevez alors votre message du jour à 9 h, un mot quand vous passez un palier, et les messages de l'équipe Pro'Vap. Sur iPhone, les notifications marchent une fois l'app installée sur l'écran d'accueil, avec iOS 16.4 ou plus récent. Vous pouvez les couper à tout moment.
+Seulement si vous les activez, dans l'onglet Profil. Vous recevez alors un message à 9 h : chaque matin pendant les quatre premiers mois, puis une fois par semaine, le lundi. Chaque étape franchie (un an, deux ans…) est fêtée le jour même, et l'équipe Pro'Vap peut aussi vous écrire. Sur iPhone, les notifications marchent une fois l'app installée sur l'écran d'accueil, avec iOS 16.4 ou plus récent. Vous pouvez les couper à tout moment.
 
 **Et mes données ?**
 Elles sont stockées en Europe, en Irlande. Elles ne servent à aucune publicité. Depuis l'onglet Profil, vous pouvez les télécharger, ou supprimer votre compte et tout ce qu'il contient.
