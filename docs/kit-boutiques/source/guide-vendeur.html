@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>My Pro'Vap · Guide vendeur</title>
+<!-- Source du PDF docs/kit-boutiques/guide-vendeur.pdf. Texte repris du kit validé
+     (docs/kit-lancement-boutiques.md). Regénérer : docs/kit-boutiques/source/generer.sh -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Outfit:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: A4;
+    margin: 15mm 16mm 16mm;
+    @bottom-left { content: "My Pro'Vap · Guide vendeur · novembre 2026"; font: 400 7.5pt 'Outfit', sans-serif; color: #8a8478; }
+    @bottom-right { content: counter(page) " / " counter(pages); font: 500 7.5pt 'Outfit', sans-serif; color: #8a8478; }
+  }
+  :root {
+    --t: #a2371a;
+    --ink: #1a1a1c;
+    --ink2: #55524c;
+    --paper: #f6f1e8;
+    --line: #e4ddcf;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; font: 400 9.8pt/1.45 'Outfit', sans-serif; color: var(--ink); }
+  p { margin: 0 0 6px; }
+  b, strong { font-weight: 600; }
+
+  /* En-tête */
+  .top { display: flex; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 2px solid var(--t); }
+  .top img { height: 48px; width: auto; display: block; }
+  .brand { font: 700 21pt/1 'Space Grotesk', sans-serif; text-transform: uppercase; letter-spacing: .01em; }
+  .brand i { font: italic 400 21pt/1 'Outfit', sans-serif; }
+  .top .right { margin-left: auto; text-align: right; }
+  .eyebrow { font: 600 7.5pt/1.3 'Outfit', sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--t); }
+  .doc-title { font: 700 13pt/1.1 'Space Grotesk', sans-serif; text-transform: uppercase; margin-top: 3px; }
+
+  .intro { margin: 14px 0 4px; font-size: 10.5pt; }
+  .note { color: var(--ink2); }
+
+  /* Sections */
+  h2 {
+    font: 700 12.5pt/1.2 'Space Grotesk', sans-serif; text-transform: uppercase; letter-spacing: .01em;
+    margin: 20px 0 8px; display: flex; gap: 9px; align-items: baseline;
+    break-after: avoid;
+  }
+  h2 .n {
+    display: inline-flex; align-items: center; justify-content: center; flex: none;
+    width: 22px; height: 22px; border-radius: 50%; background: var(--t); color: #fff;
+    font: 700 10pt/1 'Space Grotesk', sans-serif; transform: translateY(1px);
+  }
+  h3 { font: 600 10pt/1.3 'Outfit', sans-serif; margin: 10px 0 4px; break-after: avoid; }
+  .lead { color: var(--ink2); }
+
+  .quote {
+    background: var(--paper); border-left: 3px solid var(--t); border-radius: 0 6px 6px 0;
+    padding: 10px 14px; margin: 6px 0 10px; font-size: 10.3pt; line-height: 1.5;
+    break-inside: avoid;
+  }
+
+  /* Questions */
+  .faq { columns: 2; column-gap: 20px; }
+  .faq .q { break-inside: avoid; margin: 0 0 10px; }
+  .faq .q b { display: block; color: var(--t); margin-bottom: 1px; }
+
+  /* Installation */
+  .warn {
+    border: 1.5px solid var(--t); border-radius: 8px; padding: 8px 12px; margin: 8px 0 12px;
+    break-inside: avoid;
+  }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; break-inside: avoid; }
+  .card { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px 4px; background: #fff; }
+  .card h3 { margin-top: 0; font: 700 10pt/1.2 'Space Grotesk', sans-serif; text-transform: uppercase; }
+  .card h3 span { font: 400 9pt 'Outfit', sans-serif; text-transform: none; color: var(--ink2); }
+  ol.steps { margin: 6px 0 0; padding: 0; list-style: none; counter-reset: s; }
+  ol.steps li { counter-increment: s; position: relative; padding-left: 26px; margin: 0 0 8px; }
+  ol.steps li::before {
+    content: counter(s); position: absolute; left: 0; top: 1px;
+    width: 18px; height: 18px; border-radius: 50%; background: var(--ink); color: #fff;
+    font: 700 8.5pt/18px 'Space Grotesk', sans-serif; text-align: center;
+  }
+  .finish { background: var(--paper); border-radius: 8px; padding: 10px 12px; margin-top: 12px; break-inside: avoid; }
+  .finish p:last-child { margin-bottom: 0; }
+  .url { font-weight: 600; letter-spacing: .01em; }
+
+  /* Tableau */
+  table { width: 100%; border-collapse: collapse; font-size: 8.9pt; line-height: 1.4; }
+  th {
+    text-align: left; font: 600 7.3pt 'Outfit', sans-serif; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink2); border-bottom: 1.5px solid var(--ink); padding: 4px 6px;
+  }
+  td { border-bottom: 1px solid var(--line); padding: 6px 6px; vertical-align: top; }
+  tr { break-inside: avoid; }
+  td.no { color: var(--t); font-weight: 500; width: 33%; }
+  td.why { color: var(--ink2); width: 31%; }
+
+  .break { break-before: page; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <img src="bouddha.png" alt="">
+  <div class="brand"><i>My</i> Pro'Vap</div>
+  <div class="right">
+    <div class="eyebrow">Pour les vendeurs</div>
+    <div class="doc-title">Guide vendeur</div>
+  </div>
+</header>
+
+<p class="intro">À partir du lundi 2 novembre 2026, chaque client qui achète un kit repart avec l'app My Pro'Vap sur son téléphone. Ce guide vous donne les mots pour la présenter, l'installer avec le client et répondre à ses questions.</p>
+<p class="note">L'app s'appelle <b>My Pro'Vap</b>. C'est aussi le nom écrit sous son icône sur le téléphone.</p>
+
+<h2><span class="n">1</span> L'affiche avec le QR code</h2>
+<p>Placez l'affiche près de la caisse, à hauteur des yeux, le QR code bien à plat (pas derrière une vitre qui reflète).</p>
+
+<h2><span class="n">2</span> La présenter en 30 secondes, au comptoir</h2>
+<p class="lead">À dire au moment où le client a choisi son kit, avant l'encaissement ou juste après. Ton naturel, pas récité.</p>
+<div class="quote">« Avant que vous partiez : chez Pro'Vap, l'accompagnement ne s'arrête pas au comptoir. On a une app gratuite, My Pro'Vap. Vous y suivez vos jours, l'argent que vous économisez et votre taux de nicotine. Quand une envie de fumer arrive, il y a un bouton SOS : trois minutes de respiration guidée. Les premiers mois, vous recevez un petit message chaque matin à 9 h. Et si vous avez besoin de nous, vous demandez un rendez-vous depuis l'app. On l'installe ensemble ? Ça prend deux minutes. »</div>
+
+<h3>Si le client est pressé (10 secondes)</h3>
+<div class="quote">« On a une app gratuite pour vous suivre entre deux passages. Le QR code est sur l'affiche, là. Si vous voulez, on l'installe ensemble la prochaine fois. »</div>
+
+<p><b>Si le client dit non :</b> on n'insiste pas. « Pas de souci. L'affiche reste là, vous pourrez la scanner quand vous voulez. »</p>
+
+<h2><span class="n">3</span> Les questions des clients</h2>
+<div class="faq">
+  <div class="q"><b>C'est payant ?</b>Non. L'app est gratuite. Pas d'abonnement, rien à acheter dedans.</div>
+  <div class="q"><b>Il faut créer un compte ?</b>Oui : un prénom (ou un pseudo), une adresse e-mail et un mot de passe. Le mot de passe doit faire au moins 8 caractères, avec une majuscule, une minuscule, un chiffre et un symbole (! ? # …). Pas d'e-mail à confirmer, on commence tout de suite. L'app est réservée aux personnes de 18 ans et plus.</div>
+  <div class="q"><b>Ça marche sur iPhone et sur Android ?</b>Oui, sur les deux. Sur iPhone, on passe par Safari. Sur Android, par Chrome.</div>
+  <div class="q"><b>Pourquoi elle n'est pas sur l'App Store ou le Play Store ?</b>Parce qu'on la donne en boutique, à nos clients. Elle s'installe directement depuis le QR code et elle a son icône sur l'écran d'accueil, comme une app classique.</div>
+  <div class="q"><b>Je vais recevoir des notifications ?</b>Seulement si vous les activez, dans l'onglet Profil. Vous recevez alors un message à 9 h : chaque matin pendant les quatre premiers mois, puis une fois par semaine, le lundi. Chaque étape franchie (un an, deux ans…) est fêtée le jour même, et l'équipe Pro'Vap peut aussi vous écrire. Sur iPhone, les notifications marchent une fois l'app installée sur l'écran d'accueil, avec iOS 16.4 ou plus récent. Vous pouvez les couper à tout moment.</div>
+  <div class="q"><b>Et mes données ?</b>Elles sont stockées en Europe, en Irlande. Elles ne servent à aucune publicité. Depuis l'onglet Profil, vous pouvez les télécharger, ou supprimer votre compte et tout ce qu'il contient.</div>
+  <div class="q"><b>Qu'est-ce que la boutique voit de moi ?</b>L'équipe Pro'Vap peut voir votre profil : votre date d'arrêt, le nombre de cigarettes que vous avez indiqué, le résultat de votre test de dépendance et votre boutique. C'est ce qui nous permet de vous conseiller. Votre journal d'humeur et votre suivi de nicotine, personne d'autre que vous ne les voit.</div>
+  <div class="q"><b>J'ai oublié le nom de mon liquide ou mon taux.</b>Ouvrez l'onglet Vape : votre taux et votre liquide y sont notés à chaque point d'étape. Montrez l'écran au vendeur, il vous sert le bon.</div>
+  <div class="q"><b>Je n'ai pas encore arrêté, ça sert à quelque chose ?</b>Oui. À l'inscription, laissez « Aujourd'hui » comme date : votre compteur démarre maintenant. Vous avancez à votre rythme.</div>
+  <div class="q"><b>Et si je refume une cigarette, je recommence tout ?</b>Non. Sur l'accueil, il y a « Une cigarette ? Ce n'est pas grave. » Un écart ne remet pas le compteur à zéro. Si vous avez refumé plusieurs jours, c'est vous qui choisissez, ou non, de redémarrer le compteur.</div>
+  <div class="q"><b>Je peux parler à quelqu'un ?</b>Oui. Dans l'onglet Profil, vous pouvez appeler votre boutique ou demander un rendez-vous avec un conseiller. On vous recontacte.</div>
+</div>
+
+<h2><span class="n">4</span> Installer l'app avec le client, sur son téléphone</h2>
+<p>Le client tient son téléphone. Vous lui montrez où toucher, vous ne tapez pas son mot de passe à sa place.</p>
+<div class="warn"><b>Au moment du mot de passe, prévenez le client :</b> 8 caractères au moins, avec une majuscule, une minuscule, un chiffre et un symbole (! ? # …). Sinon l'app le refuse. Ne proposez pas d'exemple tout fait : chacun choisit le sien.</div>
+
+<div class="cols">
+  <div class="card">
+    <h3>Sur iPhone <span>(Safari)</span></h3>
+    <ol class="steps">
+      <li><b>Scannez le QR code</b> avec l'appareil photo et ouvrez le lien. Il doit s'ouvrir dans <b>Safari</b>. S'il s'ouvre dans une autre application (Chrome, Instagram…), copiez le lien et collez-le dans Safari.</li>
+      <li><b>Touchez le bouton Partager</b> (le carré avec une flèche vers le haut ; sur les iPhone récents, il se trouve dans le menu « ••• »), puis <b>« Sur l'écran d'accueil »</b> (faites défiler si besoin), puis <b>« Ajouter »</b>.</li>
+      <li><b>Ouvrez l'app depuis sa nouvelle icône</b> et <b>reconnectez-vous une fois</b>, avec le même e-mail et le même mot de passe. C'est normal sur iPhone, ça n'arrive qu'une fois.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>Sur Android <span>(Chrome)</span></h3>
+    <ol class="steps">
+      <li><b>Scannez le QR code</b> et ouvrez le lien dans <b>Chrome</b>.</li>
+      <li><b>Si un bandeau « Installer » apparaît, touchez-le.</b> Sinon, touchez le menu <b>⋮</b> en haut à droite, puis <b>« Installer l'application »</b> ou <b>« Ajouter à l'écran d'accueil »</b>.</li>
+      <li><b>Confirmez</b>, puis ouvrez l'app depuis sa nouvelle icône. Le client reste connecté.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="finish">
+  <h3 style="margin-top:0">Pour finir, sur les deux téléphones</h3>
+  <p>Dans l'onglet <b>Profil</b>, touchez <b>« Activer les notifications »</b>, puis acceptez la demande du téléphone. Sur iPhone, faites-le bien depuis l'icône installée, pas depuis Safari.</p>
+  <p>Montrez enfin le <b>bouton SOS</b> au centre, en bas de l'écran : c'est celui dont le client se souviendra.</p>
+  <p>Adresse de l'app, si le QR code ne s'ouvre pas : <span class="url">application-pro-vap.vercel.app</span></p>
+</div>
+
+<h2 class="break"><span class="n">5</span> Ce qu'on ne dit pas</h2>
+<table>
+  <thead><tr><th>À ne pas dire</th><th>Pourquoi</th><th>À dire plutôt</th></tr></thead>
+  <tbody>
+    <tr><td class="no">« Avec l'app, vous allez arrêter. »</td><td class="why">Personne ne peut promettre un résultat.</td><td>« L'app vous accompagne, à votre rythme. »</td></tr>
+    <tr><td class="no">« Ce kit va vous faire arrêter de fumer. »</td><td class="why">L'arrêt ne se rattache jamais à un produit, seulement à l'accompagnement.</td><td>« On vous accompagne, en boutique et avec l'app. »</td></tr>
+    <tr><td class="no">« La vape, c'est sans risque » ou « c'est moins nocif que la cigarette. »</td><td class="why">Comparaison santé interdite.</td><td>Rien. Pour les questions de santé : médecin, pharmacien ou Tabac Info Service au 39 89.</td></tr>
+    <tr><td class="no">« C'est recommandé par les médecins », « validé par l'OMS », « par la HAS ».</td><td class="why">Faux pour l'app. Seul le test de dépendance qu'elle contient est cité comme recommandé par la HAS.</td><td>« C'est un outil d'accompagnement, gratuit. »</td></tr>
+    <tr><td class="no">« C'est comme un traitement » ou « un programme médical ».</td><td class="why">L'app n'est ni un traitement, ni un dispositif médical.</td><td>« C'est un suivi au quotidien. »</td></tr>
+    <tr><td class="no">« La boutique voit tout ce que vous notez. »</td><td class="why">Faux : le journal et le suivi de nicotine restent privés.</td><td>« On voit votre profil pour vous conseiller, votre journal reste à vous. »</td></tr>
+    <tr><td class="no">« Donnez-moi votre mot de passe, je vous fais tout. »</td><td class="why">Le mot de passe appartient au client.</td><td>« Je vous montre où toucher, vous tapez. »</td></tr>
+    <tr><td class="no">« Vous êtes obligé de la prendre » ou la conditionner à un prix.</td><td class="why">L'app est un plus, jamais une condition.</td><td>« Si ça vous dit, on l'installe ensemble. »</td></tr>
+    <tr><td class="no">La proposer à un client qui a l'air mineur.</td><td class="why">L'app est réservée aux 18 ans et plus, comme la boutique.</td><td>Ne pas la proposer.</td></tr>
+    <tr><td class="no">« Vous allez recevoir des notifications de toute façon. »</td><td class="why">Faux sur un vieil iPhone ou si l'app n'est pas installée.</td><td>« Activez-les dans Profil, une fois l'app installée. »</td></tr>
+    <tr><td class="no">Tutoyer le client.</td><td class="why">La marque vouvoie toujours.</td><td>Vouvoiement, chaleureux.</td></tr>
+  </tbody>
+</table>
+
+</body>
+</html>
