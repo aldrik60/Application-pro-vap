@@ -1,12 +1,14 @@
-const CACHE_NAME = 'provap-cache-v16';
+const CACHE_NAME = 'provap-cache-v17';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/manifest.json?v=5',
-  '/favicon.svg?v=5',
-  '/icons/icon-192.png?v=5',
-  '/icons/icon-512.png?v=5',
-  '/icons/apple-touch-icon.png?v=5',
+  '/manifest.json?v=6',
+  '/favicon-32.png?v=6',
+  '/icons/icon-192.png?v=6',
+  '/icons/icon-512.png?v=6',
+  '/icons/maskable-192.png?v=6',
+  '/icons/maskable-512.png?v=6',
+  '/icons/apple-touch-icon.png?v=6',
   // Mascotte Vap : affichée dès l'accueil, doit rester visible hors connexion
   '/assets/vap/vap-1-premier-jour.svg',
   '/assets/vap/vap-2-premier-souffle.svg',
