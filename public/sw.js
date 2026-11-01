@@ -1,4 +1,4 @@
-const CACHE_NAME = 'provap-cache-v17';
+const CACHE_NAME = 'provap-cache-v18';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -17,6 +17,7 @@ const urlsToCache = [
   '/assets/vap/vap-5-ascension.svg',
   '/assets/vap/vap-6-au-sommet.svg',
   '/assets/logo-provap-blanc.svg',
+  '/assets/bouddha-entete.png',
 ];
 
 self.addEventListener('install', (event) => {

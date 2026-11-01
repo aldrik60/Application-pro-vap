@@ -4,7 +4,7 @@ import { Bell, AlertTriangle, Share2, ChevronRight, BookOpen } from 'lucide-reac
 import toast from 'react-hot-toast'
 import { Badge, MoodLevel } from '../types'
 import { Vap, vapStageFromDays, VAP_STAGES } from '../components/Vap'
-import { ProVapLogo } from '../components/ProVapLogo'
+import { AppBrand } from '../components/AppBrand'
 import { Modal } from '../components/Modal'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
@@ -226,7 +226,7 @@ export function HomePage() {
     <div className="page pb-32">
       {/* Header logo + actions */}
       <header className="flex items-center justify-between px-6 pt-6">
-        <ProVapLogo height={22} />
+        <AppBrand />
         <div className="flex gap-2">
           <button
             onClick={handleShare}
