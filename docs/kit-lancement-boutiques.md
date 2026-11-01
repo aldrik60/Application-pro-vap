@@ -125,9 +125,9 @@ Montrez enfin le **bouton SOS** au centre, en bas de l'écran : c'est celui dont
 
 ---
 
-## À valider par Antony : phrases qui touchent à la santé ou au tabac
+## Phrases qui touchent à la santé ou au tabac : validées par Antony le 1er novembre 2026
 
-Ces phrases sont destinées au public (affiche) ou dites au client. Elles décrivent le service, sans promesse de résultat, mais elles parlent de tabac ou de santé.
+Ces phrases sont destinées au public (affiche) ou dites au client. Elles décrivent le service, sans promesse de résultat, mais elles parlent de tabac ou de santé. Antony les a validées telles quelles le 1er novembre 2026, y compris « votre taux de nicotine ».
 
 1. Affiche, version retenue : « Gratuite, avec un bouton SOS quand l'envie de fumer arrive. »
 2. Affiche, variante : « L'app My Pro'Vap suit vos jours, vos économies et votre taux de nicotine. »
