@@ -51,10 +51,11 @@ export function RegisterPage() {
         message = 'Un compte existe déjà avec cette adresse email.'
       } else if (lower.includes('invalid') && lower.includes('email')) {
         message = 'Adresse email invalide.'
+      } else if (lower.includes('password') && (lower.includes('should contain') || lower.includes('character of each'))) {
+        // Tester avant « trop court » : le message Supabase (« at least one character of each… ») contient aussi « at least ».
+        message = 'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caractère spécial.'
       } else if (lower.includes('password') && (lower.includes('short') || lower.includes('at least'))) {
         message = 'Mot de passe trop court (minimum 8 caractères).'
-      } else if (lower.includes('password') && lower.includes('character')) {
-        message = 'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caractère spécial.'
       } else if (lower.includes('rate limit') || lower.includes('too many')) {
         message = 'Trop de tentatives. Patientez quelques minutes.'
       } else if (lower.includes('weak') || lower.includes('compromis') || lower.includes('pwned')) {
