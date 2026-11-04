@@ -240,7 +240,7 @@ export function NotificationToggle() {
                 </li>
                 <li className="flex gap-2">
                   <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>3.</span>
-                  <span>Trouvez <strong>Pro'Vap</strong> dans la liste et appuyez dessus.</span>
+                  <span>Trouvez <strong>My Pro'Vap</strong> dans la liste et appuyez dessus.</span>
                 </li>
                 <li className="flex gap-2">
                   <span className="shrink-0 font-bold" style={{ color: '#a2371a' }}>4.</span>
